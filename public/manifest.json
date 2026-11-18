@@ -1,0 +1,18 @@
+{
+  "name": "El Ídolo: Hacé tu carrera de futbolista",
+  "short_name": "El Ídolo",
+  "description": "Modo carrera roguelike de fútbol sudamericano y mundial.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#040705",
+  "theme_color": "#22E748",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

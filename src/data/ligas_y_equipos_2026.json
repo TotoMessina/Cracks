@@ -1,0 +1,6541 @@
+[
+  {
+    "id": 1,
+    "liga": "Liga Profesional de Fútbol",
+    "pais": "Argentina",
+    "temporada": "2026",
+    "equipos": [
+      {
+        "nombre": "River Plate",
+        "sigla": "RIV",
+        "ciudad": "Buenos Aires",
+        "estadio": "Mâs Monumental",
+        "colores": [
+          "#FFFFFF",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Boca Juniors",
+          "Independiente",
+          "Racing Club",
+          "San Lorenzo"
+        ],
+        "prestigio_historico": 96,
+        "nivel_actual": 88,
+        "perfil_competitivo": "Gigante continental, candidato permanente a títulos locales y Copa Libertadores."
+      },
+      {
+        "nombre": "Boca Juniors",
+        "sigla": "BOC",
+        "ciudad": "Buenos Aires",
+        "estadio": "La Bombonera",
+        "colores": [
+          "#003B7A",
+          "#F3B229"
+        ],
+        "clasicos": [
+          "River Plate",
+          "Racing Club",
+          "Independiente",
+          "San Lorenzo"
+        ],
+        "prestigio_historico": 96,
+        "nivel_actual": 86,
+        "perfil_competitivo": "Gigante continental con enorme peso en copas internacionales y torneos locales."
+      },
+      {
+        "nombre": "Racing Club",
+        "sigla": "RAC",
+        "ciudad": "Avellaneda",
+        "estadio": "Presidente Perón",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Independiente",
+          "River Plate",
+          "Boca Juniors",
+          "San Lorenzo"
+        ],
+        "prestigio_historico": 85,
+        "nivel_actual": 86,
+        "perfil_competitivo": "Protagonista constante en el plano local e internacional en los últimos años."
+      },
+      {
+        "nombre": "Independiente",
+        "sigla": "IND",
+        "ciudad": "Avellaneda",
+        "estadio": "Libertadores de América - Ricardo Enrique Bochini",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Racing Club",
+          "River Plate",
+          "Boca Juniors",
+          "San Lorenzo"
+        ],
+        "prestigio_historico": 91,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Máximo ganador histórico de Libertadores, en proceso de reconstrucción competitiva."
+      },
+      {
+        "nombre": "San Lorenzo",
+        "sigla": "SLO",
+        "ciudad": "Buenos Aires",
+        "estadio": "Pedro Bidegain",
+        "colores": [
+          "#002B5C",
+          "#D21034"
+        ],
+        "clasicos": [
+          "Huracán",
+          "Boca Juniors",
+          "River Plate",
+          "Racing Club"
+        ],
+        "prestigio_historico": 83,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Club grande con campañas irregulares recientes pero fuerte localía."
+      },
+      {
+        "nombre": "Vélez Sarsfield",
+        "sigla": "VEL",
+        "ciudad": "Buenos Aires",
+        "estadio": "José Amalfitani",
+        "colores": [
+          "#FFFFFF",
+          "#003399"
+        ],
+        "clasicos": [
+          "Ferro Carril Oeste",
+          "San Lorenzo"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Cantera de élite y campeón reciente, muy competitivo en torneos domésticos."
+      },
+      {
+        "nombre": "Estudiantes de La Plata",
+        "sigla": "EST",
+        "ciudad": "La Plata",
+        "estadio": "UNO Jorge Luis Hirschi",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Gimnasia y Esgrima La Plata"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Tetracampeón de América y habitual ganador de copas nacionales recientes."
+      },
+      {
+        "nombre": "Talleres",
+        "sigla": "TAL",
+        "ciudad": "Córdoba",
+        "estadio": "Mario Alberto Kempes",
+        "colores": [
+          "#041E42",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Belgrano",
+          "Instituto"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Consolidado en los primeros puestos y clasificado habitual a Copa Libertadores."
+      },
+      {
+        "nombre": "Lanús",
+        "sigla": "LAN",
+        "ciudad": "Lanús",
+        "estadio": "Ciudad de Lanús - Néstor Díaz Pérez",
+        "colores": [
+          "#7A1C24",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Banfield"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Equipo ordenado, competitivo en Copa Sudamericana y torneos locales."
+      },
+      {
+        "nombre": "Huracán",
+        "sigla": "HUR",
+        "ciudad": "Buenos Aires",
+        "estadio": "Tomás Adolfo Ducó",
+        "colores": [
+          "#FFFFFF",
+          "#E30613"
+        ],
+        "clasicos": [
+          "San Lorenzo"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Sólido en tabla anual, peleando clasificación a copas internacionales."
+      },
+      {
+        "nombre": "Argentinos Juniors",
+        "sigla": "ARG",
+        "ciudad": "Buenos Aires",
+        "estadio": "Diego Armando Maradona",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Platense",
+          "All Boys"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Semillero histórico con estilo ofensivo y presencia frecuente en copas."
+      },
+      {
+        "nombre": "Defensa y Justicia",
+        "sigla": "DYJ",
+        "ciudad": "Florencio Varela",
+        "estadio": "Norberto Tomaghello",
+        "colores": [
+          "#006633",
+          "#FFD100"
+        ],
+        "clasicos": [
+          "Quilmes",
+          "Arsenal"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Campeón de Sudamericana y Recopa, modelo de gestión y juego dinámico."
+      },
+      {
+        "nombre": "Rosario Central",
+        "sigla": "CARC",
+        "ciudad": "Rosario",
+        "estadio": "Gigante de Arroyito",
+        "colores": [
+          "#003399",
+          "#FFCC00"
+        ],
+        "clasicos": [
+          "Newell's Old Boys"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Fuerte de local y protagonista habitual de la tabla anual."
+      },
+      {
+        "nombre": "Newell's Old Boys",
+        "sigla": "NOB",
+        "ciudad": "Rosario",
+        "estadio": "Marcelo Bielsa",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Rosario Central"
+        ],
+        "prestigio_historico": 80,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Histórico formador con campañas de mitad de tabla en los últimos torneos."
+      },
+      {
+        "nombre": "Belgrano",
+        "sigla": "BEL",
+        "ciudad": "Córdoba",
+        "estadio": "Julio César Villagra",
+        "colores": [
+          "#6CACE4",
+          "#000000"
+        ],
+        "clasicos": [
+          "Talleres",
+          "Instituto"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Club de gran convocatoria, asentado en Primera y peleando puestos de Sudamericana."
+      },
+      {
+        "nombre": "Unión",
+        "sigla": "UNI",
+        "ciudad": "Santa Fe",
+        "estadio": "15 de Abril",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Colón"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Equipo aguerrido que alterna pelea por copas y permanencia."
+      },
+      {
+        "nombre": "Gimnasia y Esgrima La Plata",
+        "sigla": "GIM",
+        "ciudad": "La Plata",
+        "estadio": "Juan Carmelo Zerillo",
+        "colores": [
+          "#FFFFFF",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Estudiantes de La Plata"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Histórico del fútbol argentino con objetivos centrados en mitad de tabla."
+      },
+      {
+        "nombre": "Banfield",
+        "sigla": "BAN",
+        "ciudad": "Banfield",
+        "estadio": "Florencio Sola",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Lanús"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club formador que lucha por consolidar regularidad en la categoría."
+      },
+      {
+        "nombre": "Platense",
+        "sigla": "PLA",
+        "ciudad": "Vicente López",
+        "estadio": "Ciudad de Vicente López",
+        "colores": [
+          "#5A3825",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Argentinos Juniors",
+          "Tigre"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Ordenado tácticamente, asentado en mitad de tabla."
+      },
+      {
+        "nombre": "Tigre",
+        "sigla": "TIG",
+        "ciudad": "Victoria",
+        "estadio": "José Dellagiovanna",
+        "colores": [
+          "#003399",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Platense",
+          "Chacarita Juniors"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Alterna buenas campañas ofensivas con etapas de lucha por la permanencia."
+      },
+      {
+        "nombre": "Instituto",
+        "sigla": "INS",
+        "ciudad": "Córdoba",
+        "estadio": "Monumental Presidente Perón",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Racing de Córdoba",
+          "Talleres",
+          "Belgrano"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Regresó a Primera con solidez y pelea por copas internacionales."
+      },
+      {
+        "nombre": "Atlético Tucumán",
+        "sigla": "ATU",
+        "ciudad": "San Miguel de Tucumán",
+        "estadio": "Monumental José Fierro",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "San Martín de Tucumán"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Muy fuerte en su estadio y habitual animador del interior."
+      },
+      {
+        "nombre": "Independiente Rivadavia",
+        "sigla": "IRV",
+        "ciudad": "Mendoza",
+        "estadio": "Bautista Gargantini",
+        "colores": [
+          "#002B5C",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Gimnasia y Esgrima de Mendoza",
+          "Godoy Cruz"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Afianzado en Primera y peleando clasificación a copas."
+      },
+      {
+        "nombre": "Gimnasia y Esgrima de Mendoza",
+        "sigla": "GEM",
+        "ciudad": "Mendoza",
+        "estadio": "Víctor Antonio Legrotaglie",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Independiente Rivadavia",
+          "Godoy Cruz"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Recién ascendido buscando consolidar el clásico mendocino en la máxima categoría."
+      },
+      {
+        "nombre": "Estudiantes de Río Cuarto",
+        "sigla": "ERC",
+        "ciudad": "Río Cuarto",
+        "estadio": "Antonio Candini",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Atenas de Río Cuarto"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Equipo del interior cordobés compitiendo en Primera División."
+      },
+      {
+        "nombre": "Aldosivi",
+        "sigla": "ALD",
+        "ciudad": "Mar del Plata",
+        "estadio": "José María Minella",
+        "colores": [
+          "#007A33",
+          "#FFCC00"
+        ],
+        "clasicos": [
+          "Alvarado"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Representante marplatense luchando por la permanencia en Primera."
+      },
+      {
+        "nombre": "Barracas Central",
+        "sigla": "BAR",
+        "ciudad": "Buenos Aires",
+        "estadio": "Claudio Fabián Tapia",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sportivo Barracas"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Equipo pragmático que busca mantenerse en la zona media."
+      },
+      {
+        "nombre": "Central Córdoba (SdE)",
+        "sigla": "CCO",
+        "ciudad": "Santiago del Estero",
+        "estadio": "Alfredo Terrera / Madre de Ciudades",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Mitre (SdE)",
+          "Güemes (SdE)"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Competitivo en copas nacionales y enfocado en sumar puntos de permanencia."
+      },
+      {
+        "nombre": "Deportivo Riestra",
+        "sigla": "RIE",
+        "ciudad": "Buenos Aires",
+        "estadio": "Guillermo Laza",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sacachispas"
+        ],
+        "prestigio_historico": 58,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Juego físico y directo, haciéndose muy difícil de vencer como local."
+      },
+      {
+        "nombre": "Sarmiento",
+        "sigla": "SAR",
+        "ciudad": "Junín",
+        "estadio": "Eva Perón",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Douglas Haig"
+        ],
+        "prestigio_historico": 63,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Lucha temporada tras temporada por sostener la categoría."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "liga": "Premier League",
+    "pais": "Inglaterra",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Manchester City",
+        "sigla": "MCI",
+        "ciudad": "Mánchester",
+        "estadio": "Etihad Stadium",
+        "colores": [
+          "#6CABDD",
+          "#1C2C5B"
+        ],
+        "clasicos": [
+          "Manchester United",
+          "Liverpool"
+        ],
+        "prestigio_historico": 88,
+        "nivel_actual": 95,
+        "perfil_competitivo": "Dominador de la era moderna en Inglaterra y candidato máximo en Champions League."
+      },
+      {
+        "nombre": "Arsenal",
+        "sigla": "ARS",
+        "ciudad": "Londres",
+        "estadio": "Emirates Stadium",
+        "colores": [
+          "#EF0107",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Tottenham Hotspur",
+          "Chelsea",
+          "Manchester United"
+        ],
+        "prestigio_historico": 91,
+        "nivel_actual": 93,
+        "perfil_competitivo": "Histórico inglés consolidado nuevamente como principal contendiente al título de liga."
+      },
+      {
+        "nombre": "Liverpool",
+        "sigla": "LIV",
+        "ciudad": "Liverpool",
+        "estadio": "Anfield",
+        "colores": [
+          "#C8102E",
+          "#00B2A9"
+        ],
+        "clasicos": [
+          "Manchester United",
+          "Everton",
+          "Manchester City"
+        ],
+        "prestigio_historico": 96,
+        "nivel_actual": 93,
+        "perfil_competitivo": "Coloso europeo y multicampeón inglés, siempre en la pelea por todos los trofeos."
+      },
+      {
+        "nombre": "Chelsea",
+        "sigla": "CHE",
+        "ciudad": "Londres",
+        "estadio": "Stamford Bridge",
+        "colores": [
+          "#034694",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Arsenal",
+          "Tottenham Hotspur",
+          "Fulham"
+        ],
+        "prestigio_historico": 89,
+        "nivel_actual": 86,
+        "perfil_competitivo": "Bicampeón de Champions con plantel joven de alto potencial buscando volver al top 4 fijo."
+      },
+      {
+        "nombre": "Manchester United",
+        "sigla": "MUN",
+        "ciudad": "Mánchester",
+        "estadio": "Old Trafford",
+        "colores": [
+          "#DA291C",
+          "#FBE122"
+        ],
+        "clasicos": [
+          "Liverpool",
+          "Manchester City",
+          "Leeds United",
+          "Arsenal"
+        ],
+        "prestigio_historico": 96,
+        "nivel_actual": 84,
+        "perfil_competitivo": "El club más laureado de Inglaterra, atravesando años de transición pero peligroso en copas."
+      },
+      {
+        "nombre": "Tottenham Hotspur",
+        "sigla": "TOT",
+        "ciudad": "Londres",
+        "estadio": "Tottenham Hotspur Stadium",
+        "colores": [
+          "#FFFFFF",
+          "#132257"
+        ],
+        "clasicos": [
+          "Arsenal",
+          "Chelsea",
+          "West Ham United"
+        ],
+        "prestigio_historico": 83,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Habitual animador del Big Six con fútbol ofensivo y aspiraciones de Champions."
+      },
+      {
+        "nombre": "Newcastle United",
+        "sigla": "NEW",
+        "ciudad": "Newcastle upon Tyne",
+        "estadio": "St James' Park",
+        "colores": [
+          "#241F20",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sunderland AFC"
+        ],
+        "prestigio_historico": 80,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Proyecto ambicioso con fuerte respaldo financiero que compite por plazas europeas."
+      },
+      {
+        "nombre": "Aston Villa",
+        "sigla": "AVL",
+        "ciudad": "Birmingham",
+        "estadio": "Villa Park",
+        "colores": [
+          "#670E36",
+          "#95BFE5"
+        ],
+        "clasicos": [
+          "Birmingham City",
+          "Coventry City"
+        ],
+        "prestigio_historico": 83,
+        "nivel_actual": 86,
+        "perfil_competitivo": "Campeón de Europa en 1982, resurgido como equipo de Champions en las últimas temporadas."
+      },
+      {
+        "nombre": "Brighton & Hove Albion",
+        "sigla": "BHA",
+        "ciudad": "Brighton",
+        "estadio": "Amex Stadium",
+        "colores": [
+          "#0057B8",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Crystal Palace"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Referente en scouting y fútbol asociativo, consolidado en la mitad superior."
+      },
+      {
+        "nombre": "Nottingham Forest",
+        "sigla": "NFO",
+        "ciudad": "Nottingham",
+        "estadio": "City Ground",
+        "colores": [
+          "#DD0000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Derby County",
+          "Coventry City"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Bicampeón histórico de Europa, afianzado con solidez en la máxima categoría."
+      },
+      {
+        "nombre": "Fulham",
+        "sigla": "FUL",
+        "ciudad": "Londres",
+        "estadio": "Craven Cottage",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Chelsea",
+          "Brentford",
+          "Queens Park Rangers"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Equipo estable de mitad de tabla con buen trato de balón."
+      },
+      {
+        "nombre": "Brentford",
+        "sigla": "BRE",
+        "ciudad": "Londres",
+        "estadio": "Gtech Community Stadium",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Fulham",
+          "Queens Park Rangers"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Modelo analítico y táctico muy competitivo contra rivales superiores."
+      },
+      {
+        "nombre": "Crystal Palace",
+        "sigla": "CRY",
+        "ciudad": "Londres",
+        "estadio": "Selhurst Park",
+        "colores": [
+          "#1B458F",
+          "#C4122E"
+        ],
+        "clasicos": [
+          "Brighton & Hove Albion",
+          "Millwall"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Equipo físico y peligroso al contragolpe, fijo en mitad de tabla."
+      },
+      {
+        "nombre": "AFC Bournemouth",
+        "sigla": "BOU",
+        "ciudad": "Bournemouth",
+        "estadio": "Vitality Stadium",
+        "colores": [
+          "#DA291C",
+          "#000000"
+        ],
+        "clasicos": [
+          "Southampton"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Propuesta intensa y ofensiva que lo mantiene alejado del descenso."
+      },
+      {
+        "nombre": "Everton",
+        "sigla": "EVE",
+        "ciudad": "Liverpool",
+        "estadio": "Hill Dickinson Stadium",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Liverpool"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Uno de los fundadores de la liga, estrenando estadio nuevo en Bramley-Moore Dock."
+      },
+      {
+        "nombre": "Leeds United",
+        "sigla": "LEE",
+        "ciudad": "Leeds",
+        "estadio": "Elland Road",
+        "colores": [
+          "#FFFFFF",
+          "#1D428A"
+        ],
+        "clasicos": [
+          "Manchester United",
+          "Chelsea"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Club histórico con gran afición consolidándose nuevamente en la élite."
+      },
+      {
+        "nombre": "Ipswich Town",
+        "sigla": "IPS",
+        "ciudad": "Ipswich",
+        "estadio": "Portman Road",
+        "colores": [
+          "#0033A0",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Norwich City"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Campeón de Copa UEFA en 1981, equipo combativo en la lucha por la permanencia."
+      },
+      {
+        "nombre": "Sunderland AFC",
+        "sigla": "SUN",
+        "ciudad": "Sunderland",
+        "estadio": "Stadium of Light",
+        "colores": [
+          "#EB172B",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Newcastle United",
+          "Middlesbrough"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Seis veces campeón de Inglaterra, de regreso en la Premier League con plantel joven."
+      },
+      {
+        "nombre": "Coventry City",
+        "sigla": "COV",
+        "ciudad": "Coventry",
+        "estadio": "Coventry Building Society Arena",
+        "colores": [
+          "#6CABDD",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Aston Villa",
+          "Leicester City"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Histórico club inglés retornando a la máxima categoría tras más de dos décadas."
+      },
+      {
+        "nombre": "Hull City",
+        "sigla": "HUL",
+        "ciudad": "Kingston upon Hull",
+        "estadio": "MKM Stadium",
+        "colores": [
+          "#F5A12D",
+          "#000000"
+        ],
+        "clasicos": [
+          "Leeds United"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Los Tigres buscan estabilizarse en Premier League tras su ascenso."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "liga": "LaLiga EA Sports",
+    "pais": "España",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Real Madrid",
+        "sigla": "RMA",
+        "ciudad": "Madrid",
+        "estadio": "Santiago Bernabéu",
+        "colores": [
+          "#FFFFFF",
+          "#FEBE10"
+        ],
+        "clasicos": [
+          "FC Barcelona",
+          "Atlético de Madrid"
+        ],
+        "prestigio_historico": 99,
+        "nivel_actual": 96,
+        "perfil_competitivo": "Máximo ganador de Champions League y LaLiga, estándar de excelencia mundial."
+      },
+      {
+        "nombre": "FC Barcelona",
+        "sigla": "BAR",
+        "ciudad": "Barcelona",
+        "estadio": "Spotify Camp Nou",
+        "colores": [
+          "#A50044",
+          "#004D98"
+        ],
+        "clasicos": [
+          "Real Madrid",
+          "RCD Espanyol"
+        ],
+        "prestigio_historico": 97,
+        "nivel_actual": 94,
+        "perfil_competitivo": "Gigante mundial con identidad ofensiva y cantera de élite (La Masia)."
+      },
+      {
+        "nombre": "Atlético de Madrid",
+        "sigla": "ATM",
+        "ciudad": "Madrid",
+        "estadio": "Riyadh Air Metropolitano",
+        "colores": [
+          "#CB3524",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Real Madrid"
+        ],
+        "prestigio_historico": 89,
+        "nivel_actual": 89,
+        "perfil_competitivo": "Tercera potencia de España, presencia ininterrumpida en Champions y competidor feroz."
+      },
+      {
+        "nombre": "Athletic Club",
+        "sigla": "ATH",
+        "ciudad": "Bilbao",
+        "estadio": "San Mamés",
+        "colores": [
+          "#EE2523",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Real Sociedad"
+        ],
+        "prestigio_historico": 86,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Nunca descendió de Primera; campeón reciente de Copa del Rey y aspirante a Champions."
+      },
+      {
+        "nombre": "Real Sociedad",
+        "sigla": "RSO",
+        "ciudad": "San Sebastián",
+        "estadio": "Reale Arena",
+        "colores": [
+          "#0067B1",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Athletic Club"
+        ],
+        "prestigio_historico": 81,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Habitual en competiciones europeas gracias a su gran trabajo de cantera y juego asociativo."
+      },
+      {
+        "nombre": "Villarreal CF",
+        "sigla": "VIL",
+        "ciudad": "Villarreal",
+        "estadio": "Estadio de la Cerámica",
+        "colores": [
+          "#FFE667",
+          "#005187"
+        ],
+        "clasicos": [
+          "Valencia CF",
+          "Levante UD"
+        ],
+        "prestigio_historico": 80,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Campeón de Europa League, acostumbrado a pelear puestos europeos cada temporada."
+      },
+      {
+        "nombre": "Real Betis",
+        "sigla": "BET",
+        "ciudad": "Sevilla",
+        "estadio": "Estadio La Cartuja / Benito Villamarín",
+        "colores": [
+          "#0BB363",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sevilla FC"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Club de enorme masa social, clasificado de forma recurrente a torneos europeos."
+      },
+      {
+        "nombre": "Sevilla FC",
+        "sigla": "SEV",
+        "ciudad": "Sevilla",
+        "estadio": "Ramón Sánchez-Pizjuán",
+        "colores": [
+          "#F43333",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Real Betis"
+        ],
+        "prestigio_historico": 86,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Máximo ganador histórico de Europa League, en fase de reestructuración."
+      },
+      {
+        "nombre": "Valencia CF",
+        "sigla": "VAL",
+        "ciudad": "Valencia",
+        "estadio": "Mestalla",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Levante UD",
+          "Villarreal CF"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Histórico campeón español apoyado en jóvenes talentos para sostenerse en zona media."
+      },
+      {
+        "nombre": "CA Osasuna",
+        "sigla": "OSA",
+        "ciudad": "Pamplona",
+        "estadio": "El Sadar",
+        "colores": [
+          "#D91A21",
+          "#0A346F"
+        ],
+        "clasicos": [
+          "Real Zaragoza",
+          "Athletic Club"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Muy fuerte en El Sadar, asentado cómodamente en la mitad de tabla."
+      },
+      {
+        "nombre": "RC Celta de Vigo",
+        "sigla": "CEL",
+        "ciudad": "Vigo",
+        "estadio": "Abanca-Balaídos",
+        "colores": [
+          "#8AC3EE",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Deportivo de La Coruña"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Equipo ofensivo que combina canteranos gallegos con aspiraciones de mitad de tabla."
+      },
+      {
+        "nombre": "Rayo Vallecano",
+        "sigla": "RAY",
+        "ciudad": "Madrid",
+        "estadio": "Estadio de Vallecas",
+        "colores": [
+          "#FFFFFF",
+          "#E53027"
+        ],
+        "clasicos": [
+          "Getafe CF",
+          "Real Madrid"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Equipo intenso en su reducido estadio, habitual luchador de zona media."
+      },
+      {
+        "nombre": "Getafe CF",
+        "sigla": "GET",
+        "ciudad": "Getafe",
+        "estadio": "Coliseum",
+        "colores": [
+          "#005999",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Rayo Vallecano",
+          "CD Leganés"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Reconocido por su rigor táctico y competitividad física para asegurar la permanencia."
+      },
+      {
+        "nombre": "Deportivo Alavés",
+        "sigla": "ALA",
+        "ciudad": "Vitoria",
+        "estadio": "Mendizorroza",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Athletic Club",
+          "Real Sociedad"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Subcampeón de Copa UEFA en 2001, equipo aguerrido en su feudo."
+      },
+      {
+        "nombre": "RCD Espanyol",
+        "sigla": "ESP",
+        "ciudad": "Barcelona",
+        "estadio": "RCDE Stadium",
+        "colores": [
+          "#007FC8",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "FC Barcelona"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Histórico club catalán que alterna temporadas en Primera con luchas por la salvación."
+      },
+      {
+        "nombre": "Levante UD",
+        "sigla": "LEV",
+        "ciudad": "Valencia",
+        "estadio": "Ciutat de València",
+        "colores": [
+          "#004D98",
+          "#A50044"
+        ],
+        "clasicos": [
+          "Valencia CF",
+          "Villarreal CF"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Club decano de Valencia, retornando a la élite tras su paso por Segunda."
+      },
+      {
+        "nombre": "Elche CF",
+        "sigla": "ELC",
+        "ciudad": "Elche",
+        "estadio": "Martínez Valero",
+        "colores": [
+          "#FFFFFF",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Hércules CF"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Histórico equipo alicantino buscando estabilidad en Primera División."
+      },
+      {
+        "nombre": "RC Deportivo de La Coruña",
+        "sigla": "DEP",
+        "ciudad": "La Coruña",
+        "estadio": "Abanca-Riazor",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "RC Celta de Vigo"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Campeón de Liga en 2000 y semifinalista de Champions, regresando a Primera tras años en el ascenso."
+      },
+      {
+        "nombre": "Real Racing Club de Santander",
+        "sigla": "RAC",
+        "ciudad": "Santander",
+        "estadio": "Campos de Sport de El Sardinero",
+        "colores": [
+          "#00843D",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Real Oviedo",
+          "Sporting de Gijón"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Fundador de LaLiga que recupera su plaza en la máxima categoría."
+      },
+      {
+        "nombre": "Málaga CF",
+        "sigla": "MAL",
+        "ciudad": "Málaga",
+        "estadio": "La Rosaleda",
+        "colores": [
+          "#007FC8",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Granada CF",
+          "Sevilla FC"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Cuartofinalista de Champions en 2013, de vuelta en Primera con gran respaldo social."
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "liga": "Serie A Enilive",
+    "pais": "Italia",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Inter de Milán",
+        "sigla": "INT",
+        "ciudad": "Milán",
+        "estadio": "Giuseppe Meazza (San Siro)",
+        "colores": [
+          "#010E80",
+          "#000000"
+        ],
+        "clasicos": [
+          "AC Milan",
+          "Juventus"
+        ],
+        "prestigio_historico": 94,
+        "nivel_actual": 93,
+        "perfil_competitivo": "Potencia dominante de Italia en los últimos años y finalista reciente de Champions."
+      },
+      {
+        "nombre": "Juventus",
+        "sigla": "JUV",
+        "ciudad": "Turín",
+        "estadio": "Allianz Stadium",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Inter de Milán",
+          "Torino FC",
+          "AC Milan"
+        ],
+        "prestigio_historico": 96,
+        "nivel_actual": 89,
+        "perfil_competitivo": "Máximo ganador de Scudettos, reconstruyendo su hegemonía tras años de transición."
+      },
+      {
+        "nombre": "AC Milan",
+        "sigla": "MIL",
+        "ciudad": "Milán",
+        "estadio": "San Siro",
+        "colores": [
+          "#FB090B",
+          "#000000"
+        ],
+        "clasicos": [
+          "Inter de Milán",
+          "Juventus"
+        ],
+        "prestigio_historico": 96,
+        "nivel_actual": 88,
+        "perfil_competitivo": "Segundo máximo campeón de Europa, presencia fija en Champions League."
+      },
+      {
+        "nombre": "SSC Napoli",
+        "sigla": "NAP",
+        "ciudad": "Nápoles",
+        "estadio": "Diego Armando Maradona",
+        "colores": [
+          "#12A0D7",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AS Roma",
+          "Juventus"
+        ],
+        "prestigio_historico": 85,
+        "nivel_actual": 88,
+        "perfil_competitivo": "Campeón reciente de Serie A, siempre candidato a puestos de Champions."
+      },
+      {
+        "nombre": "Atalanta BC",
+        "sigla": "ATA",
+        "ciudad": "Bérgamo",
+        "estadio": "New Balance Arena (Gewiss Stadium)",
+        "colores": [
+          "#1E71B8",
+          "#000000"
+        ],
+        "clasicos": [
+          "Brescia"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 88,
+        "perfil_competitivo": "Campeón de Europa League y modelo de fútbol ofensivo consolidado en la élite italiana."
+      },
+      {
+        "nombre": "AS Roma",
+        "sigla": "ROM",
+        "ciudad": "Roma",
+        "estadio": "Stadio Olimpico",
+        "colores": [
+          "#8E1F2F",
+          "#F0BC42"
+        ],
+        "clasicos": [
+          "SS Lazio",
+          "SSC Napoli"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Protagonista habitual en instancias decisivas de Europa League y Conference League."
+      },
+      {
+        "nombre": "SS Lazio",
+        "sigla": "LAZ",
+        "ciudad": "Roma",
+        "estadio": "Stadio Olimpico",
+        "colores": [
+          "#87D8F7",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AS Roma"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Competidor constante por plazas europeas en la Serie A."
+      },
+      {
+        "nombre": "ACF Fiorentina",
+        "sigla": "FIO",
+        "ciudad": "Florencia",
+        "estadio": "Artemio Franchi",
+        "colores": [
+          "#482E92",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Juventus",
+          "Bologna FC"
+        ],
+        "prestigio_historico": 81,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Histórico club italiano, finalista europeo reciente y animador de zona alta."
+      },
+      {
+        "nombre": "Bologna FC",
+        "sigla": "BOL",
+        "ciudad": "Bolonia",
+        "estadio": "Renato Dall'Ara",
+        "colores": [
+          "#1A2F48",
+          "#A21C26"
+        ],
+        "clasicos": [
+          "ACF Fiorentina",
+          "Parma Calcio"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Siete veces campeón de liga, resurgido con clasificaciones europeas recientes."
+      },
+      {
+        "nombre": "Torino FC",
+        "sigla": "TOR",
+        "ciudad": "Turín",
+        "estadio": "Olimpico Grande Torino",
+        "colores": [
+          "#8A1E03",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Juventus"
+        ],
+        "prestigio_historico": 81,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Club con enorme legado histórico, asentado en la mitad de tabla."
+      },
+      {
+        "nombre": "Udinese",
+        "sigla": "UDI",
+        "ciudad": "Údine",
+        "estadio": "Bluenergy Stadium",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Venezia FC"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Más de 30 años seguidos en Serie A, especialista en scouting internacional."
+      },
+      {
+        "nombre": "Genoa CFC",
+        "sigla": "GEN",
+        "ciudad": "Génova",
+        "estadio": "Luigi Ferraris",
+        "colores": [
+          "#AD1919",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Sampdoria"
+        ],
+        "prestigio_historico": 80,
+        "nivel_actual": 76,
+        "perfil_competitivo": "El club más antiguo de Italia (9 títulos), afianzado nuevamente en la máxima categoría."
+      },
+      {
+        "nombre": "AC Monza",
+        "sigla": "MON",
+        "ciudad": "Monza",
+        "estadio": "U-Power Stadium",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Como 1907"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Establecido en mitad de tabla desde su histórico debut en Serie A."
+      },
+      {
+        "nombre": "Parma Calcio",
+        "sigla": "PAR",
+        "ciudad": "Parma",
+        "estadio": "Ennio Tardini",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "Bologna FC",
+          "US Sassuolo"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Multicampeón europeo en los 90, consolidado en Primera con proyecto joven."
+      },
+      {
+        "nombre": "Como 1907",
+        "sigla": "COM",
+        "ciudad": "Como",
+        "estadio": "Giuseppe Sinigaglia",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AC Monza"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Proyecto con fuerte inversión internacional creciendo en Serie A."
+      },
+      {
+        "nombre": "Cagliari Calcio",
+        "sigla": "CAG",
+        "ciudad": "Cagliari",
+        "estadio": "Unipol Domus",
+        "colores": [
+          "#A50021",
+          "#002350"
+        ],
+        "clasicos": [
+          "US Sassuolo"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Representante histórico de Cerdeña, enfocado en la permanencia."
+      },
+      {
+        "nombre": "US Lecce",
+        "sigla": "LEC",
+        "ciudad": "Lecce",
+        "estadio": "Via del Mare",
+        "colores": [
+          "#FFED00",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Bari"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Equipo del sur de Italia que compite con presupuestos ajustados por salvarse."
+      },
+      {
+        "nombre": "Venezia FC",
+        "sigla": "VEN",
+        "ciudad": "Venecia",
+        "estadio": "Pier Luigi Penzo",
+        "colores": [
+          "#000000",
+          "#FF6600"
+        ],
+        "clasicos": [
+          "Udinese"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club icónico por su estética, peleando por sostenerse en Primera."
+      },
+      {
+        "nombre": "US Sassuolo",
+        "sigla": "SAS",
+        "ciudad": "Sassuolo",
+        "estadio": "MAPEI Stadium",
+        "colores": [
+          "#00A650",
+          "#000000"
+        ],
+        "clasicos": [
+          "Parma Calcio",
+          "Bologna FC"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Habitual animador de Serie A en la última década, retornando tras un breve paso por Serie B."
+      },
+      {
+        "nombre": "Frosinone Calcio",
+        "sigla": "FRO",
+        "ciudad": "Frosinone",
+        "estadio": "Benito Stirpe",
+        "colores": [
+          "#FFED00",
+          "#0055A5"
+        ],
+        "clasicos": [
+          "AS Roma"
+        ],
+        "prestigio_historico": 63,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club del Lacio con estilo ofensivo buscando afianzarse en Serie A."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "liga": "Bundesliga",
+    "pais": "Alemania",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "FC Bayern Múnich",
+        "sigla": "FCB",
+        "ciudad": "Múnich",
+        "estadio": "Allianz Arena",
+        "colores": [
+          "#DC052D",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Borussia Dortmund",
+          "1860 Múnich"
+        ],
+        "prestigio_historico": 97,
+        "nivel_actual": 95,
+        "perfil_competitivo": "Hegemónico en Alemania y candidato permanente a ganar la Champions League."
+      },
+      {
+        "nombre": "Bayer 04 Leverkusen",
+        "sigla": "B04",
+        "ciudad": "Leverkusen",
+        "estadio": "BayArena",
+        "colores": [
+          "#E32221",
+          "#000000"
+        ],
+        "clasicos": [
+          "1. FC Köln"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 91,
+        "perfil_competitivo": "Campeón invicto reciente que rompió la hegemonía del Bayern y compite al máximo nivel."
+      },
+      {
+        "nombre": "Borussia Dortmund",
+        "sigla": "BVB",
+        "ciudad": "Dortmund",
+        "estadio": "Signal Iduna Park",
+        "colores": [
+          "#FDE100",
+          "#000000"
+        ],
+        "clasicos": [
+          "FC Schalke 04",
+          "FC Bayern Múnich"
+        ],
+        "prestigio_historico": 90,
+        "nivel_actual": 88,
+        "perfil_competitivo": "Segunda fuerza histórica de Alemania, finalista reciente de Champions y potencia en desarrollo de talento."
+      },
+      {
+        "nombre": "RB Leipzig",
+        "sigla": "RBL",
+        "ciudad": "Leipzig",
+        "estadio": "Red Bull Arena",
+        "colores": [
+          "#DD0741",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Dynamo Dresden"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 87,
+        "perfil_competitivo": "Fijo en Champions League desde su ascenso, fútbol vertical y alta presión."
+      },
+      {
+        "nombre": "VfB Stuttgart",
+        "sigla": "VFB",
+        "ciudad": "Stuttgart",
+        "estadio": "MHPArena",
+        "colores": [
+          "#FFFFFF",
+          "#E32219"
+        ],
+        "clasicos": [
+          "SC Freiburg"
+        ],
+        "prestigio_historico": 81,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Pentacampeón alemán resurgido a puestos de Champions en las últimas temporadas."
+      },
+      {
+        "nombre": "Eintracht Frankfurt",
+        "sigla": "SGE",
+        "ciudad": "Fráncfort",
+        "estadio": "Deutsche Bank Park",
+        "colores": [
+          "#E1000F",
+          "#000000"
+        ],
+        "clasicos": [
+          "1. FSV Mainz 05"
+        ],
+        "prestigio_historico": 80,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Campeón de Europa League en 2022, habitual en competencias continentales."
+      },
+      {
+        "nombre": "SC Freiburg",
+        "sigla": "SCF",
+        "ciudad": "Friburgo",
+        "estadio": "Europa-Park Stadion",
+        "colores": [
+          "#000000",
+          "#E30613"
+        ],
+        "clasicos": [
+          "VfB Stuttgart"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Modelo de estabilidad institucional, peleando constantemente por Europa League."
+      },
+      {
+        "nombre": "TSG Hoffenheim",
+        "sigla": "TSG",
+        "ciudad": "Sinsheim",
+        "estadio": "PreZero Arena",
+        "colores": [
+          "#1961B5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "VfB Stuttgart"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Equipo ofensivo que alterna clasificaciones a Europa League con mitad de tabla."
+      },
+      {
+        "nombre": "Borussia Mönchengladbach",
+        "sigla": "BMG",
+        "ciudad": "Mönchengladbach",
+        "estadio": "Borussia-Park",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "1. FC Köln",
+          "Borussia Dortmund"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Gigante de los años 70, actualmente asentado en la zona media de la tabla."
+      },
+      {
+        "nombre": "SV Werder Bremen",
+        "sigla": "SVW",
+        "ciudad": "Bremen",
+        "estadio": "Weserstadion",
+        "colores": [
+          "#1D9053",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Hamburger SV"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Histórico tetracampeón alemán, consolidado nuevamente en mitad de tabla."
+      },
+      {
+        "nombre": "1. FC Union Berlin",
+        "sigla": "FCU",
+        "ciudad": "Berlín",
+        "estadio": "An der Alten Försterei",
+        "colores": [
+          "#EB1923",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Hertha BSC"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Pasó de debutar en Bundesliga a jugar Champions y ahora busca estabilidad."
+      },
+      {
+        "nombre": "1. FSV Mainz 05",
+        "sigla": "M05",
+        "ciudad": "Maguncia",
+        "estadio": "Mewa Arena",
+        "colores": [
+          "#C3141E",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Eintracht Frankfurt"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Cantera de entrenadores de élite, equipo intenso de mitad de tabla."
+      },
+      {
+        "nombre": "FC Augsburg",
+        "sigla": "FCA",
+        "ciudad": "Augsburgo",
+        "estadio": "WWK Arena",
+        "colores": [
+          "#BA3733",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "FC Bayern Múnich"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Más de una década ininterrumpida en Bundesliga con juego pragmático."
+      },
+      {
+        "nombre": "Hamburger SV",
+        "sigla": "HSV",
+        "ciudad": "Hamburgo",
+        "estadio": "Volksparkstadion",
+        "colores": [
+          "#005BA3",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "SV Werder Bremen"
+        ],
+        "prestigio_historico": 85,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Campeón de Europa en 1983, histórico gigante alemán nuevamente en la élite."
+      },
+      {
+        "nombre": "1. FC Köln",
+        "sigla": "KOE",
+        "ciudad": "Colonia",
+        "estadio": "RheinEnergieStadion",
+        "colores": [
+          "#ED1C24",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Bayer 04 Leverkusen",
+          "Borussia Mönchengladbach"
+        ],
+        "prestigio_historico": 80,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Primer campeón de la Bundesliga moderna, retornando a Primera División."
+      },
+      {
+        "nombre": "FC Schalke 04",
+        "sigla": "S04",
+        "ciudad": "Gelsenkirchen",
+        "estadio": "Veltins-Arena",
+        "colores": [
+          "#004D9D",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Borussia Dortmund"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Uno de los clubes más populares de Alemania, regresando a la Bundesliga tras superar crisis."
+      },
+      {
+        "nombre": "SC Paderborn 07",
+        "sigla": "SCP",
+        "ciudad": "Paderborn",
+        "estadio": "Home Deluxe Arena",
+        "colores": [
+          "#0055A5",
+          "#000000"
+        ],
+        "clasicos": [
+          "Arminia Bielefeld"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club ofensivo de Westfalia buscando lograr la permanencia."
+      },
+      {
+        "nombre": "SV Elversberg",
+        "sigla": "ELV",
+        "ciudad": "Spiesen-Elversberg",
+        "estadio": "Waldstadion an der Kaiserlinde",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "1. FC Saarbrücken"
+        ],
+        "prestigio_historico": 58,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Histórico ascenso para este modesto club del Sarre debutante en la élite."
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "liga": "Ligue 1 McDonald's",
+    "pais": "Francia",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Paris Saint-Germain",
+        "sigla": "PSG",
+        "ciudad": "París",
+        "estadio": "Parc des Princes",
+        "colores": [
+          "#004170",
+          "#DA291C"
+        ],
+        "clasicos": [
+          "Olympique de Marsella",
+          "Paris FC"
+        ],
+        "prestigio_historico": 91,
+        "nivel_actual": 93,
+        "perfil_competitivo": "Dominador absoluto de Francia en la última década y candidato en Champions League."
+      },
+      {
+        "nombre": "AS Monaco",
+        "sigla": "ASM",
+        "ciudad": "Mónaco",
+        "estadio": "Stade Louis II",
+        "colores": [
+          "#E51B22",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "OGC Nice"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 86,
+        "perfil_competitivo": "Principal perseguidor del PSG, reconocido por formar y potenciar estrellas mundiales."
+      },
+      {
+        "nombre": "Olympique de Marsella",
+        "sigla": "OM",
+        "ciudad": "Marsella",
+        "estadio": "Orange Vélodrome",
+        "colores": [
+          "#2FAEE0",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Paris Saint-Germain",
+          "Olympique de Lyon"
+        ],
+        "prestigio_historico": 88,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Único club francés campeón de Champions League, aspirante constante al podio."
+      },
+      {
+        "nombre": "LOSC Lille",
+        "sigla": "LIL",
+        "ciudad": "Lille",
+        "estadio": "Decathlon Arena - Stade Pierre-Mauroy",
+        "colores": [
+          "#E01E13",
+          "#232E4D"
+        ],
+        "clasicos": [
+          "RC Lens"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Campeón de liga en 2021, habitual competidor en Champions y Europa League."
+      },
+      {
+        "nombre": "Olympique de Lyon",
+        "sigla": "OL",
+        "ciudad": "Lyon",
+        "estadio": "Groupama Stadium",
+        "colores": [
+          "#FFFFFF",
+          "#003399"
+        ],
+        "clasicos": [
+          "Olympique de Marsella",
+          "AS Saint-Étienne"
+        ],
+        "prestigio_historico": 86,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Heptacampeón consecutivo en los 2000, recuperando protagonismo europeo."
+      },
+      {
+        "nombre": "OGC Nice",
+        "sigla": "NIC",
+        "ciudad": "Niza",
+        "estadio": "Allianz Riviera",
+        "colores": [
+          "#D61A1F",
+          "#000000"
+        ],
+        "clasicos": [
+          "AS Monaco"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Proyecto sólido en la Costa Azul que pelea regularmente puestos europeos."
+      },
+      {
+        "nombre": "RC Lens",
+        "sigla": "RCL",
+        "ciudad": "Lens",
+        "estadio": "Stade Bollaert-Delelis",
+        "colores": [
+          "#EC1C24",
+          "#FFF200"
+        ],
+        "clasicos": [
+          "LOSC Lille"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Gran afición y estilo intenso, consolidado en la parte alta."
+      },
+      {
+        "nombre": "Stade Rennais",
+        "sigla": "REN",
+        "ciudad": "Rennes",
+        "estadio": "Roazhon Park",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "FC Nantes",
+          "FC Lorient"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Cantera prolífica y habitual participante en torneos europeos."
+      },
+      {
+        "nombre": "Stade Brestois 29",
+        "sigla": "SB29",
+        "ciudad": "Brest",
+        "estadio": "Stade Francis-Le Blé",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "FC Lorient"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Revelación reciente tras clasificar a Champions League, bloque muy competitivo."
+      },
+      {
+        "nombre": "RC Strasbourg Alsace",
+        "sigla": "RCSA",
+        "ciudad": "Estrasburgo",
+        "estadio": "Stade de la Meinau",
+        "colores": [
+          "#009FE3",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "FC Metz"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Plantel muy joven con inversión multipropiedad buscando dar el salto europeo."
+      },
+      {
+        "nombre": "Toulouse FC",
+        "sigla": "TFC",
+        "ciudad": "Toulouse",
+        "estadio": "Stadium de Toulouse",
+        "colores": [
+          "#5B2C82",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Girondins de Burdeos"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Campeón reciente de Copa de Francia, equipo ordenado de zona media."
+      },
+      {
+        "nombre": "AJ Auxerre",
+        "sigla": "AJA",
+        "ciudad": "Auxerre",
+        "estadio": "Stade de l'Abbé-Deschamps",
+        "colores": [
+          "#FFFFFF",
+          "#0055A5"
+        ],
+        "clasicos": [
+          "ESTAC Troyes"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Histórico formador francés luchando por consolidarse en la élite."
+      },
+      {
+        "nombre": "Le Havre AC",
+        "sigla": "HAC",
+        "ciudad": "El Havre",
+        "estadio": "Stade Océane",
+        "colores": [
+          "#87CEFA",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "SM Caen"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club decano del fútbol francés con el objetivo de la permanencia."
+      },
+      {
+        "nombre": "Angers SCO",
+        "sigla": "SCO",
+        "ciudad": "Angers",
+        "estadio": "Stade Raymond Kopa",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Le Mans FC"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Equipo modesto que pelea por evitar el descenso."
+      },
+      {
+        "nombre": "Paris FC",
+        "sigla": "PFC",
+        "ciudad": "París",
+        "estadio": "Stade Jean-Bouin",
+        "colores": [
+          "#1E3A8A",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Paris Saint-Germain"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Ambicioso proyecto parisino que revive el derbi de la capital francesa en Ligue 1."
+      },
+      {
+        "nombre": "FC Lorient",
+        "sigla": "FCL",
+        "ciudad": "Lorient",
+        "estadio": "Stade du Moustoir",
+        "colores": [
+          "#F37021",
+          "#000000"
+        ],
+        "clasicos": [
+          "Stade Brestois 29",
+          "Stade Rennais"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Equipo técnico de Bretaña regresando con solidez a la máxima categoría."
+      },
+      {
+        "nombre": "ESTAC Troyes",
+        "sigla": "ESTAC",
+        "ciudad": "Troyes",
+        "estadio": "Stade de l'Aube",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AJ Auxerre"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Integrante del City Football Group luchando por la permanencia."
+      },
+      {
+        "nombre": "Le Mans FC",
+        "sigla": "LMFC",
+        "ciudad": "Le Mans",
+        "estadio": "MMArena",
+        "colores": [
+          "#E30613",
+          "#FFCC00"
+        ],
+        "clasicos": [
+          "Angers SCO"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Histórico club formativo retornando a la Ligue 1."
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "liga": "Brasileirão Betano (Série A)",
+    "pais": "Brasil",
+    "temporada": "2026",
+    "equipos": [
+      {
+        "nombre": "Flamengo",
+        "sigla": "FLA",
+        "ciudad": "Río de Janeiro",
+        "estadio": "Maracaná",
+        "colores": [
+          "#C52613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Fluminense",
+          "Vasco da Gama",
+          "Botafogo"
+        ],
+        "prestigio_historico": 95,
+        "nivel_actual": 91,
+        "perfil_competitivo": "Potencia económica y deportiva de Sudamérica, favorito en cada torneo que disputa."
+      },
+      {
+        "nombre": "Palmeiras",
+        "sigla": "PAL",
+        "ciudad": "São Paulo",
+        "estadio": "Allianz Parque",
+        "colores": [
+          "#006437",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Corinthians",
+          "São Paulo",
+          "Santos"
+        ],
+        "prestigio_historico": 94,
+        "nivel_actual": 91,
+        "perfil_competitivo": "El equipo más regular y ganador de Brasil en la última década."
+      },
+      {
+        "nombre": "Botafogo",
+        "sigla": "BOT",
+        "ciudad": "Río de Janeiro",
+        "estadio": "Nilton Santos",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Flamengo",
+          "Fluminense",
+          "Vasco da Gama"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 88,
+        "perfil_competitivo": "Resurgido como potencia continental tras fuerte inversión y títulos recientes."
+      },
+      {
+        "nombre": "Atlético Mineiro",
+        "sigla": "CAM",
+        "ciudad": "Belo Horizonte",
+        "estadio": "Arena MRV",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Cruzeiro"
+        ],
+        "prestigio_historico": 85,
+        "nivel_actual": 86,
+        "perfil_competitivo": "Protagonista constante en Libertadores y copas nacionales."
+      },
+      {
+        "nombre": "São Paulo",
+        "sigla": "SAO",
+        "ciudad": "São Paulo",
+        "estadio": "MorumBIS",
+        "colores": [
+          "#FF0000",
+          "#000000"
+        ],
+        "clasicos": [
+          "Corinthians",
+          "Palmeiras",
+          "Santos"
+        ],
+        "prestigio_historico": 93,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Tricampeón mundial y de Libertadores, siempre competitivo en torneos de eliminación."
+      },
+      {
+        "nombre": "Internacional",
+        "sigla": "INT",
+        "ciudad": "Porto Alegre",
+        "estadio": "Beira-Rio",
+        "colores": [
+          "#E5050F",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Grêmio"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Bicampeón de América y campeón mundial, candidato habitual al G-4."
+      },
+      {
+        "nombre": "Fluminense",
+        "sigla": "FLU",
+        "ciudad": "Río de Janeiro",
+        "estadio": "Maracaná",
+        "colores": [
+          "#870A28",
+          "#00613C"
+        ],
+        "clasicos": [
+          "Flamengo",
+          "Vasco da Gama",
+          "Botafogo"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Campeón de Libertadores en 2023, equipo técnico de gran jerarquía."
+      },
+      {
+        "nombre": "Corinthians",
+        "sigla": "COR",
+        "ciudad": "São Paulo",
+        "estadio": "Neo Química Arena",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Palmeiras",
+          "São Paulo",
+          "Santos"
+        ],
+        "prestigio_historico": 90,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Enorme convocatoria y peso histórico, alternando irregulares campañas de liga con fuerza en copas."
+      },
+      {
+        "nombre": "Grêmio",
+        "sigla": "GRE",
+        "ciudad": "Porto Alegre",
+        "estadio": "Arena do Grêmio",
+        "colores": [
+          "#0D80BF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Internacional"
+        ],
+        "prestigio_historico": 88,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Tricampeón de Libertadores, muy fuerte en torneos de copa."
+      },
+      {
+        "nombre": "Cruzeiro",
+        "sigla": "CRU",
+        "ciudad": "Belo Horizonte",
+        "estadio": "Mineirão",
+        "colores": [
+          "#005BA2",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Atlético Mineiro"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Bicampeón de Libertadores en pleno crecimiento tras su transformación en SAF."
+      },
+      {
+        "nombre": "Bahia",
+        "sigla": "BAH",
+        "ciudad": "Salvador",
+        "estadio": "Arena Fonte Nova",
+        "colores": [
+          "#006CB5",
+          "#ED1C24"
+        ],
+        "clasicos": [
+          "Vitória"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Integrante del City Football Group, consolidado en la pelea por copas internacionales."
+      },
+      {
+        "nombre": "Santos",
+        "sigla": "SAN",
+        "ciudad": "Santos",
+        "estadio": "Vila Belmiro",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Corinthians",
+          "Palmeiras",
+          "São Paulo"
+        ],
+        "prestigio_historico": 92,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Cuna de Pelé y Neymar, buscando recuperar protagonismo tras su retorno a Série A."
+      },
+      {
+        "nombre": "Vasco da Gama",
+        "sigla": "VAS",
+        "ciudad": "Río de Janeiro",
+        "estadio": "São Januário",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Flamengo",
+          "Fluminense",
+          "Botafogo"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Campeón de América en 1998, estabilizándose en mitad de tabla."
+      },
+      {
+        "nombre": "Red Bull Bragantino",
+        "sigla": "RBB",
+        "ciudad": "Bragança Paulista",
+        "estadio": "Nabi Abi Chedid",
+        "colores": [
+          "#FFFFFF",
+          "#D2003C"
+        ],
+        "clasicos": [
+          "Mirassol"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Proyecto de desarrollo juvenil, habitual en Copa Sudamericana."
+      },
+      {
+        "nombre": "Athletico Paranaense",
+        "sigla": "CAP",
+        "ciudad": "Curitiba",
+        "estadio": "Ligga Arena",
+        "colores": [
+          "#CE181E",
+          "#000000"
+        ],
+        "clasicos": [
+          "Coritiba"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Bicampeón de Sudamericana con gran infraestructura y localía."
+      },
+      {
+        "nombre": "Vitória",
+        "sigla": "VIT",
+        "ciudad": "Salvador",
+        "estadio": "Barradão",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Bahia"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Fuerte localía en Salvador, luchando por sostenerse en Série A."
+      },
+      {
+        "nombre": "Coritiba",
+        "sigla": "CFC",
+        "ciudad": "Curitiba",
+        "estadio": "Couto Pereira",
+        "colores": [
+          "#006437",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Athletico Paranaense"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Campeón brasileño en 1985, protagonizando nuevamente el clásico Atletiba en Primera."
+      },
+      {
+        "nombre": "Mirassol",
+        "sigla": "MIR",
+        "ciudad": "Mirassol",
+        "estadio": "Campos Maia",
+        "colores": [
+          "#FFED00",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Red Bull Bragantino"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Club modelo del interior paulista compitiendo con solvencia en la máxima categoría."
+      },
+      {
+        "nombre": "Chapecoense",
+        "sigla": "CHA",
+        "ciudad": "Chapecó",
+        "estadio": "Arena Condá",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Criciúma"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Campeón de Sudamericana 2016, retornando a la Série A del fútbol brasileño."
+      },
+      {
+        "nombre": "Clube do Remo",
+        "sigla": "REM",
+        "ciudad": "Belém",
+        "estadio": "Mangueirão",
+        "colores": [
+          "#001F3F",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Paysandu"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Gigante popular del norte de Brasil logrando regresar a la élite nacional."
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "liga": "Primeira Liga (Liga Portugal)",
+    "pais": "Portugal",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Sporting CP",
+        "sigla": "SCP",
+        "ciudad": "Lisboa",
+        "estadio": "Estádio José Alvalade",
+        "colores": [
+          "#008057",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "SL Benfica",
+          "FC Porto"
+        ],
+        "prestigio_historico": 88,
+        "nivel_actual": 88,
+        "perfil_competitivo": "Dominador reciente en Portugal con una de las mejores academias de Europa."
+      },
+      {
+        "nombre": "SL Benfica",
+        "sigla": "SLB",
+        "ciudad": "Lisboa",
+        "estadio": "Estádio da Luz",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sporting CP",
+          "FC Porto"
+        ],
+        "prestigio_historico": 92,
+        "nivel_actual": 88,
+        "perfil_competitivo": "El club más laureado de Portugal y habitual en rondas eliminatorias de Champions."
+      },
+      {
+        "nombre": "FC Porto",
+        "sigla": "FCP",
+        "ciudad": "Oporto",
+        "estadio": "Estádio do Dragão",
+        "colores": [
+          "#00428C",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "SL Benfica",
+          "Sporting CP"
+        ],
+        "prestigio_historico": 92,
+        "nivel_actual": 87,
+        "perfil_competitivo": "Bicampeón de Champions League y competidor incansable por el título local."
+      },
+      {
+        "nombre": "SC Braga",
+        "sigla": "SCB",
+        "ciudad": "Braga",
+        "estadio": "Estádio Municipal de Braga",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Vitória SC"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Cuarto grande de Portugal, fijo en competiciones europeas."
+      },
+      {
+        "nombre": "Vitória SC",
+        "sigla": "VSC",
+        "ciudad": "Guimarães",
+        "estadio": "Estádio D. Afonso Henriques",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "SC Braga"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Gran masa social y presencia recurrente en Conference League."
+      },
+      {
+        "nombre": "FC Famalicão",
+        "sigla": "FAM",
+        "ciudad": "Vila Nova de Famalicão",
+        "estadio": "Estádio Municipal 22 de Junho",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Gil Vicente FC"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Equipo joven y dinámico asentado en mitad de tabla."
+      },
+      {
+        "nombre": "Moreirense FC",
+        "sigla": "MOR",
+        "ciudad": "Moreira de Cónegos",
+        "estadio": "Parque Joaquim de Almeida Freitas",
+        "colores": [
+          "#008000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Vitória SC"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Club ordenado que compite con solvencia en la zona media."
+      },
+      {
+        "nombre": "Rio Ave FC",
+        "sigla": "RIO",
+        "ciudad": "Vila do Conde",
+        "estadio": "Estádio dos Arcos",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Varzim SC"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Tradicional equipo costero portugués de mitad de tabla."
+      },
+      {
+        "nombre": "Gil Vicente FC",
+        "sigla": "GIL",
+        "ciudad": "Barcelos",
+        "estadio": "Estádio Cidade de Barcelos",
+        "colores": [
+          "#E30613",
+          "#003399"
+        ],
+        "clasicos": [
+          "SC Braga",
+          "FC Famalicão"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Equipo técnico que busca mantenerse alejado del descenso."
+      },
+      {
+        "nombre": "GD Estoril Praia",
+        "sigla": "EST",
+        "ciudad": "Estoril",
+        "estadio": "Estádio António Coimbra da Mota",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "Casa Pia AC"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club de la costa de Lisboa con propuesta ofensiva."
+      },
+      {
+        "nombre": "FC Arouca",
+        "sigla": "ARO",
+        "ciudad": "Arouca",
+        "estadio": "Estádio Municipal de Arouca",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "CD Feirense"
+        ],
+        "prestigio_historico": 63,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Equipo humilde con recientes clasificaciones europeas."
+      },
+      {
+        "nombre": "Casa Pia AC",
+        "sigla": "CAS",
+        "ciudad": "Lisboa",
+        "estadio": "Estádio Municipal de Rio Maior",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "GD Estoril Praia",
+          "CF Estrela da Amadora"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club histórico de Lisboa asentado en la máxima categoría."
+      },
+      {
+        "nombre": "CD Santa Clara",
+        "sigla": "STA",
+        "ciudad": "Ponta Delgada",
+        "estadio": "Estádio de São Miguel",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "CD Nacional",
+          "CS Marítimo"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Representante de las islas Azores, muy fuerte en su feudo."
+      },
+      {
+        "nombre": "CD Nacional",
+        "sigla": "NAC",
+        "ciudad": "Funchal",
+        "estadio": "Estádio da Madeira",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "CS Marítimo"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club de Madeira que disputa el derbi insular en Primera."
+      },
+      {
+        "nombre": "CS Marítimo",
+        "sigla": "MAR",
+        "ciudad": "Funchal",
+        "estadio": "Estádio dos Barreiros",
+        "colores": [
+          "#007A33",
+          "#E30613"
+        ],
+        "clasicos": [
+          "CD Nacional"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Histórico de Madeira retornando a la Primeira Liga."
+      },
+      {
+        "nombre": "CF Estrela da Amadora",
+        "sigla": "EAM",
+        "ciudad": "Amadora",
+        "estadio": "Estádio José Gomes",
+        "colores": [
+          "#E30613",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Casa Pia AC"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club tradicional del área metropolitana de Lisboa peleando la salvación."
+      },
+      {
+        "nombre": "FC Alverca",
+        "sigla": "ALV",
+        "ciudad": "Alverca do Ribatejo",
+        "estadio": "Complexo Desportivo FC Alverca",
+        "colores": [
+          "#E30613",
+          "#003399"
+        ],
+        "clasicos": [
+          "UD Vilafranquense"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 70,
+        "perfil_competitivo": "De regreso en la élite portuguesa tras más de dos décadas."
+      },
+      {
+        "nombre": "Académico de Viseu",
+        "sigla": "VIS",
+        "ciudad": "Viseu",
+        "estadio": "Estádio do Fontelo",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "CD Tondela"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Club del centro de Portugal buscando consolidarse en Primeira Liga."
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "liga": "Eredivisie",
+    "pais": "Países Bajos",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "PSV Eindhoven",
+        "sigla": "PSV",
+        "ciudad": "Eindhoven",
+        "estadio": "Philips Stadion",
+        "colores": [
+          "#FF0000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AFC Ajax",
+          "Feyenoord"
+        ],
+        "prestigio_historico": 88,
+        "nivel_actual": 86,
+        "perfil_competitivo": "Campeón de Europa en 1988 y referente actual del fútbol neerlandés."
+      },
+      {
+        "nombre": "Feyenoord",
+        "sigla": "FEY",
+        "ciudad": "Róterdam",
+        "estadio": "De Kuip",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AFC Ajax",
+          "Sparta Rotterdam",
+          "Excelsior"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Primer campeón europeo de Países Bajos, protagonista constante en Europa."
+      },
+      {
+        "nombre": "AFC Ajax",
+        "sigla": "AJA",
+        "ciudad": "Ámsterdam",
+        "estadio": "Johan Cruyff Arena",
+        "colores": [
+          "#FFFFFF",
+          "#D2122E"
+        ],
+        "clasicos": [
+          "Feyenoord",
+          "PSV Eindhoven"
+        ],
+        "prestigio_historico": 94,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Tetracampeón de Europa, recuperando terreno tras una etapa de crisis deportiva."
+      },
+      {
+        "nombre": "AZ Alkmaar",
+        "sigla": "AZ",
+        "ciudad": "Alkmaar",
+        "estadio": "AFAS Stadion",
+        "colores": [
+          "#DB0021",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AFC Ajax"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Gran trabajo de cantera, habitual en el top 4 de la Eredivisie."
+      },
+      {
+        "nombre": "FC Twente",
+        "sigla": "TWE",
+        "ciudad": "Enschede",
+        "estadio": "De Grolsch Veste",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Heracles Almelo"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Fuerte de local y competidor regular en torneos europeos."
+      },
+      {
+        "nombre": "FC Utrecht",
+        "sigla": "UTR",
+        "ciudad": "Utrecht",
+        "estadio": "Stadion Galgenwaard",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "AFC Ajax"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Habitual animador de los playoffs europeos en Países Bajos."
+      },
+      {
+        "nombre": "SC Heerenveen",
+        "sigla": "HEE",
+        "ciudad": "Heerenveen",
+        "estadio": "Abe Lenstra Stadion",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "SC Cambuur"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Reconocido formador de delanteros en la Eredivisie."
+      },
+      {
+        "nombre": "Sparta Rotterdam",
+        "sigla": "SPA",
+        "ciudad": "Róterdam",
+        "estadio": "Sparta Stadion Het Kasteel",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Feyenoord",
+          "Excelsior"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 74,
+        "perfil_competitivo": "El club profesional más antiguo de Países Bajos, estable en zona media."
+      },
+      {
+        "nombre": "NEC Nijmegen",
+        "sigla": "NEC",
+        "ciudad": "Nimega",
+        "estadio": "Goffertstadion",
+        "colores": [
+          "#E30613",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Vitesse"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Equipo competitivo que pelea puestos de playoff europeo."
+      },
+      {
+        "nombre": "Go Ahead Eagles",
+        "sigla": "GAE",
+        "ciudad": "Deventer",
+        "estadio": "De Adelaarshorst",
+        "colores": [
+          "#E30613",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "PEC Zwolle"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Gran ambiente en su estadio y clasificado europeo reciente."
+      },
+      {
+        "nombre": "FC Groningen",
+        "sigla": "GRO",
+        "ciudad": "Groninga",
+        "estadio": "Euroborg",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "SC Heerenveen"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Club tradicional del norte neerlandés asentado en Primera."
+      },
+      {
+        "nombre": "PEC Zwolle",
+        "sigla": "PEC",
+        "ciudad": "Zwolle",
+        "estadio": "MAC³PARK Stadion",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Go Ahead Eagles"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Equipo técnico buscando tranquilidad en mitad de tabla."
+      },
+      {
+        "nombre": "Fortuna Sittard",
+        "sigla": "FOR",
+        "ciudad": "Sittard",
+        "estadio": "Fortuna Sittard Stadion",
+        "colores": [
+          "#FFED00",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Roda JC"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club de Limburgo enfocado en asegurar la permanencia."
+      },
+      {
+        "nombre": "Willem II",
+        "sigla": "WIL",
+        "ciudad": "Tilburgo",
+        "estadio": "Koning Willem II Stadion",
+        "colores": [
+          "#E30613",
+          "#003399"
+        ],
+        "clasicos": [
+          "NAC Breda"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Tres veces campeón histórico, luchando por consolidarse en Eredivisie."
+      },
+      {
+        "nombre": "Excelsior Rotterdam",
+        "sigla": "EXC",
+        "ciudad": "Róterdam",
+        "estadio": "Van Donge & De Roo Stadion",
+        "colores": [
+          "#000000",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Feyenoord",
+          "Sparta Rotterdam"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Tercer club de Róterdam, habitual luchador por no descender."
+      },
+      {
+        "nombre": "SC Cambuur",
+        "sigla": "CAM",
+        "ciudad": "Leeuwarden",
+        "estadio": "Kooi Stadion",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "SC Heerenveen"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Protagonista del derbi frisón de regreso en la máxima categoría."
+      },
+      {
+        "nombre": "ADO Den Haag",
+        "sigla": "ADO",
+        "ciudad": "La Haya",
+        "estadio": "Bingoal Stadion",
+        "colores": [
+          "#007A33",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "AFC Ajax"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Histórico club de La Haya retornando a la Eredivisie."
+      },
+      {
+        "nombre": "SC Telstar",
+        "sigla": "TEL",
+        "ciudad": "Velsen-Zuid",
+        "estadio": "BUKO Stadion",
+        "colores": [
+          "#FFFFFF",
+          "#003399"
+        ],
+        "clasicos": [
+          "AZ Alkmaar"
+        ],
+        "prestigio_historico": 60,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Modesto club neerlandés logrando una histórica presencia en Primera."
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "liga": "Major League Soccer (MLS)",
+    "pais": "Estados Unidos / Canadá",
+    "temporada": "2026",
+    "equipos": [
+      {
+        "nombre": "Inter Miami CF",
+        "sigla": "MIA",
+        "ciudad": "Miami",
+        "estadio": "Nu Stadium / Miami Freedom Park",
+        "colores": [
+          "#F7B5CD",
+          "#231F20"
+        ],
+        "clasicos": [
+          "Orlando City SC"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Fenómeno global que revolucionó la liga y pelea todos los títulos domésticos y de Concacaf."
+      },
+      {
+        "nombre": "LA Galaxy",
+        "sigla": "LAG",
+        "ciudad": "Los Ángeles",
+        "estadio": "Dignity Health Sports Park",
+        "colores": [
+          "#FFFFFF",
+          "#00245D"
+        ],
+        "clasicos": [
+          "Los Angeles FC",
+          "San Jose Earthquakes"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 81,
+        "perfil_competitivo": "La franquicia más laureada en la historia de la MLS."
+      },
+      {
+        "nombre": "Los Angeles FC",
+        "sigla": "LAFC",
+        "ciudad": "Los Ángeles",
+        "estadio": "BMO Stadium",
+        "colores": [
+          "#000000",
+          "#C39E6D"
+        ],
+        "clasicos": [
+          "LA Galaxy"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Potencia moderna de la Conferencia Oeste y finalista habitual."
+      },
+      {
+        "nombre": "Columbus Crew",
+        "sigla": "CLB",
+        "ciudad": "Columbus",
+        "estadio": "Lower.com Field",
+        "colores": [
+          "#FEDD00",
+          "#000000"
+        ],
+        "clasicos": [
+          "FC Cincinnati"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Multicampeón de MLS Cup con un sistema de juego muy reconocido."
+      },
+      {
+        "nombre": "FC Cincinnati",
+        "sigla": "CIN",
+        "ciudad": "Cincinnati",
+        "estadio": "TQL Stadium",
+        "colores": [
+          "#F05323",
+          "#263B80"
+        ],
+        "clasicos": [
+          "Columbus Crew"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Ganador reciente de Supporters' Shield y animador de la Conferencia Este."
+      },
+      {
+        "nombre": "Seattle Sounders FC",
+        "sigla": "SEA",
+        "ciudad": "Seattle",
+        "estadio": "Lumen Field",
+        "colores": [
+          "#5D9741",
+          "#005595"
+        ],
+        "clasicos": [
+          "Portland Timbers",
+          "Vancouver Whitecaps"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Campeón de Concachampions y presencia casi permanente en playoffs."
+      },
+      {
+        "nombre": "New York City FC",
+        "sigla": "NYC",
+        "ciudad": "Nueva York",
+        "estadio": "Yankee Stadium",
+        "colores": [
+          "#6CACE4",
+          "#041E42"
+        ],
+        "clasicos": [
+          "New York Red Bulls"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Campeón de MLS Cup 2021, integrante del City Football Group."
+      },
+      {
+        "nombre": "New York Red Bulls",
+        "sigla": "RBNY",
+        "ciudad": "Harrison",
+        "estadio": "Red Bull Arena",
+        "colores": [
+          "#ED1E36",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "New York City FC",
+          "D.C. United"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Récord de clasificaciones consecutivas a playoffs con fútbol de presión alta."
+      },
+      {
+        "nombre": "Atlanta United FC",
+        "sigla": "ATL",
+        "ciudad": "Atlanta",
+        "estadio": "Mercedes-Benz Stadium",
+        "colores": [
+          "#80000A",
+          "#221F1F"
+        ],
+        "clasicos": [
+          "Orlando City SC"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Gran asistencia de público y campeón en 2018."
+      },
+      {
+        "nombre": "Orlando City SC",
+        "sigla": "ORL",
+        "ciudad": "Orlando",
+        "estadio": "Inter&Co Stadium",
+        "colores": [
+          "#633492",
+          "#FDE192"
+        ],
+        "clasicos": [
+          "Inter Miami CF",
+          "Atlanta United FC"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Clasificado habitual a playoffs en el Este y protagonista del clásico de Florida."
+      },
+      {
+        "nombre": "Philadelphia Union",
+        "sigla": "PHI",
+        "ciudad": "Chester",
+        "estadio": "Subaru Park",
+        "colores": [
+          "#071B2C",
+          "#B1872D"
+        ],
+        "clasicos": [
+          "New York Red Bulls"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Referente en desarrollo de cantera y competidor regular en el Este."
+      },
+      {
+        "nombre": "Nashville SC",
+        "sigla": "NSH",
+        "ciudad": "Nashville",
+        "estadio": "Geodis Park",
+        "colores": [
+          "#ECE83A",
+          "#1F1646"
+        ],
+        "clasicos": [
+          "Atlanta United FC"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Bloque defensivo sólido y protagonista reciente de la Conferencia Este."
+      },
+      {
+        "nombre": "Charlotte FC",
+        "sigla": "CLT",
+        "ciudad": "Charlotte",
+        "estadio": "Bank of America Stadium",
+        "colores": [
+          "#1A85C8",
+          "#000000"
+        ],
+        "clasicos": [
+          "Atlanta United FC"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Franquicia de gran convocatoria asentada en zona de playoffs."
+      },
+      {
+        "nombre": "Chicago Fire FC",
+        "sigla": "CHI",
+        "ciudad": "Chicago",
+        "estadio": "Soldier Field / Toyota Park",
+        "colores": [
+          "#FF0000",
+          "#141946"
+        ],
+        "clasicos": [
+          "Columbus Crew"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Campeón de MLS en 1998 buscando recuperar protagonismo."
+      },
+      {
+        "nombre": "New England Revolution",
+        "sigla": "NE",
+        "ciudad": "Foxborough",
+        "estadio": "Gillette Stadium",
+        "colores": [
+          "#0A2240",
+          "#CE0E2D"
+        ],
+        "clasicos": [
+          "New York Red Bulls"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Cinco veces finalista de MLS Cup, buscando estabilidad competitiva."
+      },
+      {
+        "nombre": "D.C. United",
+        "sigla": "DC",
+        "ciudad": "Washington D. C.",
+        "estadio": "Audi Field",
+        "colores": [
+          "#000000",
+          "#EF3E42"
+        ],
+        "clasicos": [
+          "New York Red Bulls"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Primer gran dinastía de la MLS (4 títulos), en etapa de reconstrucción."
+      },
+      {
+        "nombre": "CF Montréal",
+        "sigla": "MTL",
+        "ciudad": "Montreal",
+        "estadio": "Stade Saputo",
+        "colores": [
+          "#0033A1",
+          "#000000"
+        ],
+        "clasicos": [
+          "Toronto FC",
+          "Vancouver Whitecaps"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Competidor canadiense enfocado en talento joven."
+      },
+      {
+        "nombre": "Toronto FC",
+        "sigla": "TOR",
+        "ciudad": "Toronto",
+        "estadio": "BMO Field",
+        "colores": [
+          "#B81137",
+          "#455560"
+        ],
+        "clasicos": [
+          "CF Montréal",
+          "Vancouver Whitecaps"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Primer club canadiense campeón de MLS Cup (2017)."
+      },
+      {
+        "nombre": "Vancouver Whitecaps FC",
+        "sigla": "VAN",
+        "ciudad": "Vancouver",
+        "estadio": "BC Place",
+        "colores": [
+          "#00245E",
+          "#9DC2EA"
+        ],
+        "clasicos": [
+          "Seattle Sounders FC",
+          "Portland Timbers"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Potencia canadiense habitual en playoffs del Oeste."
+      },
+      {
+        "nombre": "Portland Timbers",
+        "sigla": "POR",
+        "ciudad": "Portland",
+        "estadio": "Providence Park",
+        "colores": [
+          "#004812",
+          "#D69A00"
+        ],
+        "clasicos": [
+          "Seattle Sounders FC",
+          "Vancouver Whitecaps"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Campeón en 2015 con una de las aficiones más intensas de la liga."
+      },
+      {
+        "nombre": "Real Salt Lake",
+        "sigla": "RSL",
+        "ciudad": "Sandy",
+        "estadio": "America First Field",
+        "colores": [
+          "#B30838",
+          "#013A81"
+        ],
+        "clasicos": [
+          "Colorado Rapids"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Campeón en 2009 y presencia casi constante en postemporada."
+      },
+      {
+        "nombre": "Colorado Rapids",
+        "sigla": "COL",
+        "ciudad": "Commerce City",
+        "estadio": "Dick's Sporting Goods Park",
+        "colores": [
+          "#960A2C",
+          "#9CC2EA"
+        ],
+        "clasicos": [
+          "Real Salt Lake"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Campeón de MLS Cup 2010, competitivo jugando en la altura."
+      },
+      {
+        "nombre": "FC Dallas",
+        "sigla": "DAL",
+        "ciudad": "Frisco",
+        "estadio": "Toyota Stadium",
+        "colores": [
+          "#E81F3E",
+          "#2A4076"
+        ],
+        "clasicos": [
+          "Houston Dynamo FC",
+          "Austin FC"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Mejor academia juvenil de Estados Unidos y animador del Oeste."
+      },
+      {
+        "nombre": "Houston Dynamo FC",
+        "sigla": "HOU",
+        "ciudad": "Houston",
+        "estadio": "Shell Energy Stadium",
+        "colores": [
+          "#FF6B00",
+          "#101820"
+        ],
+        "clasicos": [
+          "FC Dallas",
+          "Austin FC"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Bicampeón de MLS Cup y campeón reciente de US Open Cup."
+      },
+      {
+        "nombre": "Austin FC",
+        "sigla": "ATX",
+        "ciudad": "Austin",
+        "estadio": "Q2 Stadium",
+        "colores": [
+          "#00B140",
+          "#000000"
+        ],
+        "clasicos": [
+          "FC Dallas",
+          "Houston Dynamo FC"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Franquicia texana con gran ambiente local."
+      },
+      {
+        "nombre": "Minnesota United FC",
+        "sigla": "MIN",
+        "ciudad": "Saint Paul",
+        "estadio": "Allianz Field",
+        "colores": [
+          "#8CD2F4",
+          "#231F20"
+        ],
+        "clasicos": [
+          "Sporting Kansas City"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Equipo ordenado y habitual animador de los playoffs del Oeste."
+      },
+      {
+        "nombre": "Sporting Kansas City",
+        "sigla": "SKC",
+        "ciudad": "Kansas City",
+        "estadio": "Children's Mercy Park",
+        "colores": [
+          "#002F65",
+          "#91B0D5"
+        ],
+        "clasicos": [
+          "St. Louis City SC",
+          "Minnesota United FC"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Bicampeón de liga y múltiple ganador de copa doméstica."
+      },
+      {
+        "nombre": "St. Louis City SC",
+        "sigla": "STL",
+        "ciudad": "San Luis",
+        "estadio": "Energizer Park (CITYPARK)",
+        "colores": [
+          "#DD004A",
+          "#001544"
+        ],
+        "clasicos": [
+          "Sporting Kansas City"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Ciudad con enorme tradición futbolística en EE.UU."
+      },
+      {
+        "nombre": "San Jose Earthquakes",
+        "sigla": "SJ",
+        "ciudad": "San José",
+        "estadio": "PayPal Park",
+        "colores": [
+          "#0067B1",
+          "#000000"
+        ],
+        "clasicos": [
+          "LA Galaxy"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Bicampeón histórico de MLS buscando salir de la zona baja."
+      },
+      {
+        "nombre": "San Diego FC",
+        "sigla": "SD",
+        "ciudad": "San Diego",
+        "estadio": "Snapdragon Stadium",
+        "colores": [
+          "#002B5C",
+          "#00A3E0"
+        ],
+        "clasicos": [
+          "Los Angeles FC",
+          "LA Galaxy"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Franquicia de expansión más reciente de la MLS."
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "liga": "Liga MX",
+    "pais": "México",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Club América",
+        "sigla": "AME",
+        "ciudad": "Ciudad de México",
+        "estadio": "Estadio Banorte (Azteca)",
+        "colores": [
+          "#F7E214",
+          "#041E42"
+        ],
+        "clasicos": [
+          "CD Guadalajara",
+          "Cruz Azul",
+          "Pumas UNAM"
+        ],
+        "prestigio_historico": 93,
+        "nivel_actual": 86,
+        "perfil_competitivo": "El club más ganador de México y Concacaf, dominador reciente de la Liga MX."
+      },
+      {
+        "nombre": "CF Monterrey (Rayados)",
+        "sigla": "MTY",
+        "ciudad": "Monterrey",
+        "estadio": "Estadio BBVA",
+        "colores": [
+          "#0A2240",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Tigres UANL"
+        ],
+        "prestigio_historico": 83,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Una de las plantillas más poderosas económicamente del continente americano."
+      },
+      {
+        "nombre": "Tigres UANL",
+        "sigla": "TIG",
+        "ciudad": "San Nicolás de los Garza",
+        "estadio": "Estadio Universitario",
+        "colores": [
+          "#FBB034",
+          "#0033A0"
+        ],
+        "clasicos": [
+          "CF Monterrey"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Protagonista absoluto de la última década en México y finalista de Libertadores."
+      },
+      {
+        "nombre": "Cruz Azul",
+        "sigla": "CAZ",
+        "ciudad": "Ciudad de México",
+        "estadio": "Estadio Banorte / Ciudad de los Deportes",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Club América",
+          "Pumas UNAM"
+        ],
+        "prestigio_historico": 88,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Uno de los cuatro grandes de México, con estilo ofensivo y protagonismo constante."
+      },
+      {
+        "nombre": "CD Guadalajara (Chivas)",
+        "sigla": "GDL",
+        "ciudad": "Zapopan",
+        "estadio": "Estadio Akron",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Club América",
+          "Atlas FC"
+        ],
+        "prestigio_historico": 90,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Histórico club mexicano que juega exclusivamente con futbolistas mexicanos."
+      },
+      {
+        "nombre": "Deportivo Toluca",
+        "sigla": "TOL",
+        "ciudad": "Toluca",
+        "estadio": "Nemesio Díez",
+        "colores": [
+          "#D81E05",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Club América"
+        ],
+        "prestigio_historico": 85,
+        "nivel_actual": 83,
+        "perfil_competitivo": "Tercer máximo ganador de ligas en México, muy fuerte jugando en la altura."
+      },
+      {
+        "nombre": "Pumas UNAM",
+        "sigla": "UNAM",
+        "ciudad": "Ciudad de México",
+        "estadio": "Olímpico Universitario",
+        "colores": [
+          "#002B5C",
+          "#C59B27"
+        ],
+        "clasicos": [
+          "Club América",
+          "Cruz Azul"
+        ],
+        "prestigio_historico": 84,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Cantera emblemática del fútbol mexicano y uno de los cuatro grandes."
+      },
+      {
+        "nombre": "CF Pachuca",
+        "sigla": "PAC",
+        "ciudad": "Pachuca",
+        "estadio": "Estadio Hidalgo",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Club León"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Único club mexicano campeón de Copa Sudamericana y referente en formación juvenil."
+      },
+      {
+        "nombre": "Club León",
+        "sigla": "LEO",
+        "ciudad": "León",
+        "estadio": "Estadio León",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "CF Pachuca"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Campeón de Concachampions 2023 y habitual animador de liguillas."
+      },
+      {
+        "nombre": "Atlas FC",
+        "sigla": "ATL",
+        "ciudad": "Guadalajara",
+        "estadio": "Estadio Jalisco",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "CD Guadalajara"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Bicampeón en 2021-2022 tras romper 70 años de sequía."
+      },
+      {
+        "nombre": "Club Santos Laguna",
+        "sigla": "SAN",
+        "ciudad": "Torreón",
+        "estadio": "Estadio Corona",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "CF Monterrey"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Seis veces campeón de liga, fuerte localía en la Comarca Lagunera."
+      },
+      {
+        "nombre": "Club Tijuana (Xolos)",
+        "sigla": "TIJ",
+        "ciudad": "Tijuana",
+        "estadio": "Estadio Caliente",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "FC Juárez"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Campeón en 2012, muy difícil de vencer en el césped sintético de la frontera."
+      },
+      {
+        "nombre": "FC Juárez",
+        "sigla": "JUA",
+        "ciudad": "Ciudad Juárez",
+        "estadio": "Olímpico Benito Juárez",
+        "colores": [
+          "#76BC21",
+          "#000000"
+        ],
+        "clasicos": [
+          "Club Tijuana"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Club fronterizo buscando consolidar apariciones en fase final."
+      },
+      {
+        "nombre": "Club Necaxa",
+        "sigla": "NEC",
+        "ciudad": "Aguascalientes",
+        "estadio": "Estadio Victoria",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Atlético de San Luis"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Tricampeón de los años 90, equipo dinámico de mitad de tabla."
+      },
+      {
+        "nombre": "Atlético de San Luis",
+        "sigla": "ASL",
+        "ciudad": "San Luis Potosí",
+        "estadio": "Estadio Libertad Financiera (Alfonso Lastras)",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Querétaro FC"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Filial del Atlético de Madrid en México, habitual en zona de liguilla."
+      },
+      {
+        "nombre": "Club Puebla",
+        "sigla": "PUE",
+        "ciudad": "Puebla",
+        "estadio": "Estadio Cuauhtémoc",
+        "colores": [
+          "#FFFFFF",
+          "#003399"
+        ],
+        "clasicos": [
+          "Club América"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Dos veces campeón de liga, buscando recuperar estabilidad deportiva."
+      },
+      {
+        "nombre": "Querétaro FC",
+        "sigla": "QRO",
+        "ciudad": "Querétaro",
+        "estadio": "Estadio Corregidora",
+        "colores": [
+          "#0055A5",
+          "#000000"
+        ],
+        "clasicos": [
+          "Atlético de San Luis"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Los Gallos Blancos compiten con presupuestos ajustados por entrar al Play-In."
+      },
+      {
+        "nombre": "Atlante FC",
+        "sigla": "ATN",
+        "ciudad": "Ciudad de México",
+        "estadio": "Estadio Banorte",
+        "colores": [
+          "#8B0000",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Club América",
+          "Club Necaxa"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Histórico club mexicano tricampeón de liga retornando a Primera División."
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "liga": "Primera División de Uruguay",
+    "pais": "Uruguay",
+    "temporada": "2026",
+    "equipos": [
+      {
+        "nombre": "CA Peñarol",
+        "sigla": "PEN",
+        "ciudad": "Montevideo",
+        "estadio": "Campeón del Siglo",
+        "colores": [
+          "#FFD100",
+          "#000000"
+        ],
+        "clasicos": [
+          "Club Nacional de Football"
+        ],
+        "prestigio_historico": 94,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Pentacampeón de Libertadores y tricampeón mundial, gigante histórico de Sudamérica."
+      },
+      {
+        "nombre": "Club Nacional de Football",
+        "sigla": "NAC",
+        "ciudad": "Montevideo",
+        "estadio": "Gran Parque Central",
+        "colores": [
+          "#FFFFFF",
+          "#003399"
+        ],
+        "clasicos": [
+          "CA Peñarol"
+        ],
+        "prestigio_historico": 94,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Tricampeón de América y del mundo, presencia casi ininterrumpida en Copa Libertadores."
+      },
+      {
+        "nombre": "Liverpool FC (Uruguay)",
+        "sigla": "LIV",
+        "ciudad": "Montevideo",
+        "estadio": "Belvedere",
+        "colores": [
+          "#000000",
+          "#003399"
+        ],
+        "clasicos": [
+          "Montevideo Wanderers"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 77,
+        "perfil_competitivo": "El equipo en desarrollo más exitoso del Uruguay en la última década."
+      },
+      {
+        "nombre": "Defensor Sporting",
+        "sigla": "DEF",
+        "ciudad": "Montevideo",
+        "estadio": "Luis Franzini",
+        "colores": [
+          "#5B2C82",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Danubio FC"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Tercera fuerza histórica y una de las mejores canteras de Sudamérica."
+      },
+      {
+        "nombre": "Danubio FC",
+        "sigla": "DAN",
+        "ciudad": "Montevideo",
+        "estadio": "Jardines del Hipódromo",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Defensor Sporting"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Histórica escuela de talentos uruguayos, cuatro veces campeón nacional."
+      },
+      {
+        "nombre": "Boston River",
+        "sigla": "BOS",
+        "ciudad": "Montevideo",
+        "estadio": "Campeones Olímpicos",
+        "colores": [
+          "#E30613",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Cerrito"
+        ],
+        "prestigio_historico": 63,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Club moderno consolidado en la pelea por puestos internacionales."
+      },
+      {
+        "nombre": "Montevideo Wanderers",
+        "sigla": "WAN",
+        "ciudad": "Montevideo",
+        "estadio": "Parque Alfredo Víctor Viera",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Liverpool FC (Uruguay)"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club decano bohemio habitual en copas continentales."
+      },
+      {
+        "nombre": "Racing Club de Montevideo",
+        "sigla": "RAC",
+        "ciudad": "Montevideo",
+        "estadio": "Parque Osvaldo Roberto",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Fénix"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 74,
+        "perfil_competitivo": "La Escuelita de Sayago, competitivo en torneos locales y Sudamericana."
+      },
+      {
+        "nombre": "Montevideo City Torque",
+        "sigla": "MCT",
+        "ciudad": "Montevideo",
+        "estadio": "Estadio Charrúa",
+        "colores": [
+          "#6CABDD",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Boston River"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Integrante del City Football Group con fuerte apuesta juvenil."
+      },
+      {
+        "nombre": "Cerro Largo FC",
+        "sigla": "CER",
+        "ciudad": "Melo",
+        "estadio": "Arquitecto Antonio Ubilla",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Tacuarembó"
+        ],
+        "prestigio_historico": 63,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Referente del interior uruguayo con muy fuerte localía en Melo."
+      },
+      {
+        "nombre": "CA Cerro",
+        "sigla": "CRR",
+        "ciudad": "Montevideo",
+        "estadio": "Monumental Luis Tróccoli",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Rampla Juniors"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club popular de la Villa del Cerro luchando por la permanencia."
+      },
+      {
+        "nombre": "CA Progreso",
+        "sigla": "PRO",
+        "ciudad": "Montevideo",
+        "estadio": "Abraham Paladino",
+        "colores": [
+          "#E30613",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "Fénix"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Campeón uruguayo en 1989, equipo aguerrido del barrio La Teja."
+      },
+      {
+        "nombre": "Deportivo Maldonado",
+        "sigla": "MAL",
+        "ciudad": "Maldonado",
+        "estadio": "Domingo Burgueño Miguel",
+        "colores": [
+          "#E30613",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Rocha FC"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Representante de Punta del Este y Maldonado en Primera."
+      },
+      {
+        "nombre": "Juventud de Las Piedras",
+        "sigla": "JUV",
+        "ciudad": "Las Piedras",
+        "estadio": "Parque Artigas",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Oriental"
+        ],
+        "prestigio_historico": 63,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Club canario retornando a la máxima categoría uruguaya."
+      },
+      {
+        "nombre": "Albion FC",
+        "sigla": "ALB",
+        "ciudad": "Montevideo",
+        "estadio": "Luis Franzini",
+        "colores": [
+          "#E30613",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Montevideo Wanderers"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 70,
+        "perfil_competitivo": "El club más antiguo del fútbol uruguayo (fundado en 1891)."
+      },
+      {
+        "nombre": "Central Español",
+        "sigla": "CEN",
+        "ciudad": "Montevideo",
+        "estadio": "Parque Palermo",
+        "colores": [
+          "#E30613",
+          "#003399"
+        ],
+        "clasicos": [
+          "Miramar Misiones"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Campeón uruguayo en 1984, peleando por sostenerse en Primera."
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "liga": "Liga BetPlay Dimayor",
+    "pais": "Colombia",
+    "temporada": "2026",
+    "equipos": [
+      {
+        "nombre": "Atlético Nacional",
+        "sigla": "NAC",
+        "ciudad": "Medellín",
+        "estadio": "Atanasio Girardot",
+        "colores": [
+          "#00843D",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Independiente Medellín",
+          "Millonarios FC",
+          "América de Cali"
+        ],
+        "prestigio_historico": 90,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Bicampeón de Copa Libertadores y máximo ganador de títulos en Colombia."
+      },
+      {
+        "nombre": "Millonarios FC",
+        "sigla": "MIL",
+        "ciudad": "Bogotá",
+        "estadio": "Nemesio Camacho El Campín",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Independiente Santa Fe",
+          "Atlético Nacional",
+          "América de Cali"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Uno de los clubes más laureados y regulares de Colombia en los últimos años."
+      },
+      {
+        "nombre": "América de Cali",
+        "sigla": "AME",
+        "ciudad": "Cali",
+        "estadio": "Pascual Guerrero",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Deportivo Cali",
+          "Atlético Nacional",
+          "Millonarios FC"
+        ],
+        "prestigio_historico": 86,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Cuatro veces subcampeón de Libertadores y gigante popular colombiano."
+      },
+      {
+        "nombre": "Junior de Barranquilla",
+        "sigla": "JUN",
+        "ciudad": "Barranquilla",
+        "estadio": "Metropolitano Roberto Meléndez",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Unión Magdalena"
+        ],
+        "prestigio_historico": 81,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Potencia económica del Caribe colombiano, habitual en competencias CONMEBOL."
+      },
+      {
+        "nombre": "Independiente Santa Fe",
+        "sigla": "SFE",
+        "ciudad": "Bogotá",
+        "estadio": "Nemesio Camacho El Campín",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Millonarios FC"
+        ],
+        "prestigio_historico": 82,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Primer campeón de Colombia y ganador de Copa Sudamericana en 2015."
+      },
+      {
+        "nombre": "Independiente Medellín",
+        "sigla": "DIM",
+        "ciudad": "Medellín",
+        "estadio": "Atanasio Girardot",
+        "colores": [
+          "#E30613",
+          "#003399"
+        ],
+        "clasicos": [
+          "Atlético Nacional"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Protagonista recurrente de finales domésticas y torneos continentales."
+      },
+      {
+        "nombre": "Deportes Tolima",
+        "sigla": "TOL",
+        "ciudad": "Ibagué",
+        "estadio": "Manuel Murillo Toro",
+        "colores": [
+          "#7A1C24",
+          "#F3B229"
+        ],
+        "clasicos": [
+          "Atlético Huila"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Uno de los equipos más consistentes y competitivos del fútbol colombiano reciente."
+      },
+      {
+        "nombre": "Deportivo Cali",
+        "sigla": "CAL",
+        "ciudad": "Palmira",
+        "estadio": "Estadio Deportivo Cali",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "América de Cali"
+        ],
+        "prestigio_historico": 83,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Histórico club con estadio propio atravesando una etapa de reestructuración."
+      },
+      {
+        "nombre": "Once Caldas",
+        "sigla": "ONC",
+        "ciudad": "Manizales",
+        "estadio": "Estadio Palogrande",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Deportivo Pereira"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Campeón de Copa Libertadores en 2004, habitual animador de cuadrangulares."
+      },
+      {
+        "nombre": "Atlético Bucaramanga",
+        "sigla": "BUC",
+        "ciudad": "Bucaramanga",
+        "estadio": "Américo Montanini",
+        "colores": [
+          "#FFED00",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Cúcuta Deportivo"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Campeón reciente del fútbol colombiano y fuerte en su estadio."
+      },
+      {
+        "nombre": "Deportivo Pereira",
+        "sigla": "PER",
+        "ciudad": "Pereira",
+        "estadio": "Hernán Ramírez Villegas",
+        "colores": [
+          "#FFED00",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Once Caldas"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Cuartofinalista de Copa Libertadores 2023, competitivo en el Eje Cafetero."
+      },
+      {
+        "nombre": "Águilas Doradas",
+        "sigla": "AGU",
+        "ciudad": "Rionegro",
+        "estadio": "Alberto Grisales",
+        "colores": [
+          "#D4AF37",
+          "#000000"
+        ],
+        "clasicos": [
+          "Envigado FC"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Equipo ordenado con clasificaciones recientes a torneos CONMEBOL."
+      },
+      {
+        "nombre": "Deportivo Pasto",
+        "sigla": "PAS",
+        "ciudad": "Pasto",
+        "estadio": "Departamental Libertad",
+        "colores": [
+          "#E30613",
+          "#003399"
+        ],
+        "clasicos": [
+          "América de Cali"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Campeón en 2006, muy fuerte jugando en la altura de Nariño."
+      },
+      {
+        "nombre": "Fortaleza CEIF",
+        "sigla": "FOR",
+        "ciudad": "Bogotá",
+        "estadio": "Metropolitano de Techo",
+        "colores": [
+          "#003399",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Internacional de Bogotá"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club joven capitalino reconocido por su apuesta formativa."
+      },
+      {
+        "nombre": "Alianza FC",
+        "sigla": "ALI",
+        "ciudad": "Valledupar",
+        "estadio": "Armando Maestre Pavajeau",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Junior de Barranquilla"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Representante de Valledupar compitiendo en Primera División."
+      },
+      {
+        "nombre": "Boyacá Chicó",
+        "sigla": "BOY",
+        "ciudad": "Tunja",
+        "estadio": "La Independencia",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Patriotas Boyacá"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Campeón en 2008, luchando por mantenerse alejado del descenso."
+      },
+      {
+        "nombre": "Club Llaneros",
+        "sigla": "LLA",
+        "ciudad": "Villavicencio",
+        "estadio": "Bello Horizonte",
+        "colores": [
+          "#000000",
+          "#D4AF37"
+        ],
+        "clasicos": [
+          "Patriotas Boyacá"
+        ],
+        "prestigio_historico": 60,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Representante de los Llanos Orientales en la máxima categoría."
+      },
+      {
+        "nombre": "Cúcuta Deportivo",
+        "sigla": "CUC",
+        "ciudad": "Cúcuta",
+        "estadio": "General Santander",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Atlético Bucaramanga"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Semifinalista de Libertadores 2007 retornando a la Liga BetPlay."
+      },
+      {
+        "nombre": "Jaguares de Córdoba",
+        "sigla": "JAG",
+        "ciudad": "Montería",
+        "estadio": "Jaraguay",
+        "colores": [
+          "#6CABDD",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Junior de Barranquilla"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Equipo costeño que lucha cada temporada por sostener la categoría."
+      },
+      {
+        "nombre": "Internacional de Bogotá",
+        "sigla": "IBG",
+        "ciudad": "Bogotá",
+        "estadio": "Metropolitano de Techo",
+        "colores": [
+          "#002B5C",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Fortaleza CEIF"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Franquicia capitalina compitiendo en la máxima división colombiana."
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "liga": "Liga de Primera (Primera División de Chile)",
+    "pais": "Chile",
+    "temporada": "2026",
+    "equipos": [
+      {
+        "nombre": "Colo-Colo",
+        "sigla": "CC",
+        "ciudad": "Santiago",
+        "estadio": "Monumental David Arellano",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Universidad de Chile",
+          "Universidad Católica"
+        ],
+        "prestigio_historico": 89,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Único club chileno campeón de Copa Libertadores y máximo ganador local."
+      },
+      {
+        "nombre": "Universidad de Chile",
+        "sigla": "UCH",
+        "ciudad": "Santiago",
+        "estadio": "Estadio Nacional Julio Martínez Prádanos",
+        "colores": [
+          "#003399",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Colo-Colo",
+          "Universidad Católica"
+        ],
+        "prestigio_historico": 85,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Campeón de Copa Sudamericana 2011, protagonista en la pelea por el título."
+      },
+      {
+        "nombre": "Universidad Católica",
+        "sigla": "UC",
+        "ciudad": "Santiago",
+        "estadio": "Claro Arena",
+        "colores": [
+          "#FFFFFF",
+          "#0055A5"
+        ],
+        "clasicos": [
+          "Colo-Colo",
+          "Universidad de Chile"
+        ],
+        "prestigio_historico": 83,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Tetracampeón reciente estrenando su remodelado estadio Claro Arena."
+      },
+      {
+        "nombre": "CD Palestino",
+        "sigla": "PAL",
+        "ciudad": "Santiago",
+        "estadio": "Municipal de La Cisterna",
+        "colores": [
+          "#007A33",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Audax Italiano"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Clasificado habitual a copas internacionales con identidad muy marcada."
+      },
+      {
+        "nombre": "Coquimbo Unido",
+        "sigla": "COQ",
+        "ciudad": "Coquimbo",
+        "estadio": "Francisco Sánchez Rumoroso",
+        "colores": [
+          "#FFCC00",
+          "#000000"
+        ],
+        "clasicos": [
+          "Deportes La Serena"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Animador del norte chileno con fuerte localía."
+      },
+      {
+        "nombre": "Huachipato FC",
+        "sigla": "HUA",
+        "ciudad": "Talcahuano",
+        "estadio": "Estadio Huachipato-CAP Acero",
+        "colores": [
+          "#003399",
+          "#000000"
+        ],
+        "clasicos": [
+          "Deportes Concepción",
+          "Universidad de Concepción"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Tricampeón del sur chileno con gran trabajo de cantera."
+      },
+      {
+        "nombre": "CD O'Higgins",
+        "sigla": "OHI",
+        "ciudad": "Rancagua",
+        "estadio": "El Teniente",
+        "colores": [
+          "#6CABDD",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Curicó Unido"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Campeón en 2013, tradicional club de Rancagua."
+      },
+      {
+        "nombre": "Audax Italiano",
+        "sigla": "AUD",
+        "ciudad": "Santiago",
+        "estadio": "Bicentenario de La Florida",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "CD Palestino"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Cuatro veces campeón histórico, equipo técnico de Santiago."
+      },
+      {
+        "nombre": "Everton de Viña del Mar",
+        "sigla": "EVE",
+        "ciudad": "Viña del Mar",
+        "estadio": "Estadio Sausalito",
+        "colores": [
+          "#002B5C",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "Santiago Wanderers"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Tetracampeón chileno con respaldo del Grupo Pachuca."
+      },
+      {
+        "nombre": "CD Cobresal",
+        "sigla": "COB",
+        "ciudad": "El Salvador",
+        "estadio": "Estadio El Cobre",
+        "colores": [
+          "#FF6600",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Deportes Copiapó"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Campeón en 2015, muy difícil de vencer en el desierto de Atacama."
+      },
+      {
+        "nombre": "CD Ñublense",
+        "sigla": "NUB",
+        "ciudad": "Chillán",
+        "estadio": "Nelson Oyarzún Arenas",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Curicó Unido"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Participante reciente en Copa Libertadores representando a Chillán."
+      },
+      {
+        "nombre": "Unión La Calera",
+        "sigla": "ULC",
+        "ciudad": "La Calera",
+        "estadio": "Nicolás Chahuán Nazar",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "San Luis de Quillota"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Equipo de la Región de Valparaíso buscando consolidarse en zona media."
+      },
+      {
+        "nombre": "Deportes La Serena",
+        "sigla": "DLS",
+        "ciudad": "La Serena",
+        "estadio": "Estadio La Portada",
+        "colores": [
+          "#7A1C24",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Coquimbo Unido"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club histórico del norte chico disputando el clásico regional en Primera."
+      },
+      {
+        "nombre": "Deportes Limache",
+        "sigla": "LIM",
+        "ciudad": "Limache",
+        "estadio": "Gustavo Ocaranza",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "San Luis de Quillota"
+        ],
+        "prestigio_historico": 59,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Club emergente que sorprendió alcanzando la Primera División."
+      },
+      {
+        "nombre": "Universidad de Concepción",
+        "sigla": "UDC",
+        "ciudad": "Concepción",
+        "estadio": "Ester Roa Rebolledo",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "Deportes Concepción",
+          "Huachipato FC"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 72,
+        "perfil_competitivo": "El Campanil retorna a Primera División tras ganar el ascenso."
+      },
+      {
+        "nombre": "Deportes Concepción",
+        "sigla": "DCO",
+        "ciudad": "Concepción",
+        "estadio": "Ester Roa Rebolledo",
+        "colores": [
+          "#5B2C82",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Huachipato FC",
+          "Universidad de Concepción"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club de gran convocatoria en el Biobío de vuelta en la máxima categoría."
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "liga": "EFL Championship",
+    "pais": "Inglaterra",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "West Ham United",
+        "sigla": "WHU",
+        "ciudad": "Londres",
+        "estadio": "London Stadium",
+        "colores": [
+          "#7A263A",
+          "#1BB1E7"
+        ],
+        "clasicos": [
+          "Millwall FC"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Campeón europeo reciente buscando regresar de inmediato a la Premier League."
+      },
+      {
+        "nombre": "Wolverhampton Wanderers",
+        "sigla": "WOL",
+        "ciudad": "Wolverhampton",
+        "estadio": "Molineux Stadium",
+        "colores": [
+          "#FDB913",
+          "#231F20"
+        ],
+        "clasicos": [
+          "West Bromwich Albion",
+          "Birmingham City"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 77,
+        "perfil_competitivo": "Histórico club inglés peleando el retorno directo a Premier."
+      },
+      {
+        "nombre": "Burnley FC",
+        "sigla": "BUR",
+        "ciudad": "Burnley",
+        "estadio": "Turf Moor",
+        "colores": [
+          "#6C1D45",
+          "#99D6EA"
+        ],
+        "clasicos": [
+          "Blackburn Rovers"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Candidato permanente al ascenso directo a la Premier League."
+      },
+      {
+        "nombre": "Sheffield United",
+        "sigla": "SHU",
+        "ciudad": "Sheffield",
+        "estadio": "Bramall Lane",
+        "colores": [
+          "#EE2737",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sheffield Wednesday"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Club físico y competitivo que alterna entre Premier y Championship."
+      },
+      {
+        "nombre": "Southampton FC",
+        "sigla": "SOU",
+        "ciudad": "Southampton",
+        "estadio": "St Mary's Stadium",
+        "colores": [
+          "#D71920",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Portsmouth FC"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Gran cantera inglesa luchando en la zona alta de Championship."
+      },
+      {
+        "nombre": "Middlesbrough FC",
+        "sigla": "MID",
+        "ciudad": "Middlesbrough",
+        "estadio": "Riverside Stadium",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sunderland AFC"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Habitual peleador de playoffs de ascenso en Championship."
+      },
+      {
+        "nombre": "Norwich City",
+        "sigla": "NOR",
+        "ciudad": "Norwich",
+        "estadio": "Carrow Road",
+        "colores": [
+          "#FFF200",
+          "#00A650"
+        ],
+        "clasicos": [
+          "Ipswich Town"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Clásico equipo de zona alta de Championship."
+      },
+      {
+        "nombre": "West Bromwich Albion",
+        "sigla": "WBA",
+        "ciudad": "West Bromwich",
+        "estadio": "The Hawthorns",
+        "colores": [
+          "#122F67",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Wolverhampton Wanderers",
+          "Birmingham City"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Histórico club inglés siempre en la conversación por los playoffs."
+      },
+      {
+        "nombre": "Watford FC",
+        "sigla": "WAT",
+        "ciudad": "Watford",
+        "estadio": "Vicarage Road",
+        "colores": [
+          "#FBEE23",
+          "#ED2127"
+        ],
+        "clasicos": [
+          "Luton Town"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Equipo con experiencia reciente en Premier buscando regularidad."
+      },
+      {
+        "nombre": "Bristol City",
+        "sigla": "BRI",
+        "ciudad": "Bristol",
+        "estadio": "Ashton Gate",
+        "colores": [
+          "#E21836",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Cardiff City"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Establecido en la mitad de tabla de la segunda categoría."
+      },
+      {
+        "nombre": "Blackburn Rovers",
+        "sigla": "BLB",
+        "ciudad": "Blackburn",
+        "estadio": "Ewood Park",
+        "colores": [
+          "#009EE0",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Burnley FC"
+        ],
+        "prestigio_historico": 77,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Campeón de Premier League en 1995, luchando por volver a la élite."
+      },
+      {
+        "nombre": "Stoke City",
+        "sigla": "STK",
+        "ciudad": "Stoke-on-Trent",
+        "estadio": "bet365 Stadium",
+        "colores": [
+          "#E03A3E",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Port Vale"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Histórico club inglés buscando salir de la zona media-baja."
+      },
+      {
+        "nombre": "Queens Park Rangers",
+        "sigla": "QPR",
+        "ciudad": "Londres",
+        "estadio": "Loftus Road",
+        "colores": [
+          "#1D5BA4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Millwall FC",
+          "Fulham"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club londinense con gran tradición en Championship."
+      },
+      {
+        "nombre": "Millwall FC",
+        "sigla": "MIL",
+        "ciudad": "Londres",
+        "estadio": "The Den",
+        "colores": [
+          "#001D5E",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "West Ham United",
+          "Charlton Athletic"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Muy fuerte jugando en The Den, siempre competitivo."
+      },
+      {
+        "nombre": "Preston North End",
+        "sigla": "PNE",
+        "ciudad": "Preston",
+        "estadio": "Deepdale",
+        "colores": [
+          "#FFFFFF",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Blackburn Rovers"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Primer campeón de la historia del fútbol inglés (1889)."
+      },
+      {
+        "nombre": "Swansea City",
+        "sigla": "SWA",
+        "ciudad": "Swansea",
+        "estadio": "Swansea.com Stadium",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Cardiff City"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club galés con identidad de posesión de balón."
+      },
+      {
+        "nombre": "Cardiff City",
+        "sigla": "CAR",
+        "ciudad": "Cardiff",
+        "estadio": "Cardiff City Stadium",
+        "colores": [
+          "#0070B5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Swansea City",
+          "Bristol City"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Principal club de la capital galesa peleando en Championship."
+      },
+      {
+        "nombre": "Derby County",
+        "sigla": "DER",
+        "ciudad": "Derby",
+        "estadio": "Pride Park Stadium",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Nottingham Forest"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Bicampeón inglés en los 70 asentado nuevamente en Championship."
+      },
+      {
+        "nombre": "Portsmouth FC",
+        "sigla": "POR",
+        "ciudad": "Portsmouth",
+        "estadio": "Fratton Park",
+        "colores": [
+          "#001489",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Southampton FC"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Campeón de FA Cup 2008 con gran apoyo en Fratton Park."
+      },
+      {
+        "nombre": "Birmingham City",
+        "sigla": "BIR",
+        "ciudad": "Birmingham",
+        "estadio": "St Andrew's",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Aston Villa",
+          "Wolverhampton Wanderers"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Proyecto con fuerte inversión estadounidense apuntando al ascenso."
+      },
+      {
+        "nombre": "Wrexham AFC",
+        "sigla": "WRE",
+        "ciudad": "Wrexham",
+        "estadio": "Racecourse Ground",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Chester FC"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Fenómeno mediático mundial tras sus sucesivos ascensos hasta Championship."
+      },
+      {
+        "nombre": "Charlton Athletic",
+        "sigla": "CHA",
+        "ciudad": "Londres",
+        "estadio": "The Valley",
+        "colores": [
+          "#D4021D",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Millwall FC"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Club londinense tradicional retornando a la segunda división."
+      },
+      {
+        "nombre": "Bolton Wanderers",
+        "sigla": "BOL",
+        "ciudad": "Horwich",
+        "estadio": "Toughsheet Community Stadium",
+        "colores": [
+          "#FFFFFF",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Blackburn Rovers"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Histórico de Premier en los 2000 de vuelta en Championship."
+      },
+      {
+        "nombre": "Lincoln City",
+        "sigla": "LIN",
+        "ciudad": "Lincoln",
+        "estadio": "LNER Stadium",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Grimsby Town"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Equipo modesto que logró ascender desde League One."
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "liga": "Primera Nacional",
+    "pais": "Argentina",
+    "temporada": "2026",
+    "equipos": [
+      {
+        "nombre": "Godoy Cruz",
+        "sigla": "GOD",
+        "ciudad": "Godoy Cruz",
+        "estadio": "Feliciano Gambarte / Malvinas Argentinas",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "San Martín de San Juan",
+          "Independiente Rivadavia"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Recién descendido de Primera, máximo candidato al retorno rápido."
+      },
+      {
+        "nombre": "San Martín de San Juan",
+        "sigla": "SMSJ",
+        "ciudad": "San Juan",
+        "estadio": "Ingeniero Hilario Sánchez",
+        "colores": [
+          "#007A33",
+          "#000000"
+        ],
+        "clasicos": [
+          "Godoy Cruz"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Protagonista del clásico cuyano buscando volver a la Liga Profesional."
+      },
+      {
+        "nombre": "Colón",
+        "sigla": "COL",
+        "ciudad": "Santa Fe",
+        "estadio": "Brigadier General Estanislao López",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Unión"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Campeón de Copa de la Liga 2021 y gigante de la categoría buscando el retorno a Primera."
+      },
+      {
+        "nombre": "San Martín de Tucumán",
+        "sigla": "SMT",
+        "ciudad": "San Miguel de Tucumán",
+        "estadio": "La Ciudadela",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Atlético Tucumán"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Uno de los clubes más convocantes del interior, candidato eterno al ascenso."
+      },
+      {
+        "nombre": "Quilmes",
+        "sigla": "QUI",
+        "ciudad": "Quilmes",
+        "estadio": "Centenario Ciudad de Quilmes",
+        "colores": [
+          "#FFFFFF",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Argentino de Quilmes"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Decano del fútbol argentino, protagonista habitual del reducido."
+      },
+      {
+        "nombre": "Ferro Carril Oeste",
+        "sigla": "FCO",
+        "ciudad": "Buenos Aires",
+        "estadio": "Arquitecto Ricardo Etcheverri",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Vélez Sarsfield"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Bicampeón nacional en los años 80, histórico buscando volver a Primera."
+      },
+      {
+        "nombre": "Chacarita Juniors",
+        "sigla": "CHA",
+        "ciudad": "Villa Maipú",
+        "estadio": "Chacarita Juniors",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Atlanta",
+          "Tigre"
+        ],
+        "prestigio_historico": 73,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Campeón metropolitano de 1969, equipo de gran arraigo popular."
+      },
+      {
+        "nombre": "Nueva Chicago",
+        "sigla": "NCH",
+        "ciudad": "Buenos Aires",
+        "estadio": "República de Mataderos",
+        "colores": [
+          "#007A33",
+          "#000000"
+        ],
+        "clasicos": [
+          "All Boys",
+          "Almirante Brown"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Fuerte de local en Mataderos y animador constante del ascenso."
+      },
+      {
+        "nombre": "All Boys",
+        "sigla": "ALL",
+        "ciudad": "Buenos Aires",
+        "estadio": "Islas Malvinas",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Nueva Chicago",
+          "Argentinos Juniors"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 68,
+        "perfil_competitivo": "Tradicional club de Floresta que busca pelear puestos de reducido."
+      },
+      {
+        "nombre": "Atlanta",
+        "sigla": "ATL",
+        "ciudad": "Buenos Aires",
+        "estadio": "Don León Kolbowski",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "Chacarita Juniors"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 71,
+        "perfil_competitivo": "El Bohemio de Villa Crespo, protagonista en la pelea por el ascenso."
+      },
+      {
+        "nombre": "Deportivo Morón",
+        "sigla": "MOR",
+        "ciudad": "Morón",
+        "estadio": "Nuevo Francisco Urbano",
+        "colores": [
+          "#FFFFFF",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Almirante Brown",
+          "Nueva Chicago"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Gran convocatoria en el oeste del conurbano, animador del reducido."
+      },
+      {
+        "nombre": "Almirante Brown",
+        "sigla": "ALM",
+        "ciudad": "Isidro Casanova",
+        "estadio": "Fragata Presidente Sarmiento",
+        "colores": [
+          "#FFED00",
+          "#000000"
+        ],
+        "clasicos": [
+          "Deportivo Morón",
+          "Nueva Chicago"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 68,
+        "perfil_competitivo": "El club más popular de La Matanza buscando regularidad."
+      },
+      {
+        "nombre": "Temperley",
+        "sigla": "TEM",
+        "ciudad": "Temperley",
+        "estadio": "Alfredo Beranger",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Los Andes"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 69,
+        "perfil_competitivo": "El Gasolero, siempre competitivo en el sur del conurbano."
+      },
+      {
+        "nombre": "Los Andes",
+        "sigla": "LAN",
+        "ciudad": "Lomas de Zamora",
+        "estadio": "Eduardo Gallardón",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Temperley",
+          "Banfield"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 68,
+        "perfil_competitivo": "El Milrayitas, protagonizando el clásico del sur con Temperley."
+      },
+      {
+        "nombre": "Defensores de Belgrano",
+        "sigla": "DEF",
+        "ciudad": "Buenos Aires",
+        "estadio": "Juan Pasquale",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Excursionistas"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 70,
+        "perfil_competitivo": "El Dragón del Bajo Belgrano, habitual clasificado al reducido."
+      },
+      {
+        "nombre": "Estudiantes (BA)",
+        "sigla": "EBA",
+        "ciudad": "Caseros",
+        "estadio": "Ciudad de Caseros",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Almagro"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 70,
+        "perfil_competitivo": "El Pincha de Caseros, siempre peleando en la parte alta de la tabla."
+      },
+      {
+        "nombre": "Almagro",
+        "sigla": "ALG",
+        "ciudad": "José Ingenieros",
+        "estadio": "Tres de Febrero",
+        "colores": [
+          "#003399",
+          "#000000"
+        ],
+        "clasicos": [
+          "Estudiantes (BA)"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 68,
+        "perfil_competitivo": "El Tricolor, luchando por consolidarse en zona media."
+      },
+      {
+        "nombre": "Tristán Suárez",
+        "sigla": "TRI",
+        "ciudad": "Tristán Suárez",
+        "estadio": "20 de Octubre",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Cañuelas"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 70,
+        "perfil_competitivo": "El Lechero, equipo competitivo del sur bonaerense."
+      },
+      {
+        "nombre": "San Miguel",
+        "sigla": "SMI",
+        "ciudad": "Los Polvorines",
+        "estadio": "Malvinas Argentinas",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Tigre"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 70,
+        "perfil_competitivo": "El Trueno Verde, con fuerte inversión para pelear el ascenso."
+      },
+      {
+        "nombre": "Colegiales",
+        "sigla": "COL",
+        "ciudad": "Munro",
+        "estadio": "Libertarios Unidos",
+        "colores": [
+          "#003399",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "Acassuso"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Histórico del ascenso metropolitano compitiendo en Primera Nacional."
+      },
+      {
+        "nombre": "Acassuso",
+        "sigla": "ACA",
+        "ciudad": "Boulogne",
+        "estadio": "La Quema",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Colegiales"
+        ],
+        "prestigio_historico": 60,
+        "nivel_actual": 68,
+        "perfil_competitivo": "El Quemero, equipo ordenado del norte del conurbano."
+      },
+      {
+        "nombre": "Ferrocarril Midland",
+        "sigla": "MID",
+        "ciudad": "Libertad",
+        "estadio": "Ciudad de Libertad",
+        "colores": [
+          "#FFFFFF",
+          "#003399"
+        ],
+        "clasicos": [
+          "Deportivo Merlo"
+        ],
+        "prestigio_historico": 60,
+        "nivel_actual": 69,
+        "perfil_competitivo": "El Funebrero del oeste bonaerense sorprendiendo en la categoría."
+      },
+      {
+        "nombre": "Agropecuario",
+        "sigla": "AGR",
+        "ciudad": "Carlos Casares",
+        "estadio": "Ofelia Rosenzuaig",
+        "colores": [
+          "#007A33",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Sarmiento"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 69,
+        "perfil_competitivo": "El Sojero, habitual animador del interior bonaerense."
+      },
+      {
+        "nombre": "Ciudad de Bolívar",
+        "sigla": "BOL",
+        "ciudad": "San Carlos de Bolívar",
+        "estadio": "Municipal Eva Perón",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Agropecuario"
+        ],
+        "prestigio_historico": 59,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Proyecto deportivo del interior bonaerense peleando el reducido."
+      },
+      {
+        "nombre": "Patronato",
+        "sigla": "PAT",
+        "ciudad": "Paraná",
+        "estadio": "Presbítero Bartolomé Grella",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Atlético Paraná"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 68,
+        "perfil_competitivo": "Campeón de Copa Argentina 2022 buscando recuperar protagonismo."
+      },
+      {
+        "nombre": "Atlético de Rafaela",
+        "sigla": "RAF",
+        "ciudad": "Rafaela",
+        "estadio": "Nuevo Monumental",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "9 de Julio (Rafaela)"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 68,
+        "perfil_competitivo": "La Crema, tradicional representante santafesino en el ascenso."
+      },
+      {
+        "nombre": "Deportivo Madryn",
+        "sigla": "MAD",
+        "ciudad": "Puerto Madryn",
+        "estadio": "Abel Sastre",
+        "colores": [
+          "#FFED00",
+          "#000000"
+        ],
+        "clasicos": [
+          "Guillermo Brown"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Potencia patagónica protagonista en los últimos torneos."
+      },
+      {
+        "nombre": "Deportivo Maipú",
+        "sigla": "MAI",
+        "ciudad": "Maipú",
+        "estadio": "Omar Higinio Sperdutti",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Gutiérrez SC"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 69,
+        "perfil_competitivo": "El Cruzado mendocino, competitivo en su estadio."
+      },
+      {
+        "nombre": "Gimnasia y Tiro",
+        "sigla": "GYT",
+        "ciudad": "Salta",
+        "estadio": "El Gigante del Norte",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Central Norte",
+          "Juventud Antoniana"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 70,
+        "perfil_competitivo": "El Albo salteño, protagonista del clásico del norte en la categoría."
+      },
+      {
+        "nombre": "Central Norte",
+        "sigla": "CNO",
+        "ciudad": "Salta",
+        "estadio": "Padre Ernesto Martearena",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Gimnasia y Tiro",
+          "Juventud Antoniana"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 68,
+        "perfil_competitivo": "El Cuervo salteño, club de enorme convocatoria en el norte."
+      },
+      {
+        "nombre": "Mitre (SdE)",
+        "sigla": "MIT",
+        "ciudad": "Santiago del Estero",
+        "estadio": "Doctores José y Antonio Castiglione",
+        "colores": [
+          "#FFED00",
+          "#000000"
+        ],
+        "clasicos": [
+          "Güemes (SdE)",
+          "Central Córdoba (SdE)"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 68,
+        "perfil_competitivo": "El Aurinegro santiagueño asentado en la división."
+      },
+      {
+        "nombre": "Güemes (SdE)",
+        "sigla": "GUE",
+        "ciudad": "Santiago del Estero",
+        "estadio": "Arturo Jiya Miranda",
+        "colores": [
+          "#6CACE4",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Mitre (SdE)",
+          "Central Córdoba (SdE)"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 68,
+        "perfil_competitivo": "El Gaucho santiagueño luchando por sostenerse."
+      },
+      {
+        "nombre": "Chaco For Ever",
+        "sigla": "CFE",
+        "ciudad": "Resistencia",
+        "estadio": "Juan Alberto García",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sarmiento de Resistencia"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Gigante del noreste argentino con gran apoyo popular."
+      },
+      {
+        "nombre": "Racing de Córdoba",
+        "sigla": "RAC",
+        "ciudad": "Córdoba",
+        "estadio": "Miguel Sancho",
+        "colores": [
+          "#6CACE4",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Instituto"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 68,
+        "perfil_competitivo": "Subcampeón nacional en 1980, tradicional club de Nueva Italia."
+      },
+      {
+        "nombre": "San Telmo",
+        "sigla": "STE",
+        "ciudad": "Isla Maciel",
+        "estadio": "Dr. Osvaldo Baletto",
+        "colores": [
+          "#6CACE4",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "Dock Sud"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 69,
+        "perfil_competitivo": "El Candombero, equipo combativo y revelación reciente."
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "liga": "Süper Lig",
+    "pais": "Turquía",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Galatasaray SK",
+        "sigla": "GAL",
+        "ciudad": "Estambul",
+        "estadio": "RAMS Park",
+        "colores": [
+          "#A90432",
+          "#FDB912"
+        ],
+        "clasicos": [
+          "Fenerbahçe SK",
+          "Beşiktaş JK"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 85,
+        "perfil_competitivo": "Campeón de Copa UEFA 2000 y club más laureado de Turquía."
+      },
+      {
+        "nombre": "Fenerbahçe SK",
+        "sigla": "FEN",
+        "ciudad": "Estambul",
+        "estadio": "Ülker Stadyumu",
+        "colores": [
+          "#FFED00",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Galatasaray SK",
+          "Beşiktaş JK"
+        ],
+        "prestigio_historico": 86,
+        "nivel_actual": 84,
+        "perfil_competitivo": "Gigante de Estambul con fichajes de renombre mundial peleando cada título."
+      },
+      {
+        "nombre": "Beşiktaş JK",
+        "sigla": "BJK",
+        "ciudad": "Estambul",
+        "estadio": "Tüpraş Stadyumu",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Galatasaray SK",
+          "Fenerbahçe SK"
+        ],
+        "prestigio_historico": 83,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Tercer grande de Estambul, habitual en competencias europeas."
+      },
+      {
+        "nombre": "Trabzonspor",
+        "sigla": "TRA",
+        "ciudad": "Trebisonda",
+        "estadio": "Papara Park",
+        "colores": [
+          "#7A1C24",
+          "#3BB9FF"
+        ],
+        "clasicos": [
+          "Galatasaray SK",
+          "Fenerbahçe SK"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 78,
+        "perfil_competitivo": "El gran campeón fuera de Estambul, fuerte localía en el Mar Negro."
+      },
+      {
+        "nombre": "İstanbul Başakşehir FK",
+        "sigla": "IBFK",
+        "ciudad": "Estambul",
+        "estadio": "Başakşehir Fatih Terim",
+        "colores": [
+          "#FF6600",
+          "#002B5C"
+        ],
+        "clasicos": [
+          "Kasımpaşa SK"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Campeón en 2020 y habitual participante en torneos europeos."
+      },
+      {
+        "nombre": "Samsunspor",
+        "sigla": "SAM",
+        "ciudad": "Samsun",
+        "estadio": "Samsun 19 Mayıs",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Trabzonspor"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Club histórico del Mar Negro consolidado en la parte alta."
+      },
+      {
+        "nombre": "Göztepe",
+        "sigla": "GOZ",
+        "ciudad": "Esmirna",
+        "estadio": "Gürsel Aksel",
+        "colores": [
+          "#FFED00",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Karşıyaka"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Semifinalista europeo histórico y gran afición en Esmirna."
+      },
+      {
+        "nombre": "Kasımpaşa SK",
+        "sigla": "KAS",
+        "ciudad": "Estambul",
+        "estadio": "Recep Tayyip Erdoğan",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "İstanbul Başakşehir FK"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Equipo estable de Estambul de mitad de tabla."
+      },
+      {
+        "nombre": "Konyaspor",
+        "sigla": "KON",
+        "ciudad": "Konya",
+        "estadio": "Konya Büyükşehir",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Antalyaspor"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Campeón de Copa de Turquía 2017 con moderno estadio."
+      },
+      {
+        "nombre": "Alanyaspor",
+        "sigla": "ALA",
+        "ciudad": "Alanya",
+        "estadio": "Gain Park Stadium",
+        "colores": [
+          "#FF6600",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Antalyaspor"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club mediterráneo establecido en la Süper Lig."
+      },
+      {
+        "nombre": "Çaykur Rizespor",
+        "sigla": "RIZ",
+        "ciudad": "Rize",
+        "estadio": "Çaykur Didi",
+        "colores": [
+          "#007A33",
+          "#003399"
+        ],
+        "clasicos": [
+          "Trabzonspor"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Equipo del Mar Negro enfocado en zona media."
+      },
+      {
+        "nombre": "Gaziantep FK",
+        "sigla": "GFK",
+        "ciudad": "Gaziantep",
+        "estadio": "Gaziantep Stadium",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Hatayspor"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Representante del sureste turco peleando la permanencia."
+      },
+      {
+        "nombre": "Eyüpspor",
+        "sigla": "EYU",
+        "ciudad": "Estambul",
+        "estadio": "Recep Tayyip Erdoğan",
+        "colores": [
+          "#5B2C82",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "Kasımpaşa SK"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Club centenario de Estambul asentado en Primera."
+      },
+      {
+        "nombre": "Kocaelispor",
+        "sigla": "KOC",
+        "ciudad": "İzmit",
+        "estadio": "Yıldız Entegre Kocaeli",
+        "colores": [
+          "#007A33",
+          "#000000"
+        ],
+        "clasicos": [
+          "Sakaryaspor"
+        ],
+        "prestigio_historico": 69,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Histórico campeón de copa regresando a la Süper Lig."
+      },
+      {
+        "nombre": "Gençlerbirliği SK",
+        "sigla": "GEN",
+        "ciudad": "Ankara",
+        "estadio": "Eryaman Stadium",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "MKE Ankaragücü"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Tradicional club de la capital Ankara de vuelta en la élite."
+      },
+      {
+        "nombre": "Amed SK",
+        "sigla": "AME",
+        "ciudad": "Diyarbakır",
+        "estadio": "Diyarbakır Stadium",
+        "colores": [
+          "#007A33",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Van Spor"
+        ],
+        "prestigio_historico": 61,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Equipo de enorme convocatoria que debuta en la Süper Lig."
+      },
+      {
+        "nombre": "Erzurumspor FK",
+        "sigla": "ERZ",
+        "ciudad": "Erzurum",
+        "estadio": "Kazım Karabekir",
+        "colores": [
+          "#0055A5",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Sivasspor"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Representante del este de Anatolia en condiciones invernales extremas."
+      },
+      {
+        "nombre": "Çorum FK",
+        "sigla": "COR",
+        "ciudad": "Çorum",
+        "estadio": "Çorum City Stadium",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Samsunspor"
+        ],
+        "prestigio_historico": 59,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Modesto club logrando su estreno en la máxima categoría turca."
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "liga": "Scottish Premiership",
+    "pais": "Escocia",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Celtic FC",
+        "sigla": "CEL",
+        "ciudad": "Glasgow",
+        "estadio": "Celtic Park",
+        "colores": [
+          "#018749",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Rangers FC"
+        ],
+        "prestigio_historico": 88,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Primer campeón británico de Europa (1967) y dominador reciente en Escocia."
+      },
+      {
+        "nombre": "Rangers FC",
+        "sigla": "RAN",
+        "ciudad": "Glasgow",
+        "estadio": "Ibrox Stadium",
+        "colores": [
+          "#1B458F",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Celtic FC"
+        ],
+        "prestigio_historico": 87,
+        "nivel_actual": 79,
+        "perfil_competitivo": "Protagonista del Old Firm y finalista reciente de Europa League."
+      },
+      {
+        "nombre": "Heart of Midlothian",
+        "sigla": "HEA",
+        "ciudad": "Edimburgo",
+        "estadio": "Tynecastle Park",
+        "colores": [
+          "#7A1C24",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Hibernian FC"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Tercera fuerza histórica de Escocia y protagonista del derbi de Edimburgo."
+      },
+      {
+        "nombre": "Aberdeen FC",
+        "sigla": "ABE",
+        "ciudad": "Aberdeen",
+        "estadio": "Pittodrie Stadium",
+        "colores": [
+          "#E30613",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Dundee United"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 73,
+        "perfil_competitivo": "Campeón de Recopa Europea en 1983 con Alex Ferguson."
+      },
+      {
+        "nombre": "Hibernian FC",
+        "sigla": "HIB",
+        "ciudad": "Edimburgo",
+        "estadio": "Easter Road",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Heart of Midlothian"
+        ],
+        "prestigio_historico": 75,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Histórico club de Edimburgo peleando por el top 6."
+      },
+      {
+        "nombre": "Dundee United",
+        "sigla": "DUN",
+        "ciudad": "Dundee",
+        "estadio": "Tannadice Park",
+        "colores": [
+          "#FF6600",
+          "#000000"
+        ],
+        "clasicos": [
+          "Dundee FC",
+          "Aberdeen FC"
+        ],
+        "prestigio_historico": 74,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Subcampeón de Copa UEFA en 1987, protagonista del derbi de Dundee."
+      },
+      {
+        "nombre": "Dundee FC",
+        "sigla": "DND",
+        "ciudad": "Dundee",
+        "estadio": "Dens Park",
+        "colores": [
+          "#002B5C",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Dundee United"
+        ],
+        "prestigio_historico": 71,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Campeón escocés en 1962, rival directo en la ciudad de Dundee."
+      },
+      {
+        "nombre": "Motherwell FC",
+        "sigla": "MOT",
+        "ciudad": "Motherwell",
+        "estadio": "Fir Park",
+        "colores": [
+          "#FF9900",
+          "#7A1C24"
+        ],
+        "clasicos": [
+          "Hamilton Academical"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Más de 40 años consecutivos en la máxima categoría escocesa."
+      },
+      {
+        "nombre": "St Mirren FC",
+        "sigla": "STM",
+        "ciudad": "Paisley",
+        "estadio": "SMiSA Stadium",
+        "colores": [
+          "#000000",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Greenock Morton"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club tradicional cercano a Glasgow con clasificaciones europeas recientes."
+      },
+      {
+        "nombre": "Kilmarnock FC",
+        "sigla": "KIL",
+        "ciudad": "Kilmarnock",
+        "estadio": "Rugby Park",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Ayr United"
+        ],
+        "prestigio_historico": 70,
+        "nivel_actual": 70,
+        "perfil_competitivo": "El club profesional más antiguo de Escocia (1869)."
+      },
+      {
+        "nombre": "St Johnstone FC",
+        "sigla": "STJ",
+        "ciudad": "Perth",
+        "estadio": "McDiarmid Park",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Dundee FC"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Ganador del doblete de copas domésticas en 2021."
+      },
+      {
+        "nombre": "Falkirk FC",
+        "sigla": "FAL",
+        "ciudad": "Falkirk",
+        "estadio": "Falkirk Stadium",
+        "colores": [
+          "#002B5C",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Dunfermline Athletic"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Histórico club retornando con gran impulso a la Premiership."
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "liga": "Saudi Pro League",
+    "pais": "Arabia Saudita",
+    "temporada": "2026/2027",
+    "equipos": [
+      {
+        "nombre": "Al-Hilal SFC",
+        "sigla": "HIL",
+        "ciudad": "Riad",
+        "estadio": "Kingdom Arena",
+        "colores": [
+          "#003399",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Al-Nassr FC",
+          "Al-Ittihad Club"
+        ],
+        "prestigio_historico": 85,
+        "nivel_actual": 85,
+        "perfil_competitivo": "El club más ganador de Asia y potencia dominante en Arabia Saudita."
+      },
+      {
+        "nombre": "Al-Nassr FC",
+        "sigla": "NAS",
+        "ciudad": "Riad",
+        "estadio": "Al-Awwal Park",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "Al-Hilal SFC",
+          "Al-Shabab FC"
+        ],
+        "prestigio_historico": 79,
+        "nivel_actual": 82,
+        "perfil_competitivo": "Protagonista global con estrellas internacionales y candidato en Asia."
+      },
+      {
+        "nombre": "Al-Ittihad Club",
+        "sigla": "ITT",
+        "ciudad": "Yeda",
+        "estadio": "King Abdullah Sports City",
+        "colores": [
+          "#FFCC00",
+          "#000000"
+        ],
+        "clasicos": [
+          "Al-Ahli Saudi FC",
+          "Al-Hilal SFC"
+        ],
+        "prestigio_historico": 81,
+        "nivel_actual": 81,
+        "perfil_competitivo": "Bicampeón de Champions de Asia y uno de los clubes más populares del país."
+      },
+      {
+        "nombre": "Al-Ahli Saudi FC",
+        "sigla": "AHL",
+        "ciudad": "Yeda",
+        "estadio": "King Abdullah Sports City",
+        "colores": [
+          "#007A33",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Al-Ittihad Club"
+        ],
+        "prestigio_historico": 78,
+        "nivel_actual": 80,
+        "perfil_competitivo": "Potencia de Yeda con gran inversión y plantel competitivo."
+      },
+      {
+        "nombre": "Al-Qadsiah FC",
+        "sigla": "QAD",
+        "ciudad": "Khobar",
+        "estadio": "Prince Saud bin Jalawi",
+        "colores": [
+          "#E30613",
+          "#FFED00"
+        ],
+        "clasicos": [
+          "Al-Ettifaq FC"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 78,
+        "perfil_competitivo": "Club respaldado por Aramco con fichajes europeos de primer nivel."
+      },
+      {
+        "nombre": "Al-Shabab FC",
+        "sigla": "SHA",
+        "ciudad": "Riad",
+        "estadio": "Al-Shabab Club Stadium",
+        "colores": [
+          "#FFFFFF",
+          "#000000"
+        ],
+        "clasicos": [
+          "Al-Hilal SFC",
+          "Al-Nassr FC"
+        ],
+        "prestigio_historico": 76,
+        "nivel_actual": 76,
+        "perfil_competitivo": "Histórico campeón saudí de Riad compitiendo en zona alta."
+      },
+      {
+        "nombre": "Al-Ettifaq FC",
+        "sigla": "ETT",
+        "ciudad": "Dammam",
+        "estadio": "EGO Stadium",
+        "colores": [
+          "#007A33",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Al-Qadsiah FC"
+        ],
+        "prestigio_historico": 72,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Primer club saudí en ganar títulos internacionales, asentado en zona media."
+      },
+      {
+        "nombre": "Al-Taawoun FC",
+        "sigla": "TAA",
+        "ciudad": "Buraidá",
+        "estadio": "King Abdullah Sport City",
+        "colores": [
+          "#FFED00",
+          "#003399"
+        ],
+        "clasicos": [
+          "Al-Raed"
+        ],
+        "prestigio_historico": 67,
+        "nivel_actual": 74,
+        "perfil_competitivo": "Habitual animador de los puestos altos fuera de las grandes capitales."
+      },
+      {
+        "nombre": "Al-Fateh SC",
+        "sigla": "FAT",
+        "ciudad": "Al-Hasa",
+        "estadio": "Al-Fateh Club Stadium",
+        "colores": [
+          "#007A33",
+          "#003399"
+        ],
+        "clasicos": [
+          "Al-Adalah"
+        ],
+        "prestigio_historico": 68,
+        "nivel_actual": 72,
+        "perfil_competitivo": "Campeón de liga en 2013, equipo competitivo de mitad de tabla."
+      },
+      {
+        "nombre": "Al-Fayha FC",
+        "sigla": "FAY",
+        "ciudad": "Al Majma'ah",
+        "estadio": "Al Majma'ah Sports City",
+        "colores": [
+          "#FF6600",
+          "#003399"
+        ],
+        "clasicos": [
+          "Al-Faisaly FC"
+        ],
+        "prestigio_historico": 64,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Campeón de Copa del Rey en 2022."
+      },
+      {
+        "nombre": "Al-Khaleej FC",
+        "sigla": "KHA",
+        "ciudad": "Saihat",
+        "estadio": "Prince Mohamed bin Fahd",
+        "colores": [
+          "#FFED00",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Al-Ettifaq FC"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club de la Provincia Oriental enfocado en la permanencia."
+      },
+      {
+        "nombre": "Al-Riyadh SC",
+        "sigla": "RIY",
+        "ciudad": "Riad",
+        "estadio": "Prince Turki bin Abdul Aziz",
+        "colores": [
+          "#E30613",
+          "#000000"
+        ],
+        "clasicos": [
+          "Al-Shabab FC"
+        ],
+        "prestigio_historico": 65,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Tradicional club de la capital peleando en la zona baja."
+      },
+      {
+        "nombre": "Al-Kholood Club",
+        "sigla": "KHO",
+        "ciudad": "Ar Rass",
+        "estadio": "Al-Hazem Club Stadium",
+        "colores": [
+          "#E30613",
+          "#007A33"
+        ],
+        "clasicos": [
+          "Al-Hazem SC"
+        ],
+        "prestigio_historico": 60,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Primer club saudí adquirido por inversores extranjeros."
+      },
+      {
+        "nombre": "Al-Hazem SC",
+        "sigla": "HAZ",
+        "ciudad": "Ar Rass",
+        "estadio": "Al-Hazem Club Stadium",
+        "colores": [
+          "#FFED00",
+          "#E30613"
+        ],
+        "clasicos": [
+          "Al-Kholood Club"
+        ],
+        "prestigio_historico": 62,
+        "nivel_actual": 69,
+        "perfil_competitivo": "Club de Ar Rass luchando por sostenerse en Primera."
+      },
+      {
+        "nombre": "Abha Club",
+        "sigla": "ABH",
+        "ciudad": "Abha",
+        "estadio": "Prince Sultan bin Abdulaziz",
+        "colores": [
+          "#E30613",
+          "#003399"
+        ],
+        "clasicos": [
+          "Damac FC"
+        ],
+        "prestigio_historico": 63,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Representante de la región montañosa de Asir."
+      },
+      {
+        "nombre": "Al-Faisaly FC",
+        "sigla": "FAI",
+        "ciudad": "Harmah",
+        "estadio": "Al Majma'ah Sports City",
+        "colores": [
+          "#7A1C24",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Al-Fayha FC"
+        ],
+        "prestigio_historico": 66,
+        "nivel_actual": 70,
+        "perfil_competitivo": "Campeón de Copa 2021 retornando a la máxima categoría."
+      },
+      {
+        "nombre": "Neom SC",
+        "sigla": "NEO",
+        "ciudad": "Tabuk",
+        "estadio": "King Khalid Sport City",
+        "colores": [
+          "#002B5C",
+          "#00A3E0"
+        ],
+        "clasicos": [
+          "Al-Tai"
+        ],
+        "prestigio_historico": 60,
+        "nivel_actual": 75,
+        "perfil_competitivo": "Ambicioso proyecto vinculado a la ciudad futurista NEOM con fuerte inversión."
+      },
+      {
+        "nombre": "Al-Diriyah Club",
+        "sigla": "DIR",
+        "ciudad": "Diriyah",
+        "estadio": "Prince Turki bin Abdul Aziz",
+        "colores": [
+          "#7A1C24",
+          "#FFFFFF"
+        ],
+        "clasicos": [
+          "Al-Riyadh SC"
+        ],
+        "prestigio_historico": 60,
+        "nivel_actual": 71,
+        "perfil_competitivo": "Club histórico de la cuna del estado saudí debutando en la Pro League."
+      }
+    ]
+  }
+]

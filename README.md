@@ -2,6 +2,9 @@
 
 Simulador roguelike de carrera: arrancás a los 16 en un club chico y peleás por llegar a Primera, a Europa, a la Selección… y a tu estatua.
 
+### Ligas y equipos
+Los clubes salen de [`src/data/ligas_y_equipos_2026.json`](src/data/ligas_y_equipos_2026.json): 19 ligas y 389 equipos con estadio, ciudad, colores, clásicos, prestigio histórico, nivel actual y perfil. Podés editar ese archivo (o sumar ligas nuevas con el mismo formato) y el juego lo toma solo. Los datos extra de cada liga (sueldos, copas, ascensos) están en `LEAGUE_META` dentro de [`src/data/clubs.js`](src/data/clubs.js).
+
 ### Novedades de esta versión
 - Finales al **mejor de 3 jugadas** con marcador, en vez de un único tiro.
 - Minijuegos rehechos: el arquero ahora *ve venir* la pelota, el trile anima la mezcla de vasos de verdad, el tiro libre usa la comba elegida.
