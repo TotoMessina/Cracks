@@ -15,11 +15,26 @@ const cleanStaleLocalhostPlugin = () => ({
   }
 });
 
+// Writes the list of built files so the service worker can cache the whole game for offline play
+const precacheManifestPlugin = () => ({
+  name: 'precache-manifest',
+  apply: 'build',
+  generateBundle(_, bundle) {
+    const files = Object.keys(bundle).filter(f => /\.(js|css|png|svg|woff2?)$/.test(f)).map(f => '/' + f);
+    this.emitFile({
+      type: 'asset',
+      fileName: 'precache-manifest.json',
+      source: JSON.stringify({ version: Date.now(), files }),
+    });
+  },
+});
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     cleanStaleLocalhostPlugin(),
     react(),
-    tailwindcss()
+    tailwindcss(),
+    precacheManifestPlugin(),
   ],
 })

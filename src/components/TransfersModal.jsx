@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import ClubShield from './ClubShield';
 import { AlertOctagon, Check, X } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { signingBonus } from '../game/career';
 
 export default function TransfersModal({
   player,
   offers = [],
   onAcceptOffer,
+  isFreeAgent = true,
+  yearsRange = { min: 1, max: 4, suggested: 3 },
 }) {
   const [selectedOfferIndex, setSelectedOfferIndex] = useState(0);
+  const [years, setYears] = useState(yearsRange.suggested);
   const [showRivalConfirmation, setShowRivalConfirmation] = useState(false);
 
   const selectedOffer = offers[selectedOfferIndex] || offers[0];
@@ -29,7 +33,7 @@ export default function TransfersModal({
       return;
     }
     sound.playFanfare();
-    onAcceptOffer(selectedOffer);
+    onAcceptOffer(selectedOffer, years);
   };
 
   return (
@@ -43,13 +47,15 @@ export default function TransfersModal({
         {/* Header */}
         <div className="text-center mb-6">
           <span className="text-xs uppercase font-black tracking-widest text-[#22E748] bg-[#22E748]/10 px-3 py-1 rounded-full border border-[#22E748]/20">
-            Mercado de Pases
+            {isFreeAgent ? 'Mercado de pases · Contrato terminado' : 'Mercado de pases · Contrato vigente'}
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
-            Propuestas para la Próxima Temporada
+            {isFreeAgent ? 'Sos libre: elegí tu próximo contrato' : '¡Hay interés por vos!'}
           </h2>
           <p className="text-sm text-gray-400 mt-1">
-            Tu rendimiento en el campo llamó la atención. Podés renovar o dar un salto de club.
+            {isFreeAgent
+              ? 'Se terminó tu contrato. Podés renovar o irte gratis a otro club.'
+              : 'Todavía tenés contrato, pero llegaron propuestas. Podés quedarte tranquilo o aceptar.'}
           </p>
         </div>
 
@@ -84,9 +90,19 @@ export default function TransfersModal({
                       <h3 className="text-base font-black text-white">
                         {club.name}
                       </h3>
+                      {offer.isStay && (
+                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-white/5 text-gray-300 border border-white/15">
+                          Contrato vigente
+                        </span>
+                      )}
                       {offer.isRenewal && (
                         <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50">
-                          Tu Club Actual
+                          {offer.isRenegotiation ? 'Renegociación' : 'Tu club actual'}
+                        </span>
+                      )}
+                      {offer.paysClause && (
+                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50">
+                          Paga tu cláusula
                         </span>
                       )}
                       {offer.isRival && (
@@ -109,7 +125,7 @@ export default function TransfersModal({
                   <span className="text-base font-black text-[#22E748] font-mono">
                     ${(offer.salary || 0).toLocaleString('es-AR')}
                   </span>
-                  {player?.salary > 0 && (
+                  {player?.salary > 0 && !offer.isStay && (
                     <span className={`block text-[10px] font-mono font-bold ${offer.salary >= player.salary ? 'text-emerald-400' : 'text-red-400'}`}>
                       {offer.salary >= player.salary ? '▲' : '▼'} {Math.round((offer.salary / player.salary - 1) * 100)}% vs. actual
                     </span>
@@ -160,9 +176,42 @@ export default function TransfersModal({
                   ⚠️ ADVERTENCIA DE TRAICIÓN HISTÓRICA:
                 </span>
                 Si firmas con el clásico rival, tu idolatría en {player.currentClub.name} caerá inmediatamente a 0, quemarán tus camisetas en la calle y serás repudiado cada vez que vuelvas a su estadio.
+                {player.flags?.swornLoyalty === player.currentClub.id && (
+                  <strong className="block mt-1 text-red-100">Además juraste amor eterno en televisión: romper el juramento te cuesta 10 de fama.</strong>
+                )}
               </div>
             </div>
           )
+        )}
+
+        {/* Contract length */}
+        {selectedOffer && !selectedOffer.isStay && (
+          <div className="mb-5 p-3 sm:p-4 rounded-2xl bg-black/30 border border-white/10">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <span className="text-xs font-black uppercase text-gray-300">Duración del contrato</span>
+              <span className="text-xs font-mono text-gray-400">
+                Total: <strong className="text-[#22E748]">${((selectedOffer.salary || 0) * years).toLocaleString('es-AR')}</strong> en {years} {years === 1 ? 'año' : 'años'}
+                {' '}· Prima por firma: <strong className="text-amber-300">${signingBonus(selectedOffer.salary || 0, years).toLocaleString('es-AR')}</strong>
+              </span>
+            </div>
+            <div className="flex gap-1.5">
+              {Array.from({ length: yearsRange.max - yearsRange.min + 1 }, (_, i) => yearsRange.min + i).map(y => (
+                <button
+                  key={y}
+                  onClick={() => { sound.playClick(); setYears(y); }}
+                  className={`flex-1 py-2 rounded-xl text-sm font-black border transition-all cursor-pointer ${
+                    years === y ? 'bg-[#22E748] text-black border-[#22E748]' : 'bg-black/40 text-gray-300 border-white/10 hover:border-white/30'
+                  }`}
+                >
+                  {y} {y === 1 ? 'año' : 'años'}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-gray-400 mt-2 leading-snug">
+              El sueldo queda fijo todo el contrato. Largo = más prima y seguridad (si bajás el nivel seguís cobrando igual{selectedOffer.isRenewal ? '; renovar 4 años o más suma idolatría' : ''}), pero si mejorás vas a cobrar menos de lo que valés.
+              Mientras dure, solo te podés ir si un club paga tu cláusula.
+            </p>
+          </div>
         )}
 
         {/* Footer */}
@@ -178,7 +227,9 @@ export default function TransfersModal({
                 : 'bg-gradient-to-r from-[#22E748] to-[#16a34a] text-black hover:brightness-110 active:scale-98 cursor-pointer'
             }`}
           >
-            {selectedOffer?.isRenewal
+            {selectedOffer?.isStay
+              ? "Quedarme con mi contrato ➔"
+              : selectedOffer?.isRenewal
               ? "Firmar Renovación ➔"
               : selectedOffer?.isRival
               ? "Firmar Pase con el Rival ➔"

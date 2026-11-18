@@ -1,6 +1,38 @@
 // Centralized persistence & storage helpers for El Ídolo
 import { getCountryById } from '../data/clubs';
 
+const GLORY_MULT = { facil: 0.8, normal: 1, leyenda: 1.3 };
+
+/** Glory score of a career (same formula for the retirement screen and the Hall of Fame). */
+export function computeGlory(player) {
+  const isGk = player.position === 'arquero';
+  const trophies = player.trophies?.length || 0;
+  // Each trophy counts by importance (Champions/Libertadores 30, league 25, cup 15, Conference 12...); old saves: 20
+  const titlePoints = (player.trophies || []).reduce((sum, t) => sum + (t.weight ?? 20), 0);
+  const statPoints = isGk ? (player.totalCleanSheets || 0) * 2 : Math.round((player.totalGoals || 0) * 1.2);
+  const awardPoints = (player.awards?.length || 0) * 25;
+  const statuePoints = player.hasStatue ? 100 : 0;
+  const famePoints = (player.fame || 0) * 3;
+  const base = titlePoints + statPoints + awardPoints + statuePoints + famePoints;
+  const mult = GLORY_MULT[player.difficulty] ?? 1;
+  const total = Math.round(base * mult);
+
+  let tier = 0;
+  if (total >= 800 || (player.hasStatue && trophies >= 6)) tier = 4;
+  else if (total >= 500 || player.hasStatue) tier = 3;
+  else if (total >= 300) tier = 2;
+  else if (total >= 180) tier = 1;
+  return { base, mult, total, tier };
+}
+
+export const HONORARY_TITLES = [
+  'Trotamundos del Fútbol',
+  'Campeón Continental Destacado',
+  'Ídolo Eterno de la Hinchada',
+  'Estatua de Bronce en la Historia',
+  'Deidad Inmortal del Fútbol Mundial',
+];
+
 // --- 1. SAVE SLOTS ---
 export function getSlotData(slotNumber) {
   try {
@@ -67,24 +99,9 @@ export function getHallOfFameLegends() {
 
 export function saveLegendToHallOfFame(player) {
   if (!player) return null;
-  const isGk = player.position === 'arquero';
-  const titlePoints = (player.trophies?.length || 0) * 20;
-  const statPoints = isGk ? (player.totalCleanSheets || 0) * 2 : Math.round((player.totalGoals || 0) * 1.2);
-  const awardPoints = (player.awards?.length || 0) * 25;
-  const statuePoints = player.hasStatue ? 100 : 0;
-  const famePoints = (player.fame || 0) * 3;
-  const totalGloryScore = titlePoints + statPoints + awardPoints + statuePoints + famePoints;
-
-  let honoraryTitle = "Trotamundos del Fútbol";
-  if (totalGloryScore >= 800 || (player.hasStatue && (player.trophies?.length || 0) >= 6)) {
-    honoraryTitle = "Deidad Inmortal del Fútbol Mundial";
-  } else if (totalGloryScore >= 500 || player.hasStatue) {
-    honoraryTitle = "Estatua de Bronce en la Historia";
-  } else if (totalGloryScore >= 300) {
-    honoraryTitle = "Ídolo Eterno de la Hinchada";
-  } else if (totalGloryScore >= 180) {
-    honoraryTitle = "Campeón Continental Destacado";
-  }
+  const glory = computeGlory(player);
+  const totalGloryScore = glory.total;
+  const honoraryTitle = HONORARY_TITLES[glory.tier];
 
   const legend = {
     id: player.id || `legend_${Date.now()}`,
@@ -105,6 +122,7 @@ export function saveLegendToHallOfFame(player) {
     hasStatue: Boolean(player.hasStatue),
     money: player.money || 0,
     totalGloryScore,
+    difficulty: player.difficulty || 'normal',
     honoraryTitle,
     retiredAt: new Date().toLocaleDateString('es-AR')
   };

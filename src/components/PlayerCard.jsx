@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Flag from './Flag';
 import ClubShield from './ClubShield';
-import { getPlayerOverall, getIdolatryRank, checkNationalTeamCallUp } from '../game/career';
+import { getPlayerOverall, getIdolatryRank, checkNationalTeamCallUp, getNationalCareer, NT_STATUS_LABEL } from '../game/career';
 import { COUNTRIES } from '../data/clubs';
 import { Star, Trophy, Coins, Zap, UserCheck, Users, HelpCircle } from 'lucide-react';
 
@@ -26,7 +26,8 @@ export default function PlayerCard({ player }) {
   const overall = getPlayerOverall(player);
   const country = COUNTRIES.find(c => c.id === player.country) || COUNTRIES[0];
   const idolatryInfo = getIdolatryRank(player.idolatry);
-  const isCalledUp = player.nationalTeamStats?.calledUp || checkNationalTeamCallUp(player);
+  const nt = getNationalCareer(player);
+  const isCalledUp = nt.status !== 'none' || player.nationalTeamStats?.calledUp || checkNationalTeamCallUp(player);
 
   // Position labels & colors
   const posDetails = {
@@ -94,10 +95,19 @@ export default function PlayerCard({ player }) {
               {country.nationalTeam}
             </span>
           </div>
-          <span className="text-[10px] font-mono font-bold text-sky-400 bg-sky-900/40 px-2 py-0.5 rounded border border-sky-500/20">
-            {player.nationalTeamStats?.matches
-              ? `${player.nationalTeamStats.matches} PJ • ${player.nationalTeamStats.goals || player.nationalTeamStats.cleanSheets || 0} ${player.position === 'arquero' ? 'VI' : 'G'}`
-              : 'Convocado'}
+          <span className="flex items-center gap-1.5 flex-shrink-0">
+            {nt.skipNext ? (
+              <span className="text-[10px] font-bold text-red-300 bg-red-900/30 px-2 py-0.5 rounded border border-red-500/30">Afuera por faltazo</span>
+            ) : (
+              <span className={`text-[10px] font-black px-2 py-0.5 rounded border ${nt.status === 'captain' ? 'text-amber-300 bg-amber-900/30 border-amber-500/40' : 'text-sky-300 bg-sky-900/40 border-sky-500/20'}`}>
+                {nt.status === 'captain' ? '©️ ' : ''}{NT_STATUS_LABEL[nt.status === 'none' ? 'called' : nt.status]}{nt.shirt ? ` · #${nt.shirt}` : ''}
+              </span>
+            )}
+            {player.nationalTeamStats?.matches > 0 && (
+              <span className="text-[10px] font-mono font-bold text-sky-400 bg-sky-900/40 px-2 py-0.5 rounded border border-sky-500/20">
+                {player.nationalTeamStats.matches} PJ · {player.position === 'arquero' ? `${player.nationalTeamStats.cleanSheets || 0} VI` : `${player.nationalTeamStats.goals || 0} G`}
+              </span>
+            )}
           </span>
         </div>
       )}

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/audio';
-import { saveLegendToHallOfFame } from '../utils/storage';
+import { saveLegendToHallOfFame, computeGlory } from '../utils/storage';
+import CareerHighlights from './CareerHighlights';
 import { RefreshCw, Crown, Briefcase } from 'lucide-react';
 
 export default function RetirementScreen({
@@ -12,31 +13,17 @@ export default function RetirementScreen({
 }) {
   const isGk = player.position === 'arquero';
 
-  // Calculate Glory Points
-  const titlePoints = player.trophies.length * 20;
-  const statPoints = isGk ? player.totalCleanSheets * 2 : Math.round(player.totalGoals * 1.2);
-  const awardPoints = (player.awards?.length || 0) * 25;
-  const statuePoints = player.hasStatue ? 100 : 0;
-  const famePoints = player.fame * 3;
-
-  const totalGloryScore = titlePoints + statPoints + awardPoints + statuePoints + famePoints;
-
-  let comparison = "Trotamundos del Fútbol";
-  let tierBadge = "bg-gray-800 text-gray-300";
-
-  if (totalGloryScore >= 800 || (player.hasStatue && player.trophies.length >= 6)) {
-    comparison = "NIVEL MARADONA & MESSI: Deidad Inmortal del Fútbol Mundial";
-    tierBadge = "bg-gradient-to-r from-amber-500 to-yellow-300 text-black";
-  } else if (totalGloryScore >= 500 || player.hasStatue) {
-    comparison = "NIVEL RIQUELME, FRANCESCOLI & FILLOL: Estatua de Bronce en la Historia";
-    tierBadge = "bg-yellow-400 text-black";
-  } else if (totalGloryScore >= 300) {
-    comparison = "NIVEL PALERMO & BOCHINI: Ídolo Eterno de la Hinchada";
-    tierBadge = "bg-[#22E748] text-black";
-  } else if (totalGloryScore >= 180) {
-    comparison = "NIVEL CAMPEÓN DESTACADO: Respetado en todo el continente";
-    tierBadge = "bg-blue-400 text-black";
-  }
+  // Glory points (shared formula, includes the difficulty multiplier)
+  const glory = computeGlory(player);
+  const totalGloryScore = glory.total;
+  const TIERS = [
+    ['Trotamundos del Fútbol', 'bg-gray-800 text-gray-300'],
+    ['NIVEL CAMPEÓN DESTACADO: Respetado en todo el continente', 'bg-blue-400 text-black'],
+    ['NIVEL PALERMO & BOCHINI: Ídolo Eterno de la Hinchada', 'bg-[#22E748] text-black'],
+    ['NIVEL RIQUELME, FRANCESCOLI & FILLOL: Estatua de Bronce en la Historia', 'bg-yellow-400 text-black'],
+    ['NIVEL MARADONA & MESSI: Deidad Inmortal del Fútbol Mundial', 'bg-gradient-to-r from-amber-500 to-yellow-300 text-black'],
+  ];
+  const [comparison, tierBadge] = TIERS[glory.tier];
 
   const celebratedRef = useRef(null);
   useEffect(() => {
@@ -93,6 +80,11 @@ export default function RetirementScreen({
         <div className="text-5xl md:text-6xl font-black text-white font-mono tracking-tight text-[#22E748]">
           {totalGloryScore} <span className="text-sm font-sans text-gray-400 font-normal">PTS</span>
         </div>
+        {glory.mult !== 1 && (
+          <p className="text-xs text-gray-400 mt-1">
+            {glory.base} pts × {String(glory.mult).replace('.', ',')} por jugar en {player.difficulty === 'leyenda' ? 'Leyenda 👑' : 'Fácil 🌱'}
+          </p>
+        )}
 
         <div className={`mt-3 inline-block px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider ${tierBadge}`}>
           {comparison}
@@ -118,6 +110,9 @@ export default function RetirementScreen({
           <span className="text-xl font-black text-emerald-400 font-mono">${(player.money).toLocaleString()}</span>
         </div>
       </div>
+
+      {/* Highlights timeline + share card */}
+      <CareerHighlights player={player} showShare />
 
       {/* Action Buttons: New Game, Hall of Fame, Manager Mode */}
       <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">

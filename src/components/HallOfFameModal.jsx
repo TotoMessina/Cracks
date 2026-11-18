@@ -149,6 +149,8 @@ export default function HallOfFameModal({ onClose }) {
                           <span className="text-[10px] text-gray-400 uppercase font-bold">Puntos de Gloria</span>
                           <span className="text-xl font-black text-[#22E748] font-mono">
                             {leg.totalGloryScore}
+                            {leg.difficulty === 'leyenda' && <span className="text-xs ml-1" title="Carrera en dificultad Leyenda">👑</span>}
+                            {leg.difficulty === 'facil' && <span className="text-xs ml-1" title="Carrera en dificultad Fácil">🌱</span>}
                           </span>
                         </div>
 
@@ -198,7 +200,7 @@ export default function HallOfFameModal({ onClose }) {
                                 {leg.hasStatue && <span>🗽</span>}
                               </h5>
                               <p className="text-[10px] text-gray-400 truncate">
-                                {leg.finalClub} • {leg.position} • {leg.honoraryTitle}
+                                {leg.finalClub} • {leg.position} • {leg.honoraryTitle}{leg.difficulty === 'leyenda' ? ' • 👑 Leyenda' : leg.difficulty === 'facil' ? ' • 🌱 Fácil' : ''}
                               </p>
                             </div>
                           </div>

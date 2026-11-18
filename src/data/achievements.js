@@ -98,6 +98,22 @@ export const ACHIEVEMENTS = [
 
   // 4. Folclore, Idolatría & Vestuario
   {
+    id: "capitan_seleccion",
+    title: "La Cinta de la Patria",
+    desc: "Ser nombrado capitán de tu Selección.",
+    category: "seleccion",
+    icon: "©️",
+    check: (p) => p.nationalTeam?.status === 'captain'
+  },
+  {
+    id: "centenario_seleccion",
+    title: "Centenario Celeste y Blanco",
+    desc: "Llegar a 100 partidos con la Selección.",
+    category: "seleccion",
+    icon: "💯",
+    check: (p) => (p.nationalTeamStats?.matches || 0) >= 100
+  },
+  {
     id: "estatua_bronce",
     title: "Estatua en las Puertas del Estadio",
     desc: "Alcanzar 95 de idolatría y 5 temporadas en un club para tener tu monumento.",

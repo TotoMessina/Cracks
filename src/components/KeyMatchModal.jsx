@@ -8,7 +8,7 @@ import ClubShield from './ClubShield';
 import Flag from './Flag';
 import { getClubById } from '../data/clubs';
 import { describeEffects } from '../game/effects';
-import { getKeyStat } from '../game/career';
+import { getKeyStat, getConditionBonus, adjustMinigame } from '../game/career';
 import { sound } from '../utils/audio';
 
 const KIND_STYLE = {
@@ -43,13 +43,15 @@ export default function KeyMatchModal({ event, player, index, total, onDone, aut
   const opponentClub = event.opponentClubId ? getClubById(event.opponentClubId) : null;
   const isNational = event.kind === 'seleccion';
   const playerStat = player.stats?.[getKeyStat(player.position)] || 75;
+  const cond = getConditionBonus(player.form || 0, player.energy ?? 100);
+  const adjusted = adjustMinigame(player, event.difficulty, cond.total);
 
   const common = {
     title: `${event.title} · ${event.context}`,
     strikerName: player.name,
-    bonus: 0,
+    bonus: adjusted.bonus,
     playerStat,
-    difficulty: event.difficulty,
+    difficulty: adjusted.difficulty,
     continueLabel: 'Seguir la temporada ➔',
     onResult: (won) => onDone(won, false),
   };
@@ -89,7 +91,9 @@ export default function KeyMatchModal({ event, player, index, total, onDone, aut
             <p className="text-base sm:text-lg font-black text-white">{event.context}</p>
             <p className="text-xs text-gray-400">
               Te toca: <strong className="text-white">{MINIGAME_LABEL[event.minigame]}</strong> · Dificultad{' '}
-              <strong className="text-white">{{ normal: 'normal', medium: 'media', hard: 'alta' }[event.difficulty]}</strong>
+              <strong className="text-white">{{ normal: 'normal', medium: 'media', hard: 'alta' }[adjusted.difficulty]}</strong>
+              {' '}· Tu estado: <strong className={cond.total >= 0 ? 'text-[#22E748]' : 'text-red-400'}>{cond.total > 0 ? '+' : ''}{cond.total}%</strong>
+              <span className="text-gray-500"> (forma {cond.form >= 0 ? '+' : ''}{cond.form}%, energía {cond.energy >= 0 ? '+' : ''}{cond.energy}%)</span>
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
               <div className="p-3 rounded-xl bg-[#22E748]/5 border border-[#22E748]/20">

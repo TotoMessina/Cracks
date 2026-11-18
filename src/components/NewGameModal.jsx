@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Flag from './Flag';
 import { CLUBS, COUNTRIES, LEAGUES } from '../data/clubs';
+import { DIFFICULTIES } from '../game/career';
 import ClubShield from './ClubShield';
 import { sound } from '../utils/audio';
 import { User, X } from 'lucide-react';
@@ -14,6 +15,7 @@ export default function NewGameModal({ onStartGame, onClose, replacing = null })
   const [selectedLeagueId, setSelectedLeagueId] = useState('arg_ascenso');
   const [selectedClubId, setSelectedClubId] = useState(1001); // Chacarita
   const [gameMode, setGameMode] = useState('standard'); // 'standard', 'ultra', 'sin_reglas'
+  const [difficulty, setDifficulty] = useState('normal');
 
   const availableClubs = CLUBS.filter(c => c.league === selectedLeagueId).sort((a, b) => a.reputation - b.reputation);
   const selectedClub = CLUBS.find(c => c.id === selectedClubId);
@@ -38,6 +40,7 @@ export default function NewGameModal({ onStartGame, onClose, replacing = null })
       country,
       initialClubId: Number(selectedClubId),
       gameMode,
+      difficulty,
     };
 
     onStartGame(initialPlayerConfig);
@@ -123,6 +126,31 @@ export default function NewGameModal({ onStartGame, onClose, replacing = null })
                 >
                   <span className="text-xs font-black block text-white">{m.label}</span>
                   <span className="text-[10px] text-gray-400 block">{m.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Dificultad */}
+          <div>
+            <label className="text-xs font-black uppercase text-gray-300 block mb-1.5">
+              Dificultad
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {Object.values(DIFFICULTIES).map(d => (
+                <button
+                  type="button"
+                  key={d.id}
+                  onClick={() => { sound.playClick(); setDifficulty(d.id); }}
+                  className={`p-2.5 rounded-xl border text-left transition-all ${
+                    difficulty === d.id
+                      ? d.id === 'leyenda' ? 'border-[#F6B40E] bg-[#F6B40E]/10' : 'border-[#22E748] bg-[#14261b]'
+                      : 'border-white/10 bg-[#0e1712] hover:border-white/20'
+                  }`}
+                  aria-pressed={difficulty === d.id}
+                >
+                  <span className="text-xs font-black block text-white">{d.icon} {d.label}</span>
+                  <span className="text-[10px] text-gray-400 block leading-snug mt-0.5">{d.desc}</span>
                 </button>
               ))}
             </div>

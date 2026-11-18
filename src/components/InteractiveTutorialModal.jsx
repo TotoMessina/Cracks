@@ -39,7 +39,7 @@ const TUTORIAL_STEPS = [
     color: "from-blue-500/20 to-indigo-500/10 border-blue-500/40",
     bullets: [
       "Después de cada temporada viene un dilema: tus decisiones mueven atributos, idolatría, fama y vestuario.",
-      "En el mercado de pases renovás o te vas. El sueldo que firmás es lo que cobrás cada año.",
+      "Firmás contratos de 1 a 5 años con sueldo fijo. Mientras dure, solo te vas si un club paga tu cláusula; cuando termina, elegís libremente.",
       "¡Ojo! Firmar con el clásico rival deja tu idolatría en cero y te marca como traidor."
     ]
   },

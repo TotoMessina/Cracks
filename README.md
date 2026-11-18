@@ -2,6 +2,15 @@
 
 Simulador roguelike de carrera: arrancás a los 16 en un club chico y peleás por llegar a Primera, a Europa, a la Selección… y a tu estatua.
 
+### Tests
+```bash
+npm test          # corre los tests del motor (carrera, temporadas, contratos, dilemas, Modo DT, datos)
+npm run test:watch
+```
+
+### Jugar sin conexión
+La versión de producción (`npm run build`) registra un service worker que guarda todo el juego la primera vez que lo abrís: después funciona sin internet y se puede instalar como app desde el navegador.
+
 ### Ligas y equipos
 Los clubes salen de [`src/data/ligas_y_equipos_2026.json`](src/data/ligas_y_equipos_2026.json): 19 ligas y 389 equipos con estadio, ciudad, colores, clásicos, prestigio histórico, nivel actual y perfil. Podés editar ese archivo (o sumar ligas nuevas con el mismo formato) y el juego lo toma solo. Los datos extra de cada liga (sueldos, copas, ascensos) están en `LEAGUE_META` dentro de [`src/data/clubs.js`](src/data/clubs.js).
 

@@ -3,6 +3,8 @@ import Flag from './Flag';
 import { Trophy, Award, Shield } from 'lucide-react';
 import ClubShield from './ClubShield';
 import { getClubById, COUNTRIES } from '../data/clubs';
+import { getNationalCareer, NT_STATUS_LABEL } from '../game/career';
+import CareerHighlights from './CareerHighlights';
 
 export default function TrophyCabinet({ player }) {
   if (!player) return null;
@@ -98,6 +100,10 @@ export default function TrophyCabinet({ player }) {
                 <h3 className="text-base font-black text-white mt-0.5">
                   {country.nationalTeam}
                 </h3>
+                <span className="text-[11px] text-sky-300 font-bold">
+                  {NT_STATUS_LABEL[getNationalCareer(player).status]}
+                  {getNationalCareer(player).shirt ? ` · camiseta ${getNationalCareer(player).shirt}` : ''}
+                </span>
               </div>
             </div>
 
@@ -246,6 +252,7 @@ export default function TrophyCabinet({ player }) {
           </table>
         </div>
       </div>
+      <CareerHighlights player={player} compact />
     </div>
   );
 }

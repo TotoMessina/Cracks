@@ -12,7 +12,8 @@ export const DILEMMAS = [
       {
         text: "Ir a la joda: «Una cerveza no le hace mal a nadie».",
         outcome: "Te sacaron una foto en el boliche a las 4 AM. El DT te cuelga medio tiempo, pero la historia se hizo viral.",
-        effects: { forma: -1, resistencia: -2, fama: 4, idolatria: -5 }
+        effects: { forma: -1, resistencia: -2, fama: 4, idolatria: -5 },
+        actions: [{ type: 'followUp', dilemmaId: 'clasico_previa_reincidencia', delay: 1, label: 'El DT te va a poner a prueba.' }]
       },
       {
         text: "Quedarte concentrado mirando videos del rival.",
@@ -32,7 +33,8 @@ export const DILEMMAS = [
       {
         text: "Infiltrarte con anestesia: «Me rompo todo pero la juego».",
         outcome: "Entraste como un león herido, jugaste con el corazón y la hinchada coreó tu nombre hasta las lágrimas, pero terminaste la temporada con la pierna a la miseria.",
-        effects: { idolatria: 15, fama: 6, resistencia: -4, definicion: 2 }
+        effects: { idolatria: 15, fama: 6, resistencia: -4, definicion: 2 },
+        actions: [{ type: 'nextSeason', injuryRisk: 8, label: '+8% de riesgo de lesión por la infiltración' }]
       },
       {
         text: "Cuidarte y recuperarte: «Primero está mi salud y mi carrera».",
@@ -52,7 +54,8 @@ export const DILEMMAS = [
       {
         text: "Prender fuego todo: «Esto fue un afano descarado, nos robaron en la cara».",
         outcome: "El tribunal de disciplina te metió 2 fechas de sanción, pero la gente del club te ama por decir la verdad que todos callan.",
-        effects: { idolatria: 12, liderazgo: 3, dinero: -10000, fama: 5 }
+        effects: { idolatria: 12, liderazgo: 3, dinero: -10000, fama: 5 },
+        actions: [{ type: 'nextSeason', suspension: 2, label: '2 fechas de sanción' }]
       },
       {
         text: "Bajarle el tono: «Los árbitros se equivocan como nosotros, hay que seguir».",
@@ -107,7 +110,7 @@ export const DILEMMAS = [
     id: "oferta_petrodolares",
     title: "La Tentación de Medio Oriente",
     category: "negocios",
-    text: "Un emisario árabe llega al club con un maletín de 15 millones de dólares para vos y un sueldo astronómico. Tu club necesita vender para pagar deudas.",
+    text: "Un emisario de un club árabe llega con una prima de 3 millones de dólares para vos y un sueldo astronómico. Tu club necesita vender para pagar deudas.",
     options: [
       {
         text: "Quedarte por amor a la camiseta: «La gloria no se compra con plata».",
@@ -117,7 +120,8 @@ export const DILEMMAS = [
       {
         text: "Aceptar la montaña de billetes: «Tengo que salvar a mi familia por 3 generaciones».",
         outcome: "Te vas a jugar en un estadio de jeques aplaudiendo. Tu cuenta bancaria estalla, aunque deportivamente competís en una liga exótica.",
-        effects: { dinero: 5000000, fama: -2, idolatria: -10 }
+        effects: { dinero: 3000000, fama: -2 },
+        actions: [{ type: 'transfer', league: 'sau_pro', salaryMult: 1.6, years: 3, label: 'Te vas ya a la Saudi Pro League con un contrato de 3 años.' }]
       }
     ]
   },
@@ -137,7 +141,8 @@ export const DILEMMAS = [
       {
         text: "Pedir permiso para quedarte con tu club en este momento crítico.",
         outcome: "La hinchada de tu club no puede creer tu lealtad. El DT de la Selección prometió llamarte para el torneo continental.",
-        effects: { idolatria: 15, forma: 2, liderazgo: 3 }
+        effects: { idolatria: 15, forma: 2, liderazgo: 3 },
+        actions: [{ type: 'nextSeason', forceCallUp: true, label: 'El DT de la Selección te convoca sí o sí' }]
       }
     ]
   },
@@ -157,7 +162,8 @@ export const DILEMMAS = [
       {
         text: "Aceptar con disimulo: «Total una amarilla en mitad de cancha no le hace daño a nadie».",
         outcome: "Pegaste una patada desmedida a los 25 minutos y cobraste el dinero, pero la culpa te carcome por dentro cada vez que entrás a la cancha.",
-        effects: { dinero: 40000, forma: -1, idolatria: -8, liderazgo: -3 }
+        effects: { dinero: 40000, forma: -1, idolatria: -8, liderazgo: -3 },
+        actions: [{ type: 'followUp', dilemmaId: 'apuestas_investigacion', delay: 1, label: 'Alguien filmó la patada...' }]
       }
     ]
   },
@@ -272,7 +278,8 @@ export const DILEMMAS = [
       {
         text: "Felicitarlo, regalarle un par de botines y ser su mentor.",
         outcome: "El pibe te mira con ojos de devoción. Se convirtió en tu mejor socio adentro de la cancha.",
-        effects: { liderazgo: 5, idolatria: 6, fama: 3 }
+        effects: { liderazgo: 5, idolatria: 6, fama: 3 },
+        actions: [{ type: 'followUp', dilemmaId: 'pibe_mentor_regreso', delay: 3, label: 'Ese pibe no se va a olvidar de vos.' }]
       },
       {
         text: "Meterle una murra justa en la siguiente jugada: «Bienvenido a Primera, nene».",
@@ -372,7 +379,8 @@ export const DILEMMAS = [
       {
         text: "Firmar con el mega-empresario europeo: «El tren pasa una sola vez».",
         outcome: "Tu cotización internacional voló y empezaron a llegar ojeadores de la Champions League a verte.",
-        effects: { fama: 12, dinero: 100000, idolatria: -3 }
+        effects: { fama: 12, dinero: 100000, idolatria: -3 },
+        actions: [{ type: 'flag', key: 'europeanAgent', value: true, label: 'Tu nuevo agente te va a conseguir una oferta de Europa en el próximo mercado.' }]
       },
       {
         text: "Mantenerte con tu amigo de la infancia: «La lealtad vale más que un contrato».",
@@ -432,12 +440,14 @@ export const DILEMMAS = [
       {
         text: "Encabezar la protesta junto a tus compañeros: «Cobran todos o no juega nadie».",
         outcome: "Los dirigentes te miraron con bronca, pero los trabajadores del club te abrazaron llorando. Sos el líder moral de la institución.",
-        effects: { liderazgo: 8, idolatria: 10, dinero: -20000 }
+        effects: { liderazgo: 8, idolatria: 10, dinero: -20000 },
+        actions: [{ type: 'flag', key: 'boardAngry', value: true, label: 'La dirigencia te va a ofrecer menos plata en la próxima renovación.' }]
       },
       {
         text: "Concentrar solo para cuidar tu relación con la comisión directiva.",
         outcome: "El presidente te premió con una mejora de contrato, pero el vestuario te dio la espalda.",
-        effects: { dinero: 60000, liderazgo: -6, idolatria: -5 }
+        effects: { liderazgo: -6, idolatria: -5 },
+        actions: [{ type: 'salaryRaise', pct: 0.12, label: '💰 El presidente te sube el sueldo un 12%.' }]
       }
     ]
   },
@@ -452,7 +462,8 @@ export const DILEMMAS = [
       {
         text: "Invertir los $50.000 en el fondo riesgoso.",
         outcome: "El mercado acompañó y recuperaste tu inversión con ganancias fabulosas para comprar lujos.",
-        effects: { dinero: 120000, fama: 3 }
+        effects: {},
+        actions: [{ type: 'gamble', chance: 0.55, win: { effects: { dinero: 120000, fama: 3 }, outcome: 'El fondo multiplicó tu plata. Tu compañero gurú ahora te pide consejos a vos.' }, lose: { effects: { dinero: -50000, forma: -1 }, outcome: 'El fondo se desplomó y perdiste los $50.000. Te pasaste la semana mirando gráficos en vez de entrenar.' } }]
       },
       {
         text: "Guardar el dinero en ladrillos seguros: «La plata se gana sudando la camiseta».",
@@ -513,12 +524,14 @@ export const DILEMMAS = [
       {
         text: "Aceptar el rol de recambio de lujo y aportar experiencia en los minutos finales.",
         outcome: "Entraste fresco en los segundos tiempos a definir partidos cerrados con pura jerarquía.",
-        effects: { liderazgo: 6, definicion: 3, forma: 1, idolatria: 6 }
+        effects: { liderazgo: 6, definicion: 3, forma: 1, idolatria: 6 },
+        actions: [{ type: 'nextSeason', matchesFactor: 0.8, injuryRisk: -5, label: 'Rotación: jugás menos partidos pero te cuidás (−5% lesión)' }]
       },
       {
         text: "Exigir titularidad absoluta: «Mientras respire, juego los 90 minutos».",
         outcome: "Forzaste la máquina al límite. Tu orgullo conmovió a la gente, aunque tu cuerpo sintió el desgaste físico.",
-        effects: { potencia: 3, resistencia: -3, idolatria: 4 }
+        effects: { potencia: 3, resistencia: -3, idolatria: 4 },
+        actions: [{ type: 'nextSeason', injuryRisk: 5, label: '+5% de riesgo de lesión por exigirte de más' }]
       }
     ]
   },
@@ -553,7 +566,8 @@ export const DILEMMAS = [
       {
         text: "Jurar amor incondicional: «Nunca en mi vida, antes me corto las piernas».",
         outcome: "La hinchada enloqueció. La frase se convirtió en bandera, remeras y tatuajes populares.",
-        effects: { idolatria: 20, fama: 8 }
+        effects: { idolatria: 20, fama: 8 },
+        actions: [{ type: 'flag', key: 'swornLoyalty', value: 'currentClub', label: 'Juraste amor eterno: irte al rival ahora sería imperdonable.' }, { type: 'followUp', dilemmaId: 'juramento_tentacion', delay: 2, label: 'Algún día te van a poner a prueba...' }]
       },
       {
         text: "Ser cauto y diplomático: «Uno es profesional y nunca sabe qué depara el futuro».",
@@ -614,7 +628,8 @@ export const DILEMMAS = [
       {
         text: "Infiltrarse con analgésicos: «Por la camiseta de mi país juego en una pierna».",
         outcome: "Fuiste al torneo internacional con el corazón. Te consagraste ante los ojos de millones, aunque tu club se enfureció por el riesgo.",
-        effects: { fama: 8, idolatria: 8, dt: -10, resistencia: -3, vestuario: 6 }
+        effects: { fama: 8, idolatria: 8, dt: -10, resistencia: -3, vestuario: 6 },
+        actions: [{ type: 'nextSeason', injuryRisk: 6, label: '+6% de riesgo de lesión por jugar infiltrado' }]
       },
       {
         text: "Bajarse con madurez: «No estoy al 100%, que juegue un compañero sano».",
@@ -634,7 +649,8 @@ export const DILEMMAS = [
       {
         text: "Plantarte y pedir la titularidad y la camiseta: «Me la gané jugando al fútbol».",
         outcome: "Tu audacia dividió las aguas en el país. Los jóvenes te aclaman, pero los viejos del vestuario te miran con recelo.",
-        effects: { liderazgo: 3, fama: 6, vestuario: -8, pegada: 1 }
+        effects: { liderazgo: 3, fama: 6, vestuario: -8, pegada: 1 },
+        actions: [{ type: 'flag', key: 'nationalShirt10', value: true, label: 'En la próxima convocatoria vas a usar la 10.' }]
       },
       {
         text: "Cederle el número con una sonrisa: «El número no juega, juega el corazón».",
@@ -719,7 +735,95 @@ export const DILEMMAS = [
       {
         text: "Decir la verdad: «El mensaje ya no llega y hace falta un cambio de aire».",
         outcome: "A los dos días renunció el técnico. El vestuario quedó con cierta tensión pero llegó un nuevo DT con ganas.",
-        effects: { dt: -25, vestuario: -6, dinero: 10000 }
+        effects: { vestuario: -6, dinero: 10000 },
+        actions: [{ type: 'resetManager', value: 60, label: 'Llega un DT nuevo: la relación arranca de cero (60)' }]
+      }
+    ]
+  },
+
+  // ---------------- Follow-up dilemmas (only appear as a consequence) ----------------
+  {
+    id: "apuestas_investigacion",
+    followUpOnly: true,
+    title: "La Fiscalía Deportiva Toca la Puerta",
+    category: "etica",
+    text: "Apareció un video de la patada que te hiciste sacar por el apostador. La fiscalía deportiva abrió una investigación y los periodistas te esperan en la puerta de tu casa.",
+    options: [
+      {
+        text: "Confesar todo y colaborar con la investigación.",
+        outcome: "Te sancionaron, pero tu sinceridad te dio una segunda oportunidad. La gente valora que des la cara.",
+        effects: { idolatria: -6, fama: -4, liderazgo: 2 },
+        actions: [{ type: 'nextSeason', suspension: 6, label: '6 fechas de suspensión' }]
+      },
+      {
+        text: "Negar todo: «Fue una jugada de fútbol, nada más».",
+        outcome: "Te la jugaste a que no hubiera pruebas.",
+        effects: {},
+        actions: [{
+          type: 'gamble', chance: 0.5,
+          win: { effects: { fama: 2 }, outcome: "El caso se archivó por falta de pruebas. Zafaste, pero sabés lo que hiciste." },
+          lose: { effects: { idolatria: -20, fama: -10, dt: -15 }, outcome: "Apareció un audio tuyo con el apostador. Escándalo nacional y una sanción durísima." }
+        }]
+      }
+    ]
+  },
+  {
+    id: "pibe_mentor_regreso",
+    followUpOnly: true,
+    title: "El Pibe que Ayudaste",
+    category: "vestuario",
+    text: "Aquel pibe de reserva al que le regalaste botines hoy es figura y lo vende el club a Europa. En la conferencia de despedida dice: «Todo se lo debo a él», y te señala.",
+    options: [
+      {
+        text: "Subir al escenario y abrazarlo frente a todos.",
+        outcome: "La foto del abrazo dio la vuelta al país. La hinchada te ve como el padre futbolístico del club.",
+        effects: { idolatria: 8, fama: 5, vestuario: 6 }
+      },
+      {
+        text: "Mandarle un mensaje en privado: «El mérito es tuyo, campeón».",
+        outcome: "El pibe lo contó igual en una entrevista. Tu humildad agrandó tu leyenda en el vestuario.",
+        effects: { liderazgo: 4, vestuario: 10, idolatria: 4 }
+      }
+    ]
+  },
+  {
+    id: "juramento_tentacion",
+    followUpOnly: true,
+    requires: "swornLoyalty",
+    title: "La Prueba del Juramento",
+    category: "negocios",
+    text: "Años después de jurar amor eterno en televisión, el presidente del clásico rival te cita en secreto en un hotel: «Ponés la cifra que quieras».",
+    options: [
+      {
+        text: "Levantarte de la mesa y contarlo públicamente.",
+        outcome: "Contaste todo en una radio. La hinchada te ve como el último hombre leal del fútbol.",
+        effects: { idolatria: 10, fama: 4 }
+      },
+      {
+        text: "Usar la oferta para pedirle un aumento a tu club.",
+        outcome: "Tu club te subió el sueldo, pero la reunión se filtró y muchos hinchas empezaron a dudar de tu juramento.",
+        effects: { idolatria: -8 },
+        actions: [{ type: 'salaryRaise', pct: 0.2, label: '💰 Tu club te sube el sueldo un 20% para retenerte.' }]
+      }
+    ]
+  },
+  {
+    id: "clasico_previa_reincidencia",
+    followUpOnly: true,
+    title: "El DT No Se Olvida",
+    category: "vida_nocturna",
+    text: "Se acerca otro clásico y el DT junta al plantel: «El año pasado alguno salió de joda la noche anterior. Esta vez quiero ver quién está comprometido». Todos te miran.",
+    options: [
+      {
+        text: "Pedir disculpas delante del plantel y concentrar dos días antes.",
+        outcome: "El DT valoró el gesto. Cerraste la herida y volviste a ser titular indiscutido.",
+        effects: { dt: 12, vestuario: 4, forma: 1 }
+      },
+      {
+        text: "Redoblar la apuesta: «Lo que hago fuera de la cancha es asunto mío».",
+        outcome: "El DT te mandó al banco para el clásico y el vínculo quedó roto.",
+        effects: { dt: -15, fama: 3 },
+        actions: [{ type: 'nextSeason', matchesFactor: 0.85, label: 'El DT te rota más: jugás menos partidos' }]
       }
     ]
   }
@@ -727,9 +831,17 @@ export const DILEMMAS = [
 
 // Helper to draw a dilemma without repeating recently seen ones
 export function getRandomDilemma(player = null, seenIds = []) {
-  let pool = DILEMMAS.filter(d => !seenIds.includes(d.id));
+  // 1. A follow-up that is due this off-season always comes first
+  if (player?.scheduledDilemmas?.length) {
+    const due = player.scheduledDilemmas
+      .filter(sd => sd.dueSeason <= (player.seasonsPlayed || 0))
+      .map(sd => DILEMMAS.find(d => d.id === sd.id))
+      .find(d => d && (!d.requires || isRequirementMet(player, d.requires)));
+    if (due) return due;
+  }
 
-  // If player passed, filter by position and age conditions if specified
+  let pool = DILEMMAS.filter(d => !d.followUpOnly && !seenIds.includes(d.id));
+
   if (player) {
     const positionMatches = pool.filter(d => !d.position || d.position === player.position);
     if (positionMatches.length > 0) pool = positionMatches;
@@ -742,11 +854,13 @@ export function getRandomDilemma(player = null, seenIds = []) {
     if (ageMatches.length > 0) pool = ageMatches;
   }
 
-  // If all eligible dilemmas were seen, reset and pick from full pool
-  if (pool.length === 0) {
-    pool = DILEMMAS;
-  }
+  // If every dilemma was already seen, start over (follow-ups excluded)
+  if (pool.length === 0) pool = DILEMMAS.filter(d => !d.followUpOnly);
 
-  const idx = Math.floor(Math.random() * pool.length);
-  return pool[idx];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function isRequirementMet(player, requirement) {
+  if (requirement === 'swornLoyalty') return player.flags?.swornLoyalty === player.currentClub?.id;
+  return Boolean(player.flags?.[requirement]);
 }

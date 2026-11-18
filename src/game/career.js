@@ -1,5 +1,6 @@
 // Career Engine & Season Simulator for El Ídolo
 import { CLUBS, COUNTRIES, getClubById, getCountryById, getLeague, refreshClub } from '../data/clubs';
+import { getContinentalEntry, simulateContinental, simulateDomesticCup, leagueOutcome, buildFinals, pickContinentalOpponent, estimatedQualification } from './competitions';
 
 export const START_YEAR = 2026;
 export const RETIREMENT_AGE = 38;
@@ -11,6 +12,85 @@ const ELITE_NATIONS = ['ar', 'br', 'fr', 'es', 'de', 'it', 'en', 'pt', 'nl'];
 /** Short display name of a league id (e.g. "Premier League"). */
 export function leagueName(id) {
   return getLeague(id).short;
+}
+
+/**
+ * Minutes plan chosen before each season.
+ * matchesFactor: share of matches you play · energyCost: extra wear · injury: risk delta (%) · dt: coach reaction
+ */
+export const WORKLOADS = {
+  rotacion: {
+    id: 'rotacion', label: 'Rotar', icon: '🔄',
+    desc: 'Jugás menos partidos (−20%), te cansás menos y te lesionás menos. Al DT no le gusta tanto.',
+    matchesFactor: 0.8, energyCost: -12, injury: -5, dt: -2,
+  },
+  normal: {
+    id: 'normal', label: 'Normal', icon: '⚖️',
+    desc: 'La carga habitual de un titular.',
+    matchesFactor: 1, energyCost: 0, injury: 0, dt: 0,
+  },
+  total: {
+    id: 'total', label: 'Jugar todo', icon: '🔥',
+    desc: 'Jugás todos los partidos (+12%): más goles y el DT feliz, pero terminás fundido y con más riesgo de lesión.',
+    matchesFactor: 1.12, energyCost: 14, injury: 5, dt: 3,
+  },
+};
+
+export function getWorkload(player) {
+  return WORKLOADS[player?.workload] || WORKLOADS.normal;
+}
+
+/** Performance multiplier from energy at the start of the season (fresh = 1, exhausted = 0.85). */
+export function energyPerformance(energy) {
+  const e = energy ?? 100;
+  if (e >= 70) return 1;
+  return Math.max(0.85, 0.85 + ((e - 20) / 50) * 0.15);
+}
+
+/**
+ * Bonus (in %) for the decisive minigames from form and end-of-season energy.
+ * Returns { total, form, energy } so the UI can explain it.
+ */
+export function getConditionBonus(form = 0, energy = 100) {
+  const formPart = Math.round((form || 0) * 4);
+  const e = energy ?? 100;
+  const energyPart = e >= 80 ? 3 : e >= 60 ? 0 : -Math.min(10, Math.round((60 - e) / 4));
+  return { total: formPart + energyPart, form: formPart, energy: energyPart };
+}
+
+/**
+ * Difficulty levels (chosen when the career starts).
+ * powerAdj: team strength in the table · cupAdj: luck in cup ties · minigameBonus: % in decisive minigames · tierShift: makes tournaments harder
+ * injury: risk delta · idolatryMult: how fast fans love you · keyAuto: simulated key matches · gloryMult: Hall of Fame score
+ */
+export const DIFFICULTIES = {
+  facil: {
+    id: 'facil', label: 'Fácil', icon: '🌱',
+    desc: 'Tu equipo rinde más en la tabla y en las copas, minijuegos más amables, menos lesiones y la hinchada te quiere rápido. La gloria vale ×0,8.',
+    powerAdj: 1.5, cupAdj: 0.04, minigameBonus: 8, tierShift: 0, injury: -3, idolatryMult: 1.2, keyAuto: 0.06, gloryMult: 0.8,
+  },
+  normal: {
+    id: 'normal', label: 'Normal', icon: '⚽',
+    desc: 'La experiencia pensada: los títulos cuestan y cada decisión pesa.',
+    powerAdj: -1.5, cupAdj: -0.03, minigameBonus: 0, tierShift: 0, injury: 0, idolatryMult: 1, keyAuto: 0, gloryMult: 1,
+  },
+  leyenda: {
+    id: 'leyenda', label: 'Leyenda', icon: '👑',
+    desc: 'Tu equipo rinde menos en la tabla y en las copas, minijuegos un nivel más difíciles, más lesiones y una hinchada exigente. La gloria vale ×1,3.',
+    powerAdj: -4, cupAdj: -0.08, minigameBonus: -5, tierShift: 1, injury: 3, idolatryMult: 0.8, keyAuto: -0.06, gloryMult: 1.3,
+  },
+};
+
+export function getDifficulty(player) {
+  return DIFFICULTIES[player?.difficulty] || DIFFICULTIES.normal;
+}
+
+const TIERS = ['normal', 'medium', 'hard'];
+/** Minigame difficulty and bonus adjusted to the career difficulty. */
+export function adjustMinigame(player, difficulty = 'normal', bonus = 0) {
+  const d = getDifficulty(player);
+  const idx = Math.min(TIERS.length - 1, Math.max(0, TIERS.indexOf(difficulty) + d.tierShift));
+  return { difficulty: TIERS[idx] || difficulty, bonus: bonus + d.minigameBonus };
 }
 
 export function getKeyStat(position) {
@@ -45,6 +125,7 @@ export function createInitialPlayer({
   country = "ar",
   initialClubId = 1001,
   gameMode = "standard", // 'standard', 'ultra', 'sin_reglas'
+  difficulty = 'normal', // 'facil', 'normal', 'leyenda'
 }) {
   const isWonderkid = archetype === 'pibe_maravilla';
   const stats = getPositionStats(position, isWonderkid ? 8 : 0);
@@ -94,8 +175,10 @@ export function createInitialPlayer({
     ],
     lifestyle: [],
     seasonHistory: [],
+    moments: [{ year: START_YEAR, age: 16, type: 'debut', icon: '🌱', text: `Debut profesional en ${initialClub.name}` }],
     seenDilemmas: [],
     gameMode,
+    difficulty: DIFFICULTIES[difficulty] ? difficulty : 'normal',
     isRetired: false,
     // Off-season flow persisted in the save so a reload never skips a step
     offseasonStep: 'cards', // null | 'dilemma' | 'transfers' | 'cards'
@@ -114,6 +197,7 @@ export function createInitialPlayer({
   }
 
   player.salary = computeSalary(initialClub, getPlayerOverall(player));
+  player.contract = makeContract(player.salary, 3); // first professional contract
   return player;
 }
 
@@ -133,6 +217,13 @@ export function normalizePlayer(saved) {
   p.managerRelationship ??= 65;
   p.lockerRoomChemistry ??= 70;
   p.form ??= 0;
+  p.workload ??= 'normal';
+  p.difficulty ??= 'normal';
+  p.moments ??= [];
+  if (p.qualifiedFor === undefined) {
+    const q = estimatedQualification(p.currentClub);
+    p.qualifiedFor = { clubId: p.currentClub.id, tier: q?.tier || null, name: q?.name || null };
+  }
   p.coins ??= 0;
   p.money = Number.isFinite(p.money) ? p.money : 0;
   p.bonusFinal ??= 0;
@@ -143,6 +234,10 @@ export function normalizePlayer(saved) {
   p.seenDilemmas ??= [];
   p.clubHistory ??= [];
   p.nationalTeamStats ??= { calledUp: false, matches: 0, goals: 0, assists: 0, cleanSheets: 0, titles: 0 };
+  p.nationalTeam = getNationalCareer(p);
+  if (p.nationalTeamStats.matches > 0 && p.nationalTeam.status === 'none') {
+    p.nationalTeam = { ...p.nationalTeam, status: p.nationalTeamStats.matches >= 12 ? 'regular' : 'called', shirt: p.nationalTeamStats.matches >= 12 ? (p.position === 'arquero' ? 1 : p.position === 'enganche' ? 10 : 9) : 20 };
+  }
   p.seasonBoosts ??= { finalBonus: false, specialConcentration: false, recoveryPhysio: false, secondCard: false };
   p.trainingRewardsLeft ??= TRAINING_REWARDS_PER_SEASON;
   p.offseasonStep ??= null;
@@ -152,8 +247,13 @@ export function normalizePlayer(saved) {
   p.currentClub = refreshClub(p.currentClub);
   if (Array.isArray(p.pendingOffers)) p.pendingOffers = p.pendingOffers.map(o => ({ ...o, club: refreshClub(o.club) }));
   p.seasonInProgress ??= null;
+  p.flags ??= {};
+  p.scheduledDilemmas ??= [];
+  p.nextSeasonMods ??= null;
+  p.pendingDilemmaResult ??= null;
   p.clasicosWon ??= 0;
   if (!p.salary) p.salary = computeSalary(p.currentClub, getPlayerOverall(p));
+  if (!p.contract) p.contract = { ...makeContract(p.salary, 1), yearsLeft: ['dilemma', 'transfers'].includes(p.offseasonStep) ? 0 : 1 };
   return p;
 }
 
@@ -208,7 +308,11 @@ export function getInjuryRisk(player) {
   if (player.seasonBoosts?.recoveryPhysio) risk -= 3;
   if (player.age >= 32) risk += (player.age - 31) * 1.2;
   if (energy < 75) risk += (75 - energy) * 0.35;
-  return Math.max(2, Math.min(32, Math.round(risk)));
+  risk += getWorkload(player).injury;
+  risk += getDifficulty(player).injury;
+  if (player.seasonInProgress?.ntDecision === 'go') risk += 3; // a big summer tournament
+  risk += player.nextSeasonMods?.injuryRisk || 0; // consequences of last season's decisions
+  return Math.max(2, Math.min(40, Math.round(risk)));
 }
 
 export function calculateInjury(player) {
@@ -245,14 +349,6 @@ export function calculateInjury(player) {
   };
 }
 
-function pickFinalTournament(club) {
-  const league = getLeague(club.league);
-  if (league.secondTier) return league.promotionFinal;
-  const r = Math.random();
-  // Only strong clubs play the continental cup final
-  if (club.reputation >= 78 && r < 0.35) return league.continentalCup;
-  return r < 0.75 ? league.short : league.cup;
-}
 
 export function simulateSeasonMatches(player) {
   const overall = getPlayerOverall(player);
@@ -270,11 +366,21 @@ export function simulateSeasonMatches(player) {
   else if (managerRel > 80) baseMatches += 3;
   // A kid in a club far above his level gets fewer minutes
   if (player.age <= 20 && club.reputation - overall > 12) baseMatches = Math.round(baseMatches * 0.7);
+  // Minutes plan (rotate / normal / play everything)
+  const workload = getWorkload(player);
+  baseMatches = Math.round(baseMatches * workload.matchesFactor);
+  // Arriving exhausted makes you less decisive
+  const perf = energyPerformance(player.energy);
+
+  // Decisions from the last off-season (rotation, suspensions...)
+  const mods = player.nextSeasonMods || {};
+  if (mods.matchesFactor && mods.matchesFactor !== 1) baseMatches = Math.round(baseMatches * mods.matchesFactor);
 
   const injury = calculateInjury(player);
-  const missedMatches = injury ? injury.missedMatches : 0;
+  const missedMatches = (injury ? injury.missedMatches : 0) + (mods.suspension || 0);
   const matches = Math.max(8, baseMatches - missedMatches);
-  const matchesRatio = matches / baseMatches;
+  // Share of a standard 37-match season you actually played
+  const matchesRatio = Math.max(0.2, Math.min(1.15, matches / 37));
 
   let seasonGoals = 0;
   let seasonAssists = 0;
@@ -282,16 +388,16 @@ export function simulateSeasonMatches(player) {
 
   if (isGk) {
     const baseCleanSheets = Math.round((overall / 100) * 16) + (effectiveForm > 0 ? 3 : 0) + Math.round((club.reputation - 75) / 6);
-    const unadjusted = Math.max(5, Math.min(26, baseCleanSheets + Math.floor(Math.random() * 5 - 2)));
+    const unadjusted = Math.max(5, Math.min(26, (baseCleanSheets + Math.floor(Math.random() * 5 - 2)) * perf));
     seasonCleanSheets = Math.max(2, Math.round(unadjusted * matchesRatio));
   } else if (player.position === 'delantero') {
     const baseGoals = Math.round((player.stats.definicion / 100) * 26) + (effectiveForm * 3) + Math.round((club.reputation - 75) / 8);
-    const unadjusted = Math.max(4, Math.min(48, baseGoals + Math.floor(Math.random() * 8 - 4)));
+    const unadjusted = Math.max(4, Math.min(48, (baseGoals + Math.floor(Math.random() * 8 - 4)) * perf));
     seasonGoals = Math.max(2, Math.round(unadjusted * matchesRatio));
     seasonAssists = Math.max(1, Math.floor(seasonGoals * 0.35 + Math.random() * 4));
   } else {
     const baseAssists = Math.round((player.stats.pegada / 100) * 20) + (effectiveForm * 2) + Math.round((club.reputation - 75) / 9);
-    const unadjusted = Math.max(5, Math.min(32, baseAssists + Math.floor(Math.random() * 6 - 3)));
+    const unadjusted = Math.max(5, Math.min(32, (baseAssists + Math.floor(Math.random() * 6 - 3)) * perf));
     seasonAssists = Math.max(3, Math.round(unadjusted * matchesRatio));
     seasonGoals = Math.max(1, Math.floor(seasonAssists * 0.5 + Math.random() * 5));
   }
@@ -307,13 +413,11 @@ export function simulateSeasonMatches(player) {
   else seasonGoals += keyWins;
 
   const chemBonus = (chemistry - 70) * 0.2;
-  const teamPower = (club.reputation * 0.6) + (overall * 0.4) + chemBonus + effectiveForm * 1.5 + keyWins * 3 - keyLosses * 2;
-  const reachedFinalChance = Math.max(0.1, Math.min(0.8, (teamPower - 48) / 58));
-  const reachedFinal = Math.random() < reachedFinalChance;
-  const finalTournament = reachedFinal ? pickFinalTournament(club) : null;
+  const difficulty = getDifficulty(player);
+  const teamPower = (club.reputation * 0.6) + (overall * 0.4) + chemBonus + effectiveForm * 1.5 + keyWins * 3 - keyLosses * 2 + difficulty.powerAdj;
 
   // National team
-  const isCalledUp = checkNationalTeamCallUp(player);
+  const isCalledUp = playsForNationalTeam(player);
   const intlTournament = isCalledUp ? getInternationalTournamentInfo(player.seasonsPlayed, player.country) : null;
   let nationalActivity = null;
 
@@ -339,7 +443,8 @@ export function simulateSeasonMatches(player) {
     if (intlTournament.isMajor) {
       const nationBaseStrength = isEliteNation ? 75 : 55;
       const combinedPower = nationBaseStrength * 0.7 + overall * 0.3;
-      reachedNationalFinal = Math.random() < Math.max(0.15, Math.min(0.6, (combinedPower - 50) / 60));
+      const captainBoost = getNationalCareer(player).status === 'captain' ? 0.05 : 0;
+      reachedNationalFinal = Math.random() < Math.max(0.15, Math.min(0.65, (combinedPower - 50) / 60 + captainBoost));
     }
 
     nationalActivity = {
@@ -363,7 +468,7 @@ export function simulateSeasonMatches(player) {
   const scoredClubs = leagueClubs.map(c => {
     const isPlayerTeam = c.id === club.id;
     const power = isPlayerTeam ? teamPower : c.reputation;
-    const variance = (Math.random() * 14) - 7;
+    const variance = (Math.random() * 18) - 9;
     return {
       clubId: c.id,
       name: c.name,
@@ -372,12 +477,6 @@ export function simulateSeasonMatches(player) {
       isPlayerTeam,
     };
   });
-
-  if (reachedFinal) {
-    const playerEntry = scoredClubs.find(c => c.isPlayerTeam);
-    const maxPoints = Math.max(...scoredClubs.map(c => c.points));
-    playerEntry.points = Math.max(playerEntry.points, maxPoints - 2);
-  }
 
   scoredClubs.sort((a, b) => b.points - a.points || (a.isPlayerTeam ? -1 : 1));
   const playerPosition = scoredClubs.findIndex(c => c.isPlayerTeam) + 1;
@@ -392,12 +491,24 @@ export function simulateSeasonMatches(player) {
     zone: idx === 0 ? 'campeon' : idx < Math.max(2, Math.round(total * 0.3)) ? 'copa' : total >= 6 && idx >= total - 2 ? 'descenso' : 'medio'
   }));
   // Top 5 + always the player's row
+  // ---- Competitions: league by the table, national cup, international cup ----
+  const competitions = {
+    league: leagueOutcome(club, scoredClubs, playerPosition),
+    cup: simulateDomesticCup(club, teamPower, difficulty.cupAdj),
+    continental: simulateContinental(getContinentalEntry(player), club, teamPower, difficulty.cupAdj),
+  };
+  const finals = buildFinals(club, competitions);
+  const reachedFinal = finals.length > 0;
+  const finalTournament = finals[0]?.tournament || null;
+
   const miniTable = fullTable.slice(0, 5);
   if (playerPosition > 5) miniTable.push(fullTable[playerPosition - 1]);
 
-  const energyLoss = 25 + (isCalledUp ? 6 : 0) + (injury ? 8 : 0);
-  const recovery = 35 + (player.lifestyle?.includes('kinesiologo_veterano') ? 8 : 0) + (player.lifestyle?.includes('fisio_personal') ? 6 : 0);
-  const nextEnergy = Math.max(20, Math.min(100, (player.energy ?? 100) - energyLoss + recovery));
+  // Energy: the season wears you down, the off-season gives part of it back
+  const energyLoss = Math.max(8, 26 + workload.energyCost + (isCalledUp ? 4 : 0) + (injury ? 6 : 0) + (player.age >= 31 ? 3 : 0));
+  const endEnergy = Math.max(10, (player.energy ?? 100) - energyLoss);
+  const recovery = 30 + (player.lifestyle?.includes('kinesiologo_veterano') ? 8 : 0) + (player.lifestyle?.includes('fisio_personal') ? 6 : 0) + (player.lifestyle?.includes('mansion_nordelta') ? 4 : 0);
+  const nextEnergy = Math.max(20, Math.min(100, endEnergy + recovery));
 
   let newManagerRel = managerRel;
   let newChemistry = chemistry;
@@ -407,8 +518,12 @@ export function simulateSeasonMatches(player) {
   } else if (missedMatches > 12) {
     newManagerRel = Math.max(25, newManagerRel - 2);
   }
+  newManagerRel = Math.max(0, Math.min(100, newManagerRel + workload.dt));
 
   return {
+    workload: workload.id,
+    startEnergy: player.energy ?? 100,
+    endEnergy,
     keyMatches: keyResults,
     matches,
     baseMatches,
@@ -419,6 +534,8 @@ export function simulateSeasonMatches(player) {
     earnings: Math.round(seasonEarnings),
     reachedFinal,
     finalTournament,
+    finals,
+    competitions,
     injury,
     nextEnergy,
     newManagerRel,
@@ -489,13 +606,16 @@ export function generateTransferOffers(player) {
   const fameBoost = (player.fame || 0) / 10;
 
   // 1. Renewal: small raise over the market value
-  const renewalSalary = Math.round(Math.max(player.salary || 0, computeSalary(currentClub, overall)) * 1.08 * lawyerMultiplier);
+  const boardAngry = Boolean(player.flags?.boardAngry);
+  const renewalSalary = Math.round(Math.max(player.salary || 0, computeSalary(currentClub, overall)) * (boardAngry ? 0.85 : 1.08) * lawyerMultiplier);
   offers.push({
     club: currentClub,
     isRenewal: true,
     isRival: false,
     salary: renewalSalary,
-    message: `Renovación en ${currentClub.name}: aumento de sueldo y +5 de idolatría por quedarte.`
+    message: boardAngry
+      ? `La dirigencia de ${currentClub.name} no te perdona la protesta: te ofrece renovar, pero por menos de lo que valés.`
+      : `Renovación en ${currentClub.name}: aumento de sueldo y +5 de idolatría por quedarte.`
   });
 
   // 2. The arch-rival tempts you
@@ -550,6 +670,12 @@ export function generateTransferOffers(player) {
       message: `${club.name} (${leagueName(club.league)}) te quiere como refuerzo. ${club.profile || ''}`.trim()
     });
   });
+
+  // The European super-agent delivers what he promised
+  if (player.flags?.europeanAgent) {
+    const agentOffer = europeanAgentOffer(player);
+    if (agentOffer && !offers.some(o => o.club.id === agentOffer.club.id)) offers.push(agentOffer);
+  }
 
   return offers;
 }
@@ -633,16 +759,16 @@ export function generateKeyMatches(player) {
   }
 
   const extras = [];
-  const league = getLeague(club.league);
-  if (!league.secondTier && club.reputation >= 80) extras.push('copa');
-  if (checkNationalTeamCallUp(player)) extras.push('seleccion');
+  const continentalEntry = getContinentalEntry(player);
+  if (continentalEntry) extras.push('copa');
+  if (playsForNationalTeam(player)) extras.push('seleccion');
   if (extras.length && Math.random() < 0.75) {
     const kind = pick(extras);
     if (kind === 'copa') {
-      const sameContinent = CLUBS.filter(c => c.league !== club.league && c.reputation >= 82 && getLeague(c.league).continent === league.continent);
-      const pool = sameContinent.length ? sameContinent : CLUBS.filter(c => c.league !== club.league && c.reputation >= 85);
-      const opp = pick(pool);
-      events.push(makeKeyEvent(player, 'copa', { id: opp.id, clubId: opp.id, name: opp.name, rep: opp.reputation }));
+      const opp = pickContinentalOpponent(player, continentalEntry);
+      const ev = makeKeyEvent(player, 'copa', { id: opp.id, clubId: opp.id, name: opp.name, rep: opp.reputation });
+      ev.title = `${continentalEntry.name} vs ${opp.name}`;
+      events.push(ev);
     } else {
       const country = pick(COUNTRIES.filter(c => c.id !== player.country));
       events.push(makeKeyEvent(player, 'seleccion', { id: country.id, country: country.id, name: country.name, rep: 85 }));
@@ -655,6 +781,193 @@ export function generateKeyMatches(player) {
 export function autoResolveKeyMatch(player, event) {
   const stat = player.stats?.[getKeyStat(player.position)] || 70;
   const penalty = event.difficulty === 'hard' ? 0.1 : event.difficulty === 'medium' ? 0.05 : 0;
-  const chance = Math.max(0.2, Math.min(0.75, 0.42 + (stat - 70) * 0.012 + (player.form || 0) * 0.04 - penalty));
+  const energyAdj = ((player.energy ?? 100) - 70) * 0.003;
+  const chance = Math.max(0.15, Math.min(0.8, 0.42 + (stat - 70) * 0.012 + (player.form || 0) * 0.04 + energyAdj - penalty + getDifficulty(player).keyAuto));
   return Math.random() < chance;
+}
+
+// ---------------------------------------------------------------------------
+// Contracts: fixed salary for 1-5 years + release clause
+// ---------------------------------------------------------------------------
+/** Contract lengths a club offers depending on age (young players get long deals). */
+export function contractYearsRange(age) {
+  const max = age <= 23 ? 5 : age <= 29 ? 4 : age <= 32 ? 3 : 2;
+  return { min: 1, max, suggested: Math.min(max, age <= 23 ? 4 : 3) };
+}
+
+/** One-off signing bonus: 10% of the yearly salary for each year signed. */
+export function signingBonus(salary, years) {
+  return Math.round((salary * 0.1 * years) / 1000) * 1000;
+}
+
+export function makeContract(salary, years) {
+  const y = Math.max(1, Math.round(years));
+  return {
+    salary: Math.round(salary),
+    years: y,
+    yearsLeft: y,
+    releaseClause: Math.round((salary * (3 + y)) / 10000) * 10000,
+  };
+}
+
+/**
+ * Off-season market.
+ * - Contract expired: full market (renewal, other clubs, maybe the rival).
+ * - Under contract: you stay, unless a bigger club pays your release clause
+ *   or your club offers to renegotiate because you're underpaid.
+ * Returns { free, offers } or null when there is nothing to decide.
+ */
+export function generateOffseasonMarket(player) {
+  const contract = player.contract;
+  if (!contract || contract.yearsLeft <= 0) {
+    return { free: true, offers: generateTransferOffers(player) };
+  }
+
+  const overall = getPlayerOverall(player);
+  const club = player.currentClub;
+  const lawyer = player.lifestyle?.includes('abogado_deportivo_top') ? 1.15 : 1.0;
+  const offers = [{
+    club,
+    isStay: true,
+    isRenewal: false,
+    isRival: false,
+    salary: contract.salary,
+    years: contract.yearsLeft,
+    message: `Seguís con tu contrato: ${contract.yearsLeft} ${contract.yearsLeft === 1 ? 'año' : 'años'} más a $${contract.salary.toLocaleString('es-AR')} por año.`,
+  }];
+
+  // Underpaid? The club offers a new, longer deal (if the coach backs you)
+  const market = computeSalary(club, overall);
+  if (market > contract.salary * 1.25 && (player.managerRelationship ?? 65) >= 50) {
+    offers.push({
+      club,
+      isRenewal: true,
+      isRenegotiation: true,
+      isRival: false,
+      salary: Math.round(market * lawyer),
+      message: `Estás cobrando por debajo de tu nivel: ${club.shortName} te ofrece un contrato nuevo y mejor pago.`,
+    });
+  }
+
+  // A bigger club pays the release clause (more likely if you outgrew your club)
+  const chance = Math.max(0.05, Math.min(0.6, 0.15 + (overall - club.reputation) * 0.03 + (player.fame || 0) / 400));
+  if (Math.random() < chance) {
+    const buyers = generateTransferOffers(player)
+      .filter(o => !o.isRenewal && !o.isRival && o.club.reputation > club.reputation)
+      .slice(0, 2);
+    buyers.forEach(o => offers.push({
+      ...o,
+      paysClause: true,
+      message: `${o.club.name} pagó tu cláusula de rescisión ($${contract.releaseClause.toLocaleString('es-AR')}) y te quiere ya. ${o.club.profile || ''}`.trim(),
+    }));
+  }
+
+  // The European super-agent can get you out even with a contract
+  if (player.flags?.europeanAgent && !offers.some(o => o.fromAgent)) {
+    const agentOffer = europeanAgentOffer(player);
+    if (agentOffer) offers.push(agentOffer);
+  }
+
+  return offers.length > 1 ? { free: false, offers } : null;
+}
+
+/** Offer from the "European super-agent" (flag europeanAgent): a club from Europe near your level. */
+export function europeanAgentOffer(player) {
+  const overall = getPlayerOverall(player);
+  const pool = CLUBS.filter(c => getLeague(c.league).continent === 'eu' && c.id !== player.currentClub.id && !getLeague(c.league).secondTier);
+  const near = pool.filter(c => c.reputation <= overall + 6 && c.reputation >= overall - 10);
+  const club = pick(near.length ? near : [...pool].sort((a, b) => a.reputation - b.reputation).slice(0, 8));
+  if (!club) return null;
+  return {
+    club,
+    isRenewal: false,
+    isRival: false,
+    paysClause: Boolean(player.contract?.yearsLeft > 0),
+    fromAgent: true,
+    salary: Math.round(computeSalary(club, overall) * 1.1),
+    message: `Tu representante cumplió su promesa: ${club.name} (${getLeague(club.league).short}) te quiere en Europa.`,
+  };
+}
+
+
+// ---------------------------------------------------------------------------
+// National team career: call-ups, the decision to go, shirt number and status
+// ---------------------------------------------------------------------------
+export const NT_STATUS_LABEL = { none: 'Sin convocar', called: 'Convocado', regular: 'Titular', captain: 'Capitán' };
+
+const DEFAULT_NT = { status: 'none', shirt: null, declined: 0, skipNext: false };
+
+export function getNationalCareer(player) {
+  return { ...DEFAULT_NT, ...(player?.nationalTeam || {}) };
+}
+
+/** Tournament you are called up for this season, or null. */
+export function getNationalCallUp(player) {
+  const nt = getNationalCareer(player);
+  if (nt.skipNext) return null;
+  const called = checkNationalTeamCallUp(player) || Boolean(player.nextSeasonMods?.forceCallUp);
+  return called ? getInternationalTournamentInfo(player.seasonsPlayed, player.country) : null;
+}
+
+/** Will you actually play with the national team this season? */
+export function playsForNationalTeam(player) {
+  return Boolean(getNationalCallUp(player)) && player.seasonInProgress?.ntDecision !== 'decline';
+}
+
+function mainShirt(position) {
+  return position === 'arquero' ? 1 : position === 'enganche' ? 10 : 9;
+}
+
+function benchShirt(position) {
+  const pool = position === 'arquero' ? [12, 23] : [14, 16, 18, 19, 20, 21, 22, 24, 25, 26];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/** Bonus (%) in national-team finals: the captain carries the team. */
+export function nationalFinalBonus(player) {
+  return getNationalCareer(player).status === 'captain' ? 5 : 0;
+}
+
+/**
+ * Updates status/shirt after a season. Returns { nationalTeam, messages }.
+ * played: participated with the national team this season. declined: said no to a major tournament.
+ */
+export function updateNationalCareer(player, { played, declined, overall }) {
+  const nt = getNationalCareer(player);
+  const messages = [];
+  const caps = player.nationalTeamStats?.matches || 0;
+  const teamName = getCountryById(player.country).nationalTeam;
+
+  if (declined) {
+    nt.declined += 1;
+    nt.skipNext = overall < 85;
+    messages.push(nt.skipNext
+      ? `El DT de ${teamName} no te perdonó el faltazo: la próxima temporada no te convoca.`
+      : `Sos indiscutido: aunque faltaste, ${teamName} te va a seguir llamando.`);
+  } else if (nt.skipNext) {
+    nt.skipNext = false; // the punishment was served
+  }
+
+  if (played) {
+    if (nt.status === 'none' || !nt.shirt) {
+      nt.status = 'called';
+      nt.shirt = benchShirt(player.position);
+      messages.push(`Debutaste en ${teamName} con la camiseta número ${nt.shirt}.`);
+    }
+    if (player.flags?.nationalShirt10 && nt.shirt !== 10) {
+      nt.shirt = 10;
+      messages.push('Ganaste la pulseada: ahora usás la 10 de la Selección.');
+    }
+    if (nt.status === 'called' && caps >= 12 && overall >= 77) {
+      nt.status = 'regular';
+      const s = mainShirt(player.position);
+      if (nt.shirt !== 10 || player.position === 'enganche') nt.shirt = s;
+      messages.push(`Te ganaste la titularidad en ${teamName}: ahora sos el ${nt.shirt}.`);
+    } else if (nt.status === 'regular' && caps >= 45 && player.age >= 27 && player.age <= 33 && overall >= 84
+      && ((player.fame || 0) >= 75 || (player.stats?.liderazgo || 0) >= 84) && Math.random() < 0.25) {
+      nt.status = 'captain';
+      messages.push(`¡Te dieron la cinta de capitán de ${teamName}!`);
+    }
+  }
+  return { nationalTeam: nt, messages };
 }

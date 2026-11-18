@@ -1,24 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import PlayerCard from './components/PlayerCard';
-import TrophyCabinet from './components/TrophyCabinet';
-import TrainingZone from './components/TrainingZone';
-import StoreModal from './components/StoreModal';
-import GuideModal from './components/GuideModal';
-import NewGameModal from './components/NewGameModal';
-import PreseasonCardsModal from './components/PreseasonCardsModal';
-import DilemmaModal from './components/DilemmaModal';
-import TransfersModal from './components/TransfersModal';
-import RetirementScreen from './components/RetirementScreen';
-import AchievementsModal from './components/AchievementsModal';
-import SavesModal from './components/SavesModal';
-import HallOfFameModal from './components/HallOfFameModal';
-import ManagerModeModal from './components/ManagerModeModal';
 import CareerTimeline from './components/CareerTimeline';
-import InteractiveTutorialModal from './components/InteractiveTutorialModal';
-import FinalSeries from './components/FinalSeries';
 import SeasonRecap from './components/SeasonRecap';
 import AppHeader from './components/AppHeader';
-import KeyMatchModal from './components/KeyMatchModal';
 import ClubShield from './components/ClubShield';
 import { getSlotData, saveSlotData, getActiveSlotNumber, setActiveSlotNumber } from './utils/storage';
 import { checkPlayerAchievements } from './data/achievements';
@@ -27,8 +11,16 @@ import {
   normalizePlayer,
   simulateSeasonMatches,
   generateKeyMatches,
+  getDifficulty,
+  getNationalCallUp,
+  nationalFinalBonus,
   autoResolveKeyMatch,
-  generateTransferOffers,
+  generateOffseasonMarket,
+  makeContract,
+  WORKLOADS,
+  getWorkload,
+  signingBonus,
+  contractYearsRange,
   getPlayerOverall,
   getKeyStat,
   getInjuryRisk,
@@ -40,6 +32,9 @@ import {
   TRAINING_REWARDS_PER_SEASON,
 } from './game/career';
 import { finalizeSeasonState } from './game/season';
+import { resolveDilemmaOption } from './game/dilemmaEngine';
+import { addMoment } from './game/moments';
+import { getContinentalEntry, domesticCupName } from './game/competitions';
 import { applyEffects, addIdolatry, withStatueCheck, seasonsAtCurrentClub, STATUE_MIN_SEASONS } from './game/effects';
 import { drawPreseasonCards } from './data/cards';
 import { DILEMMAS, getRandomDilemma } from './data/dilemmas';
@@ -49,6 +44,25 @@ import {
   Play, Sparkles, Coins, Flame, Target, Zap, Save, Crown, Award, Briefcase,
   X, ShoppingBag, Dumbbell, HeartPulse, Flag,
 } from 'lucide-react';
+
+// Windows and minigames load on demand (smaller first load)
+const TrophyCabinet = lazy(() => import('./components/TrophyCabinet'));
+const TrainingZone = lazy(() => import('./components/TrainingZone'));
+const StoreModal = lazy(() => import('./components/StoreModal'));
+const GuideModal = lazy(() => import('./components/GuideModal'));
+const NewGameModal = lazy(() => import('./components/NewGameModal'));
+const PreseasonCardsModal = lazy(() => import('./components/PreseasonCardsModal'));
+const DilemmaModal = lazy(() => import('./components/DilemmaModal'));
+const TransfersModal = lazy(() => import('./components/TransfersModal'));
+const RetirementScreen = lazy(() => import('./components/RetirementScreen'));
+const AchievementsModal = lazy(() => import('./components/AchievementsModal'));
+const SavesModal = lazy(() => import('./components/SavesModal'));
+const HallOfFameModal = lazy(() => import('./components/HallOfFameModal'));
+const ManagerModeModal = lazy(() => import('./components/ManagerModeModal'));
+const InteractiveTutorialModal = lazy(() => import('./components/InteractiveTutorialModal'));
+const FinalSeries = lazy(() => import('./components/FinalSeries'));
+const KeyMatchModal = lazy(() => import('./components/KeyMatchModal'));
+const NationalCallModal = lazy(() => import('./components/NationalCallModal'));
 
 const SIM_DURATION_MS = 2400;
 
@@ -84,6 +98,22 @@ function loadInitialPlayer() {
   }
 }
 
+function LoadingOverlay() {
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center" aria-label="Cargando">
+      <div className="text-4xl animate-roll">⚽</div>
+    </div>
+  );
+}
+
+function LoadingBlock() {
+  return (
+    <div className="py-20 flex justify-center" aria-label="Cargando">
+      <div className="text-4xl animate-roll">⚽</div>
+    </div>
+  );
+}
+
 export default function App() {
   const [activeSlot, setActiveSlot] = useState(() => getActiveSlotNumber());
   const [player, setPlayerState] = useState(loadInitialPlayer);
@@ -110,6 +140,7 @@ export default function App() {
   });
   const [confirmRetire, setConfirmRetire] = useState(false);
   const [keyMatchOpen, setKeyMatchOpen] = useState(false);
+  const [ntCallOpen, setNtCallOpen] = useState(false);
   const simRef = useRef({ timer: null, result: null });
   const [simResult, setSimResult] = useState(null);
 
@@ -194,10 +225,13 @@ export default function App() {
     const p = playerRef.current;
     if (!p?.offseasonStep) return;
     let next = p;
-    if (p.offseasonStep === 'dilemma' && !DILEMMAS.some(d => d.id === p.pendingDilemmaId)) {
+    if (p.offseasonStep === 'dilemma' && !p.pendingDilemmaResult && !DILEMMAS.some(d => d.id === p.pendingDilemmaId)) {
       next = { ...p, pendingDilemmaId: getRandomDilemma(p, p.seenDilemmas || []).id };
     } else if (p.offseasonStep === 'transfers' && !p.pendingOffers?.length) {
-      next = { ...p, pendingOffers: generateTransferOffers(p) };
+      const market = generateOffseasonMarket(p);
+      next = market
+        ? { ...p, pendingOffers: market.offers, pendingMarketFree: market.free }
+        : { ...p, pendingOffers: null, offseasonStep: 'cards', pendingCards: drawCardsFor(p) };
     } else if (p.offseasonStep === 'cards' && !p.pendingCards?.length) {
       next = { ...p, pendingCards: drawCardsFor(p) };
     }
@@ -212,24 +246,57 @@ export default function App() {
 
   const handleResolveDilemma = (option) => {
     const prev = playerRef.current;
-    let next = applyEffects(prev, option.effects || {});
-    next = {
-      ...next,
-      seenDilemmas: [...(prev.seenDilemmas || []), prev.pendingDilemmaId].filter(Boolean),
+    const dilemma = DILEMMAS.find(d => d.id === prev.pendingDilemmaId);
+    if (!dilemma) return;
+    const { next: resolved, result } = resolveDilemmaOption(prev, dilemma, option);
+    const next = {
+      ...resolved,
+      seenDilemmas: [...(prev.seenDilemmas || []), dilemma.id],
+      scheduledDilemmas: (resolved.scheduledDilemmas || []).filter(sd => sd.id !== dilemma.id),
       pendingDilemmaId: null,
-      offseasonStep: 'transfers',
+      pendingDilemmaResult: result,
     };
-    next.pendingOffers = generateTransferOffers(next);
+    if (result.transferredTo) sound.playTrophy();
     commitPlayer(next);
     pushAchievements(next);
   };
 
-  const handleAcceptOffer = (offer) => {
+  /** After reading the consequences: go to the market (or straight to pre-season). */
+  const handleDilemmaContinue = () => {
+    const prev = playerRef.current;
+    const result = prev.pendingDilemmaResult;
+    const next = { ...prev, pendingDilemmaResult: null };
+    if (result?.transferredTo) {
+      // You already changed club in the dilemma: no market this off-season
+      next.offseasonStep = 'cards';
+      next.pendingOffers = null;
+      next.pendingCards = drawCardsFor(next);
+      commitPlayer(next);
+      return;
+    }
+    // Under contract and nobody came for you? Straight to pre-season.
+    const market = generateOffseasonMarket(next);
+    if (market) {
+      next.offseasonStep = 'transfers';
+      next.pendingOffers = market.offers;
+      next.pendingMarketFree = market.free;
+    } else {
+      next.offseasonStep = 'cards';
+      next.pendingOffers = null;
+      next.pendingCards = drawCardsFor(next);
+    }
+    commitPlayer(next);
+    pushAchievements(next);
+  };
+
+  const handleAcceptOffer = (offer, years) => {
     const prev = playerRef.current;
     const next = { ...prev, clubHistory: prev.clubHistory.map(h => ({ ...h })) };
     const oldClubId = prev.currentClub.id;
 
-    if (offer.isRenewal) {
+    if (offer.isStay) {
+      // Keep the current contract as it is
+    } else if (offer.isRenewal) {
       next.idolatry = addIdolatry(prev.idolatry, 5);
     } else {
       const newClub = offer.club;
@@ -237,6 +304,11 @@ export default function App() {
       if (isRival) {
         const old = next.clubHistory.find(h => h.clubId === oldClubId);
         if (old) old.leftAsRival = true;
+        // Breaking a public oath of loyalty costs you everywhere
+        if (prev.flags?.swornLoyalty === oldClubId) {
+          next.fame = Math.max(0, (prev.fame || 0) - 10);
+          next.flags = { ...(prev.flags || {}), swornLoyalty: null, oathBroken: true };
+        }
       }
       next.currentClub = newClub;
       const existing = next.clubHistory.find(h => h.clubId === newClub.id);
@@ -252,9 +324,30 @@ export default function App() {
       }
     }
 
-    next.salary = offer.salary || computeSalary(next.currentClub, getPlayerOverall(next));
+    if (!offer.isStay) {
+      const salary = offer.salary || computeSalary(next.currentClub, getPlayerOverall(next));
+      const range = contractYearsRange(prev.age);
+      const length = Math.max(range.min, Math.min(range.max, years || range.suggested));
+      next.salary = salary;
+      next.contract = makeContract(salary, length);
+      next.money = (prev.money || 0) + signingBonus(salary, length);
+      // Committing long-term to your club wins the fans over
+      if (offer.isRenewal && length >= 4) next.idolatry = addIdolatry(next.idolatry, 3);
+    }
     Object.assign(next, withStatueCheck(next));
+    // Career highlight: changing club (and betrayals)
+    if (!offer.isRenewal && !offer.isStay && offer.club?.id !== oldClubId) {
+      const betrayal = offer.isRival || areRivals(oldClubId, offer.club.id);
+      Object.assign(next, addMoment(next, betrayal
+        ? { type: 'betrayal', icon: '🐍', text: `La traición: dejaste ${prev.currentClub.name} por el clásico rival, ${offer.club.name}` }
+        : { type: 'transfer', icon: '✈️', text: `Pase a ${offer.club.name}${offer.paysClause ? ' (pagaron tu cláusula)' : ''}` }));
+    }
     next.pendingOffers = null;
+    next.pendingMarketFree = null;
+    // Market-related promises are used up once you sign
+    if (prev.flags?.europeanAgent || prev.flags?.boardAngry) {
+      next.flags = { ...(next.flags || prev.flags), europeanAgent: false, boardAngry: offer.isStay ? prev.flags.boardAngry : false };
+    }
     next.offseasonStep = 'cards';
     next.pendingCards = drawCardsFor(next);
     commitPlayer(next);
@@ -328,39 +421,34 @@ export default function App() {
     simRef.current.result = null;
 
     const keyStat = getKeyStat(p.position);
-    const base = {
-      bonus: p.bonusFinal || 0,
-      playerStat: p.stats?.[keyStat] || 75,
-      seasonResult: result,
-    };
+    // Form and end-of-season energy weigh on the finals
+    const condition = { form: p.form || 0, energy: result.endEnergy ?? p.energy ?? 100 };
+    const playerStat = p.stats?.[keyStat] || 75;
 
-    if (result.reachedFinal) {
-      sound.playWhistle();
-      setActiveFinal({
-        ...base,
-        stage: 'club',
-        tournament: result.finalTournament,
-        title: finalTitle(result.finalTournament),
-        teamName: p.currentClub.name,
-        difficulty: getTournamentDifficulty(result.finalTournament),
-        pendingNationalFinal: result.nationalTeam?.reachedFinal ? result.nationalTeam : null,
-      });
-    } else if (result.nationalTeam?.reachedFinal) {
-      sound.playWhistle();
-      setActiveFinal({
-        ...base,
-        bonus: 0,
+    // Every final of the season, in calendar order: cup, international cup, league decider / promotion, national team
+    const queue = (result.finals || []).map(f => ({
+      ...f,
+      stage: 'club',
+      teamName: p.currentClub.name,
+      bonus: p.bonusFinal || 0,
+    }));
+    if (result.nationalTeam?.reachedFinal) {
+      queue.push({
         stage: 'national',
+        kind: 'national',
         tournament: result.nationalTeam.finalTournament,
         title: finalTitle(result.nationalTeam.finalTournament),
         teamName: result.nationalTeam.nationalTeamName,
+        bonus: nationalFinalBonus(p),
         difficulty: getTournamentDifficulty(result.nationalTeam.finalTournament),
-        wonClubFinal: false,
-        pendingNationalFinal: null,
       });
-    } else {
-      finalizeSeason(result, {});
     }
+    if (queue.length === 0) {
+      finalizeSeason(result, { finals: [] });
+      return;
+    }
+    sound.playWhistle();
+    setActiveFinal({ ...queue[0], condition, playerStat, seasonResult: result, queue, index: 0, results: [], rested: false });
   };
 
   const handlePlaySeason = () => {
@@ -368,18 +456,48 @@ export default function App() {
     if (!p || simProgress !== null || p.offseasonStep || p.isRetired) return;
     setConfirmRetire(false);
 
-    // 1) Key matches first (persisted, so a reload can't skip or replay them)
+    // 0) Big national team tournament? You decide whether to go (persisted)
     let sip = p.seasonInProgress;
     if (!sip) {
-      sip = { matches: generateKeyMatches(p), results: [] };
+      const call = getNationalCallUp(p);
+      const needsDecision = Boolean(call?.isMajor);
+      sip = {
+        ntCall: needsDecision ? { name: call.name, icon: call.icon, isMajor: true } : null,
+        ntDecision: needsDecision ? null : (call ? 'auto' : null),
+        matches: needsDecision ? null : generateKeyMatches(p),
+        results: [],
+      };
       commitPlayer({ ...p, seasonInProgress: sip });
     }
+    if (sip.ntCall && !sip.ntDecision) {
+      sound.playWhistle();
+      setNtCallOpen(true);
+      return;
+    }
+    if (!sip.matches) {
+      sip = { ...sip, matches: generateKeyMatches(playerRef.current) };
+      commitPlayer({ ...playerRef.current, seasonInProgress: sip });
+    }
+    // 1) Key matches first (persisted, so a reload can't skip or replay them)
     if (sip.results.length < sip.matches.length) {
       sound.playWhistle();
       setKeyMatchOpen(true);
       return;
     }
     runSeasonSimulation(playerRef.current);
+  };
+
+  const handleNationalDecision = (decision) => {
+    const p = playerRef.current;
+    if (!p?.seasonInProgress) return;
+    const effects = decision === 'go' ? { dt: -2 } : { dt: 4, idolatria: 3, fama: -3 };
+    const decided = applyEffects(p, effects);
+    const sip = { ...p.seasonInProgress, ntDecision: decision };
+    const withSip = { ...decided, seasonInProgress: sip };
+    // Key matches depend on the decision (no national-team game if you stay home)
+    commitPlayer({ ...withSip, seasonInProgress: { ...sip, matches: generateKeyMatches(withSip) } });
+    setNtCallOpen(false);
+    setTimeout(() => handlePlaySeasonRef.current?.(), 0);
   };
 
   const handleKeyMatchDone = (won, auto) => {
@@ -425,38 +543,33 @@ export default function App() {
     proceedAfterSimulation(simRef.current.result);
   };
 
-  const handleFinalResult = (won) => {
-    const f = activeFinal;
+  const handlePlaySeasonRef = useRef(null);
+  useEffect(() => { handlePlaySeasonRef.current = handlePlaySeason; });
+
+  const handleFinalResult = (won, meta = {}) => {
+    let f = activeFinal;
     if (!f) return;
-    if (f.stage === 'club') {
-      if (f.pendingNationalFinal) {
-        const p = playerRef.current;
-        setActiveFinal({
-          stage: 'national',
-          tournament: f.pendingNationalFinal.finalTournament,
-          title: finalTitle(f.pendingNationalFinal.finalTournament),
-          teamName: f.pendingNationalFinal.nationalTeamName,
-          bonus: 0,
-          playerStat: p.stats?.[getKeyStat(p.position)] || 75,
-          difficulty: getTournamentDifficulty(f.pendingNationalFinal.finalTournament),
-          seasonResult: f.seasonResult,
-          wonClubFinal: won,
-          pendingNationalFinal: null,
-        });
-        return;
-      }
-      setActiveFinal(null);
-      finalizeSeason(f.seasonResult, { wonFinal: won, tournamentName: f.tournament });
-    } else {
-      setActiveFinal(null);
-      finalizeSeason(f.seasonResult, {
-        wonFinal: Boolean(f.wonClubFinal),
-        tournamentName: f.seasonResult?.finalTournament || null,
-        wonNationalFinal: won,
-        nationalTournamentName: f.tournament,
-      });
+    // Skipping the last league game to rest: the coach doesn't love it (only once per season)
+    if (meta.rested && !f.rested && f.seasonResult) {
+      f = {
+        ...f,
+        rested: true,
+        condition: { ...f.condition, energy: Math.min(100, (f.condition?.energy ?? 100) + 20) },
+        seasonResult: { ...f.seasonResult, newManagerRel: Math.max(0, (f.seasonResult.newManagerRel ?? 65) - 3) },
+      };
     }
+    const results = [...f.results, {
+      stage: f.stage, kind: f.kind, tier: f.tier, tournament: f.tournament, opponent: f.opponent, weight: f.weight, won,
+    }];
+    const nextIndex = f.index + 1;
+    if (nextIndex < f.queue.length) {
+      setActiveFinal({ ...f, ...f.queue[nextIndex], index: nextIndex, results });
+      return;
+    }
+    setActiveFinal(null);
+    finalizeSeason(f.seasonResult, { finals: results });
   };
+
 
   const finalizeSeason = (seasonData, outcome) => {
     const { next } = finalizeSeasonState(playerRef.current, seasonData, outcome);
@@ -468,14 +581,14 @@ export default function App() {
     }
     commitPlayer(next);
     setOffseasonOpen(false);
-    if (outcome.wonFinal || outcome.wonNationalFinal) sound.playTrophy();
+    if ((outcome.finals || []).some(f => f.won) || next.lastRecap?.titles?.length) sound.playTrophy();
     pushAchievements(next);
   };
 
   const handleRetire = () => {
     const p = playerRef.current;
     if (!p) return;
-    commitPlayer({ ...p, isRetired: true, offseasonStep: null });
+    commitPlayer(addMoment({ ...p, isRetired: true, offseasonStep: null }, { type: 'retire', icon: '👋', text: `Colgaste los botines a los ${p.age} años en ${p.currentClub.name}` }));
     setConfirmRetire(false);
   };
 
@@ -583,7 +696,7 @@ export default function App() {
             </div>
           </div>
         </div>
-        {sharedModals}
+        <Suspense fallback={<LoadingOverlay />}>{sharedModals}</Suspense>
       </div>
     );
   }
@@ -615,6 +728,7 @@ export default function App() {
       />
 
       <main className="max-w-6xl mx-auto w-full p-3 sm:p-4 md:p-6 flex-1">
+        <Suspense fallback={<LoadingBlock />}>
         {player.isRetired ? (
           <RetirementScreen
             player={player}
@@ -660,7 +774,12 @@ export default function App() {
                             {player.currentClub?.name}
                           </h2>
                           <p className="text-xs text-gray-400 mt-1">
-                            {league} · {player.age} años · Sueldo ${Math.round(player.salary || 0).toLocaleString('es-AR')}/año
+                            {league} · {player.age} años · ${Math.round(player.salary || 0).toLocaleString('es-AR')}/año
+                            {player.contract && (
+                              <span className={player.contract.yearsLeft <= 1 ? 'text-amber-300' : ''}>
+                                {' '}· Contrato: {player.contract.yearsLeft > 0 ? `${player.contract.yearsLeft} ${player.contract.yearsLeft === 1 ? 'año' : 'años'}` : 'vence ahora'}
+                              </span>
+                            )}
                           </p>
                         </div>
                       </div>
@@ -695,6 +814,16 @@ export default function App() {
                       </div>
                     </div>
 
+                    {/* Consequences of last off-season's decisions */}
+                    {!isSimulating && !offseasonPending && player.nextSeasonMods?.labels?.length > 0 && (
+                      <div className="relative mt-4 p-3 rounded-xl border border-amber-500/30 bg-amber-500/5">
+                        <span className="text-[10px] font-black uppercase text-amber-300 block mb-1.5">Esta temporada pesan tus decisiones</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {player.nextSeasonMods.labels.map((l, i) => <span key={i} className="chip chip-gold">{l}</span>)}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Pre-season status chips */}
                     {!isSimulating && !offseasonPending && (
                       <div className="relative mt-4 flex flex-wrap gap-1.5">
@@ -703,6 +832,41 @@ export default function App() {
                         <span className="chip">📈 Forma {player.form > 0 ? `+${player.form}` : player.form || 0}</span>
                         {player.bonusFinal > 0 && <span className="chip chip-gold">🎯 Bonus final +{player.bonusFinal}%</span>}
                         <span className="chip">⏳ {player.gameMode === 'ultra' ? `${yearsLeft} temporadas restantes` : `Retiro en ${yearsLeft} años`}</span>
+                        <span className={`chip ${player.difficulty === 'leyenda' ? 'chip-gold' : ''}`} title={getDifficulty(player).desc}>{getDifficulty(player).icon} {getDifficulty(player).label}</span>
+                        <span className="chip" title="Copa nacional (también la juegan los de segunda)">🥇 {domesticCupName(player.currentClub.league)}</span>
+                        <span className={`chip ${getContinentalEntry(player) ? 'chip-up' : ''}`} title="Copa internacional de esta temporada">
+                          🌎 {getContinentalEntry(player)?.name || 'Sin copa internacional'}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Minutes plan */}
+                    {!isSimulating && !offseasonPending && !player.seasonInProgress?.results?.length && (
+                      <div className="relative mt-4">
+                        <div className="flex items-center justify-between mb-2.5">
+                          <span className="text-xs font-black uppercase tracking-wider text-sky-300">Plan de minutos</span>
+                          <span className="text-[11px] text-gray-400">
+                            Energía {player.energy ?? 100}%{(player.energy ?? 100) < 70 ? ' · rendís menos' : ''}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          {Object.values(WORKLOADS).map(w => {
+                            const active = getWorkload(player).id === w.id;
+                            return (
+                              <button
+                                key={w.id}
+                                onClick={() => { sound.playClick(); commitPlayer({ ...playerRef.current, workload: w.id }); }}
+                                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                                  active ? 'bg-sky-500/15 border-sky-400/60' : 'bg-black/30 border-white/10 hover:border-white/25'
+                                }`}
+                                aria-pressed={active}
+                              >
+                                <span className="text-xs font-black text-white block">{w.icon} {w.label}</span>
+                                <span className="text-[10px] text-gray-400 leading-snug block mt-0.5">{w.desc}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
 
@@ -831,8 +995,10 @@ export default function App() {
             )}
           </>
         )}
+        </Suspense>
       </main>
 
+      <Suspense fallback={<LoadingOverlay />}>
       {/* Off-season modals */}
       {offseasonOpen && player.offseasonStep === 'cards' && player.pendingCards && (
         <PreseasonCardsModal
@@ -846,14 +1012,32 @@ export default function App() {
           onBuySecondSlot={handleBuySecondCardSlot}
         />
       )}
-      {offseasonOpen && currentDilemma && (
-        <DilemmaModal key={currentDilemma.id} dilemma={currentDilemma} player={player} onResolve={handleResolveDilemma} />
+      {offseasonOpen && player.offseasonStep === 'dilemma' && (player.pendingDilemmaResult || currentDilemma) && (
+        <DilemmaModal
+          key={player.pendingDilemmaResult ? `result-${player.pendingDilemmaResult.dilemmaId}` : currentDilemma.id}
+          dilemma={currentDilemma}
+          result={player.pendingDilemmaResult}
+          player={player}
+          onResolve={handleResolveDilemma}
+          onContinue={handleDilemmaContinue}
+        />
       )}
       {offseasonOpen && player.offseasonStep === 'transfers' && player.pendingOffers && (
-        <TransfersModal player={player} offers={player.pendingOffers} onAcceptOffer={handleAcceptOffer} />
+        <TransfersModal
+          player={player}
+          offers={player.pendingOffers}
+          isFreeAgent={player.pendingMarketFree !== false}
+          yearsRange={contractYearsRange(player.age)}
+          onAcceptOffer={handleAcceptOffer}
+        />
       )}
 
       {modal === 'store' && <StoreModal player={player} onBuyItem={handleBuyStoreItem} onClose={closeModal} />}
+
+      {/* National team call-up decision */}
+      {ntCallOpen && player.seasonInProgress?.ntCall && !player.seasonInProgress.ntDecision && (
+        <NationalCallModal player={player} tournament={player.seasonInProgress.ntCall} onDecide={handleNationalDecision} />
+      )}
 
       {/* Key matches during the season */}
       {keyMatchOpen && player.seasonInProgress && player.seasonInProgress.matches[player.seasonInProgress.results.length] && (
@@ -872,7 +1056,7 @@ export default function App() {
       {activeFinal && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 z-50 animate-fadeIn">
           <FinalSeries
-            key={`${activeFinal.stage}-${activeFinal.tournament}`}
+            key={`${activeFinal.index}-${activeFinal.stage}-${activeFinal.tournament}`}
             final={activeFinal}
             player={player}
             onFinish={handleFinalResult}
@@ -881,6 +1065,7 @@ export default function App() {
       )}
 
       {sharedModals}
+      </Suspense>
 
       {toasts[0] && (
         <div key={toasts[0].id} className="fixed bottom-20 md:bottom-6 right-3 left-3 sm:left-auto sm:right-6 z-[60] toast animate-slideUp sm:max-w-sm">

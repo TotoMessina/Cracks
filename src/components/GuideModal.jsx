@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, X, Trophy, Shield, Zap, AlertTriangle, Sparkles, Calendar, Target, Coins, TrendingUp } from 'lucide-react';
+import { BookOpen, X, Trophy, Shield, Zap, AlertTriangle, Sparkles, Calendar, Target, Coins, TrendingUp, Star } from 'lucide-react';
 import { RETIREMENT_AGE, VOLUNTARY_RETIREMENT_AGE, TRAINING_REWARDS_PER_SEASON } from '../game/career';
 import { STATUE_IDOLATRY, STATUE_MIN_SEASONS } from '../game/effects';
 
@@ -48,14 +48,32 @@ export default function GuideModal({ onClose, onOpenTutorial }) {
             </p>
           </Section>
 
+          <Section icon={<Star className="w-4 h-4 text-amber-300" />} title="Dificultad">
+            <p>
+              Se elige al crear la carrera. <strong className="text-white">Fácil</strong>: tu equipo rinde más en la tabla y en las copas, minijuegos más amables (+8%), menos lesiones y la hinchada te quiere más rápido.
+              <strong className="text-white"> Normal</strong>: la experiencia pensada. <strong className="text-white">Leyenda</strong>: tu equipo rinde menos en la tabla y en las copas, minijuegos un nivel más difíciles (−5%), más lesiones y una hinchada exigente.
+              Tu puntaje de gloria en el Salón de la Fama vale ×0,8 en Fácil y ×1,3 en Leyenda.
+            </p>
+          </Section>
+
           <Section icon={<Calendar className="w-4 h-4 text-sky-400" />} title="El ciclo de cada año">
             <ol className="list-decimal list-inside space-y-1.5">
               <li><strong className="text-white">Pretemporada:</strong> elegís 1 de 3 cartas de entrenamiento (🪙 5 para cambiarlas, 🪙 15 para quedarte con 2).</li>
+              <li><strong className="text-white">Plan de minutos:</strong> rotar (menos partidos, menos desgaste y lesiones), normal o jugar todo (más goles y el DT contento, pero terminás fundido). Si arrancás una temporada con menos de 70% de energía rendís menos, y la energía con la que terminás el año pesa en las finales.</li>
               <li><strong className="text-white">Preparación táctica:</strong> gastá monedas en ventaja para la final, concentración (+1 forma) o fisio (+energía, menos lesiones).</li>
               <li><strong className="text-white">Partidos clave:</strong> el clásico (o un partido decisivo) y a veces una noche de copa o un partido de la Selección. Los jugás con un minijuego o los simulás: ganarlos suma idolatría, confianza del DT y chances de llegar a la final; perderlos resta.</li>
-              <li><strong className="text-white">Temporada:</strong> se simulan el resto de los partidos. Si tu equipo llega a una final, la jugás vos.</li>
-              <li><strong className="text-white">Receso:</strong> un dilema, después el mercado de pases y vuelta a la pretemporada. Todo queda guardado aunque cierres la página.</li>
+              <li><strong className="text-white">Temporada:</strong> se juegan la liga, la copa nacional y, si tu club clasificó, la copa internacional. Las finales las jugás vos, una detrás de otra.</li>
+              <li><strong className="text-white">Receso:</strong> un dilema, después el mercado de pases y vuelta a la pretemporada. Ojo con los dilemas: algunos te cambian de club, te dejan sanciones o secuelas para el año siguiente, o vuelven a aparecer temporadas después. Todo queda guardado aunque cierres la página.</li>
             </ol>
+          </Section>
+
+          <Section icon={<Trophy className="w-4 h-4 text-amber-300" />} title="Competencias">
+            <ul className="space-y-1.5">
+              <li><strong className="text-white">Liga:</strong> la gana el primero de la tabla. Si el título se define por 4 puntos o menos, se juega en la última fecha (una final). En segunda división, el 1° asciende directo y del 2° al 5° juegan el reducido o play-off.</li>
+              <li><strong className="text-white">Copa nacional</strong> (Copa Argentina, FA Cup, Copa del Rey...): eliminación directa y la juegan también los de segunda, así que hay batacazos. Ganarla te clasifica a una copa internacional.</li>
+              <li><strong className="text-white">Copas internacionales:</strong> se clasifican por la tabla del año anterior. Europa: Champions, Europa League y Conference. Sudamérica: Libertadores y Sudamericana. También Concacaf y AFC. Fase de grupos, octavos, cuartos, semis y final.</li>
+              <li>Cada título vale distinto en gloria, plata e idolatría: Champions/Libertadores &gt; liga &gt; copa nacional y copas internacionales menores.</li>
+            </ul>
           </Section>
 
           <Section icon={<Target className="w-4 h-4 text-amber-400" />} title="Las finales: al mejor de 3 jugadas">
@@ -67,7 +85,19 @@ export default function GuideModal({ onClose, onOpenTutorial }) {
               <li>🧤 <strong className="text-white">Atajada:</strong> mirá hacia dónde sale la pelota y tirate a ese rincón (Q / E / A / D) antes de que entre.</li>
               <li>🏆 <strong className="text-white">Trile:</strong> seguí con la vista el vaso que tiene la copa mientras se mezclan.</li>
             </ul>
-            <p>Tu atributo clave (Definición, Pegada o Reflejos) agranda la zona verde o te da más tiempo, y la dificultad sube en Libertadores, Champions y Mundial. En la pestaña <strong className="text-white">Entrenar</strong> podés practicar y ganar 🪙 2 por acierto ({TRAINING_REWARDS_PER_SEASON} premios por temporada).</p>
+            <p>Tu atributo clave (Definición, Pegada o Reflejos) agranda la zona verde o te da más tiempo, y la dificultad sube en Libertadores, Champions y Mundial. Tu <strong className="text-white">forma</strong> (±4% por punto) y tu <strong className="text-white">energía</strong> (+3% si estás fresco, hasta −10% si llegás fundido) también suman o restan; si llegás cansado a una final podés cuidarte la semana previa. En la pestaña <strong className="text-white">Entrenar</strong> podés practicar y ganar 🪙 2 por acierto ({TRAINING_REWARDS_PER_SEASON} premios por temporada).</p>
+          </Section>
+
+          <Section icon={<Star className="w-4 h-4 text-sky-300" />} title="La Selección">
+            <p>
+              Te convocan si tu nivel y tu fama alcanzan (los países más fuertes piden más). Las eliminatorias se juegan solas, pero antes de un
+              <strong className="text-white"> Mundial o Copa Continental</strong> decidís: ir (más partidos, chance de final, +3% de riesgo de lesión y −2 con el DT de tu club)
+              o pedir no ir (+4 con el DT, +3 de idolatría, −3 de fama y, salvo que seas indiscutido, la próxima temporada no te llaman).
+            </p>
+            <p>
+              Debutás con un número de suplente; con 12 partidos y nivel 77 te ganás la titularidad y la camiseta de tu puesto (9, 10 o 1),
+              y si sos de los mejores (nivel 84, 45 partidos, entre 27 y 33 años, con mucho liderazgo o fama) podés ser <strong className="text-white">capitán</strong> (+5% en las finales con la Selección).
+            </p>
           </Section>
 
           <Section icon={<Shield className="w-4 h-4 text-amber-400" />} title="Los puestos">
@@ -88,8 +118,11 @@ export default function GuideModal({ onClose, onOpenTutorial }) {
 
           <Section icon={<Coins className="w-4 h-4 text-emerald-400" />} title="Contratos y dinero">
             <p>
-              Cobrás el sueldo del contrato que firmás en el mercado de pases: renovar da un aumento y algo de idolatría; los clubes grandes (y Europa)
-              pagan mucho más. Ganar una final suma un premio extra. Con la plata comprás mejoras permanentes en la tienda.
+              Firmás contratos de 1 a 5 años (los pibes pueden firmar más largo, los veteranos menos). El sueldo queda fijo hasta que termina:
+              un contrato largo te protege si bajás el nivel, pero si mejorás vas a cobrar menos de lo que valés. Mientras tengas contrato no vas al mercado:
+              solo te vas si un club más grande paga tu cláusula, o tu club te ofrece renegociar si cobrás muy por debajo de tu nivel.
+              Cuando se termina, sos libre de elegir club (renovar suma algo de idolatría). Los clubes grandes y las ligas más ricas pagan mucho más,
+              y ganar una final suma un premio extra. Con la plata comprás mejoras permanentes en la tienda.
             </p>
           </Section>
 
