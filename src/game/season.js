@@ -10,14 +10,15 @@ import {
   applySeasonDevelopment,
   computeSalary,
 } from './career';
-import { getLeague } from '../data/clubs';
+import { getLeague, setWorld, findClub, LEAGUES } from '../data/clubs';
+import { updateWorld, evaluateObjective } from './world';
 import { addIdolatry, withStatueCheck, applyEffects } from './effects';
 import { addMoment } from './moments';
-import { TITLE_WEIGHT, computeQualification } from './competitions';
+import { TITLE_WEIGHT, computeQualification, buildSupercups } from './competitions';
 
 const PASSIVE_INCOME_DEPT = 35000;
 
-const KIND_ICON = { continental: '⭐', league: '🏆', cup: '🥇', promotion: '🎖️' };
+const KIND_ICON = { continental: '⭐', league: '🏆', cup: '🥇', promotion: '🎖️', supercup: '🏅', continental_supercup: '🏅', intercontinental: '🌍' };
 
 /** Old call style ({ wonFinal, tournamentName }) -> list of club finals. */
 function legacyClubFinals(prev, tournamentName, wonFinal) {
@@ -47,7 +48,10 @@ export function finalizeSeasonState(prev, seasonData, {
   const ntFinal = finals
     ? finals.find(f => f.stage === 'national') || null
     : (legacyNational ? { tournament: legacyNational, won: legacyWonNational } : null);
-  const titles = clubFinals.filter(f => f.won).map(f => ({ title: f.tournament, kind: f.kind, weight: f.weight || 15, viaFinal: true }));
+  const titles = clubFinals.filter(f => f.won).map(f => ({ title: f.tournament, kind: f.kind, tier: f.tier, weight: f.weight || 15, viaFinal: true }));
+  // Supercups / Recopa / Intercontinental played at the start of the season
+  const titleMatches = (seasonData.keyMatches || []).filter(k => k.isTitle);
+  titleMatches.filter(k => k.won).forEach(k => titles.push({ title: k.tournament, kind: k.titleKind, weight: k.weight || 8, viaFinal: true }));
   if (comps?.league?.champion) titles.push({ title: comps.league.name, kind: 'league', weight: TITLE_WEIGHT.league, viaFinal: false });
   if (comps?.league?.directPromotion) titles.push({ title: `Ascenso: campeón de ${clubLeague.short}`, kind: 'promotion', weight: TITLE_WEIGHT.promotion, viaFinal: false });
   const wonFinal = titles.length > 0;
@@ -105,6 +109,8 @@ export function finalizeSeasonState(prev, seasonData, {
   if (seasonData.matches < 20) idolatryGain -= 4;
   if (!wonFinal && !wonNationalFinal && (seasonData.leagueStanding?.position || 99) > 3) idolatryGain -= 4;
 
+  const relegated = Boolean(comps?.league?.relegated);
+  if (relegated) idolatryGain -= 6; // a sad day for everyone
   if (promotedToPrimera) {
     idolatryGain += 6;
     next.currentClub = {
@@ -313,9 +319,12 @@ export function finalizeSeasonState(prev, seasonData, {
   });
   const clubAtTitle = prev.currentClub.name;
   titles.forEach(t => {
-    const type = t.kind === 'continental' ? 'continental' : t.kind === 'promotion' ? 'promotion' : 'title';
+    const type = t.kind === 'intercontinental' ? 'intercontinental' : t.kind === 'continental' ? 'continental' : t.kind === 'promotion' ? 'promotion' : 'title';
     if (t.kind === 'promotion') return; // promotion has its own moment below
     checked = addMoment(checked, { ...at, type, icon: KIND_ICON[t.kind] || '🏆', text: `Campeón de ${t.title} con ${clubAtTitle}` });
+  });
+  titleMatches.filter(k => !k.won && k.titleKind === 'intercontinental').forEach(k => {
+    checked = addMoment(checked, { ...at, type: 'final_lost', icon: '🥈', text: `Perdiste la ${k.tournament} ante ${k.opponentName}` });
   });
   clubFinals.filter(f => !f.won).forEach(f => {
     checked = addMoment(checked, { ...at, type: 'final_lost', icon: '🥈', text: f.kind === 'league' ? `Se te escapó ${f.tournament} en la última fecha` : `Perdiste la final de ${f.tournament}${f.opponent ? ` ante ${f.opponent}` : ''}` });
@@ -347,12 +356,57 @@ export function finalizeSeasonState(prev, seasonData, {
     checked = addMoment(checked, { ...at, type: 'retire', icon: '👋', text: `Colgaste los botines a los ${checked.age} años en ${clubName}` });
   }
 
+  // ---- Promotions and relegations for every club (the world changes) ----
+  const promoFinal = clubFinals.find(f => f.kind === 'promotion');
+  const { world, moves } = updateWorld(prev.world || {}, {
+    playerLeague: prev.currentClub.league,
+    playerTable: seasonData.leagueStanding?.fullTable || null,
+    playerClubId: prev.currentClub.id,
+    playerPromotion: promoFinal ? promoFinal.won : null,
+  });
+  setWorld(world);
+  checked.world = world;
+  recap.worldMoves = moves.map(mv => ({ ...mv, name: findClub(mv.clubId)?.name || '' }));
+  if (relegated) {
+    const secondTier = LEAGUES.find(l => l.secondTier && l.promotesTo === prev.currentClub.league);
+    if (secondTier) {
+      checked.currentClub = { ...checked.currentClub, league: secondTier.id };
+      checked.relegationRelease = prev.currentClub.id; // you can leave for free this off-season
+      checked = addMoment(checked, { ...at, type: 'relegation', icon: '⬇️', text: `Descenso con ${prev.currentClub.name} a ${secondTier.short}` });
+    }
+  } else if (checked.relegationRelease) {
+    checked.relegationRelease = null;
+  }
+  recap.relegated = relegated;
+
   // Next season's international competition (table position or winning the cup)
   const leaguePosition = clubLeague.secondTier ? null : (comps?.league?.decider
     ? (titles.some(t => t.kind === 'league') ? 1 : 2)
     : seasonData.leagueStanding?.position);
   checked.qualifiedFor = computeQualification(prev.currentClub, leaguePosition, wonCup);
   recap.qualifiedFor = checked.qualifiedFor;
+
+  // Title matches earned for next season (league + cup winners, continental champions...)
+  checked.pendingSupercups = checked.isRetired ? [] : buildSupercups(prev.currentClub, titles, seasonData.leagueStanding?.miniTable || []);
+  recap.nextSupercups = checked.pendingSupercups;
+  recap.titleMatches = titleMatches;
+
+  // ---- Board objective ----
+  if (seasonData.objective) {
+    const met = evaluateObjective(seasonData.objective, {
+      position: seasonData.leagueStanding?.position ?? 99,
+      total: seasonData.leagueStanding?.totalTeams ?? 20,
+      titles,
+      promoted: promotedToPrimera,
+      relegated,
+      qualified: Boolean(checked.qualifiedFor?.tier),
+      playoff: Boolean(comps?.league?.playoff),
+    });
+    const effects = met ? { dt: 8, idolatria: 4 } : { dt: relegated ? -15 : -8, idolatria: -3 };
+    checked = applyEffects(checked, effects);
+    if (met) checked.coins = (checked.coins || 0) + 3;
+    recap.objective = { ...seasonData.objective, met, effects };
+  }
 
   checked.lastRecap = recap;
   return { next: checked, recap };

@@ -62,6 +62,34 @@ export const ACHIEVEMENTS = [
     check: (p) => (p.trophies || []).some(t => /Libertadores|Champions|Concacaf|AFC/.test(t.title))
   },
   {
+    id: "campeon_intercontinental",
+    title: "Campeón del Mundo de Clubes",
+    desc: "Ganar la Copa Intercontinental con tu club.",
+    category: "titulos",
+    icon: "🌍",
+    check: (p) => (p.trophies || []).some(t => t.title === 'Copa Intercontinental')
+  },
+  {
+    id: "rey_supercopas",
+    title: "Rey de las Supercopas",
+    desc: "Ganar 3 supercopas o recopas en tu carrera.",
+    category: "titulos",
+    icon: "🏅",
+    check: (p) => (p.trophies || []).filter(t => t.kind === 'supercup' || t.kind === 'continental_supercup').length >= 3
+  },
+  {
+    id: "no_se_fue",
+    title: "El Que No Se Fue",
+    desc: "Quedarte en tu club después de un descenso y devolverlo a primera.",
+    category: "folclore",
+    icon: "🫡",
+    check: (p) => {
+      const ms = p.moments || [];
+      const stayed = ms.findIndex(m => m.type === 'loyal_relegation');
+      return stayed >= 0 && ms.slice(stayed).some(m => m.type === 'promotion');
+    }
+  },
+  {
     id: "ascenso_heroico",
     title: "El Salto a Primera",
     desc: "Ganar la final por el ascenso y subir a primera con un club de segunda.",

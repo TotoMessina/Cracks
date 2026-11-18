@@ -95,11 +95,48 @@ function CompetitionsSummary({ recap }) {
     rows.push({ icon: '🌎', name: cont.name, status, tone, note });
   }
 
+  // Supercups / Recopa / Intercontinental played at the start of this season
+  [...(recap.titleMatches || [])].reverse().forEach(k => {
+    rows.unshift({
+      icon: k.titleKind === 'intercontinental' ? '🌍' : '🏅',
+      name: k.tournament,
+      status: k.won ? '🏆 Campeón' : '🥈 Perdida',
+      tone: k.won ? 'text-yellow-300' : 'text-gray-300',
+      note: `vs ${k.opponentName}${k.auto ? ' · simulado' : ''}`,
+    });
+  });
+
   const q = recap.qualifiedFor;
+  const nextSc = recap.nextSupercups || [];
+  const obj = recap.objective;
+  const moves = recap.worldMoves || [];
+  const ups = moves.filter(m => m.type === 'promoted');
+  const downs = moves.filter(m => m.type === 'relegated');
   return (
     <div className="mb-3 space-y-1.5">
       <span className="text-[10px] uppercase font-black text-gray-400 block">Competencias</span>
+      {obj && (
+        <div className={`px-3 py-2 rounded-xl border text-xs font-bold ${obj.met ? 'border-[#22E748]/40 bg-[#22E748]/10 text-[#22E748]' : 'border-red-500/40 bg-red-500/10 text-red-300'}`}>
+          {obj.icon} Objetivo de la dirigencia: {obj.label} — {obj.met ? '✅ cumplido (+8 con el DT, +4 idolatría, +3 🪙)' : `❌ no cumplido (${obj.effects.dt} con el DT)`}
+        </div>
+      )}
+      {recap.relegated && (
+        <div className="px-3 py-2 rounded-xl border border-red-500/50 bg-red-950/40 text-xs font-black text-red-200">
+          ⬇️ ¡DESCENSO! Tu club juega en segunda la próxima temporada. Por la cláusula de descenso te podés ir gratis.
+        </div>
+      )}
       {rows.map((r, i) => <CompetitionRow key={i} {...r} />)}
+      {(ups.length > 0 || downs.length > 0) && (
+        <div className="px-3 py-2 rounded-xl border border-white/10 bg-black/30 text-[11px] text-gray-300">
+          {ups.length > 0 && <span className="block">⬆️ Ascienden: {ups.map(m => m.name).join(', ')}</span>}
+          {downs.length > 0 && <span className="block">⬇️ Descienden: {downs.map(m => m.name).join(', ')}</span>}
+        </div>
+      )}
+      {nextSc.length > 0 && (
+        <div className="px-3 py-2 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs font-bold text-amber-200">
+          🏅 Te ganaste: {nextSc.map(sc => `${sc.tournament} vs ${sc.opponent.name}`).join(' · ')} (al arrancar la próxima temporada)
+        </div>
+      )}
       <div className={`px-3 py-2 rounded-xl border text-xs font-bold ${q?.name ? 'border-sky-500/40 bg-sky-500/10 text-sky-200' : 'border-white/10 bg-white/5 text-gray-400'}`}>
         {q?.name
           ? `✈️ Próxima temporada: ${q.name}${q.viaCup ? ' (por ganar la copa)' : ''}`

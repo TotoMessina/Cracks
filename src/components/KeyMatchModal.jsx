@@ -16,6 +16,9 @@ const KIND_STYLE = {
   decisivo: 'text-sky-300 bg-sky-500/10 border-sky-500/40',
   copa: 'text-[#F6B40E] bg-[#F6B40E]/10 border-[#F6B40E]/40',
   seleccion: 'text-sky-200 bg-sky-400/10 border-sky-400/40',
+  supercup: 'text-amber-200 bg-amber-500/10 border-amber-400/40',
+  continental_supercup: 'text-amber-200 bg-amber-500/10 border-amber-400/40',
+  intercontinental: 'text-yellow-200 bg-yellow-500/15 border-yellow-400/60',
 };
 
 const MINIGAME_LABEL = {
@@ -99,12 +102,18 @@ export default function KeyMatchModal({ event, player, index, total, onDone, aut
               <div className="p-3 rounded-xl bg-[#22E748]/5 border border-[#22E748]/20">
                 <span className="text-[10px] font-black uppercase text-[#22E748] block mb-1.5">Si ganás</span>
                 <Stakes player={player} effects={event.stakes.win} positive />
-                <span className="text-[10px] text-gray-400 block mt-1.5">+1 {player.position === 'arquero' ? 'valla invicta' : 'gol'} y más chances de llegar a la final.</span>
+                <span className="text-[10px] text-gray-400 block mt-1.5">
+                  {event.isTitle
+                    ? `🏆 Levantás la ${event.tournament} y la sumás a tu vitrina.`
+                    : `+1 ${player.position === 'arquero' ? 'valla invicta' : 'gol'} y más chances de llegar a la final.`}
+                </span>
               </div>
               <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/20">
                 <span className="text-[10px] font-black uppercase text-red-400 block mb-1.5">Si perdés</span>
                 <Stakes player={player} effects={event.stakes.lose} />
-                <span className="text-[10px] text-gray-400 block mt-1.5">El equipo pierde confianza para el resto del año.</span>
+                <span className="text-[10px] text-gray-400 block mt-1.5">
+                  {event.isTitle ? 'El título se lo lleva el rival.' : 'El equipo pierde confianza para el resto del año.'}
+                </span>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-2">

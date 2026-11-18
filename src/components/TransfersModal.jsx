@@ -9,6 +9,7 @@ export default function TransfersModal({
   offers = [],
   onAcceptOffer,
   isFreeAgent = true,
+  released = false,
   yearsRange = { min: 1, max: 4, suggested: 3 },
 }) {
   const [selectedOfferIndex, setSelectedOfferIndex] = useState(0);
@@ -47,13 +48,15 @@ export default function TransfersModal({
         {/* Header */}
         <div className="text-center mb-6">
           <span className="text-xs uppercase font-black tracking-widest text-[#22E748] bg-[#22E748]/10 px-3 py-1 rounded-full border border-[#22E748]/20">
-            {isFreeAgent ? 'Mercado de pases · Contrato terminado' : 'Mercado de pases · Contrato vigente'}
+            {released ? 'Mercado de pases · Tu club descendió' : isFreeAgent ? 'Mercado de pases · Contrato terminado' : 'Mercado de pases · Contrato vigente'}
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-white mt-2">
-            {isFreeAgent ? 'Sos libre: elegí tu próximo contrato' : '¡Hay interés por vos!'}
+            {released ? 'Descendiste: ¿te vas o te quedás?' : isFreeAgent ? 'Sos libre: elegí tu próximo contrato' : '¡Hay interés por vos!'}
           </h2>
           <p className="text-sm text-gray-400 mt-1">
-            {isFreeAgent
+            {released
+              ? 'Por la cláusula de descenso te podés ir gratis. Quedarte para devolver al club a primera suma mucha idolatría (+12).'
+              : isFreeAgent
               ? 'Se terminó tu contrato. Podés renovar o irte gratis a otro club.'
               : 'Todavía tenés contrato, pero llegaron propuestas. Podés quedarte tranquilo o aceptar.'}
           </p>
@@ -97,7 +100,7 @@ export default function TransfersModal({
                       )}
                       {offer.isRenewal && (
                         <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/50">
-                          {offer.isRenegotiation ? 'Renegociación' : 'Tu club actual'}
+                          {offer.loyalRelegation ? 'Quedarte en el ascenso' : offer.isRenegotiation ? 'Renegociación' : 'Tu club actual'}
                         </span>
                       )}
                       {offer.paysClause && (

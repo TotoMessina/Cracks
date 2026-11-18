@@ -1,5 +1,6 @@
 // Career Engine & Season Simulator for El Ídolo
-import { CLUBS, COUNTRIES, getClubById, getCountryById, getLeague, refreshClub } from '../data/clubs';
+import { CLUBS, COUNTRIES, getClubById, getCountryById, getLeague, refreshClub, setWorld } from '../data/clubs';
+import { getClubObjective } from './world';
 import { getContinentalEntry, simulateContinental, simulateDomesticCup, leagueOutcome, buildFinals, pickContinentalOpponent, estimatedQualification } from './competitions';
 
 export const START_YEAR = 2026;
@@ -129,6 +130,7 @@ export function createInitialPlayer({
 }) {
   const isWonderkid = archetype === 'pibe_maravilla';
   const stats = getPositionStats(position, isWonderkid ? 8 : 0);
+  setWorld({}); // a new career starts with every club in its original league
   const initialClub = getClubById(initialClubId);
 
   const player = {
@@ -175,6 +177,7 @@ export function createInitialPlayer({
     ],
     lifestyle: [],
     seasonHistory: [],
+    world: {},
     moments: [{ year: START_YEAR, age: 16, type: 'debut', icon: '🌱', text: `Debut profesional en ${initialClub.name}` }],
     seenDilemmas: [],
     gameMode,
@@ -220,6 +223,7 @@ export function normalizePlayer(saved) {
   p.workload ??= 'normal';
   p.difficulty ??= 'normal';
   p.moments ??= [];
+  p.pendingSupercups ??= [];
   if (p.qualifiedFor === undefined) {
     const q = estimatedQualification(p.currentClub);
     p.qualifiedFor = { clubId: p.currentClub.id, tier: q?.tier || null, name: q?.name || null };
@@ -244,6 +248,8 @@ export function normalizePlayer(saved) {
   p.pendingCards ??= null;
   p.pendingDilemmaId ??= null;
   p.pendingOffers ??= null;
+  p.world ??= {};
+  setWorld(p.world);
   p.currentClub = refreshClub(p.currentClub);
   if (Array.isArray(p.pendingOffers)) p.pendingOffers = p.pendingOffers.map(o => ({ ...o, club: refreshClub(o.club) }));
   p.seasonInProgress ??= null;
@@ -407,8 +413,10 @@ export function simulateSeasonMatches(player) {
 
   // Key matches already played this season push the team up (or down)
   const keyResults = player.seasonInProgress?.results || [];
-  const keyWins = keyResults.filter(r => r.won).length;
-  const keyLosses = keyResults.length - keyWins;
+  // Supercups are titles of their own: they don't change how the team does in the season
+  const momentum = keyResults.filter(r => !r.isTitle);
+  const keyWins = momentum.filter(r => r.won).length;
+  const keyLosses = momentum.length - keyWins;
   if (isGk) seasonCleanSheets += keyWins;
   else seasonGoals += keyWins;
 
@@ -484,6 +492,7 @@ export function simulateSeasonMatches(player) {
   const total = scoredClubs.length;
 
   const fullTable = scoredClubs.map((team, idx) => ({
+    clubId: team.clubId,
     pos: idx + 1,
     name: team.shortName,
     points: team.points,
@@ -541,7 +550,9 @@ export function simulateSeasonMatches(player) {
     newManagerRel,
     newChemistry,
     nationalTeam: nationalActivity,
+    objective: getClubObjective(club),
     leagueStanding: {
+      fullTable: fullTable.map(r => ({ clubId: r.clubId, points: r.points })),
       league: club.league,
       position: playerPosition,
       points: playerPoints,
@@ -745,6 +756,34 @@ function makeKeyEvent(player, kind, opponent) {
   };
 }
 
+/** One-off title match (supercup, Recopa, Intercontinental) earned last season, played as a key match. */
+export function makeSupercupEvent(player, sc) {
+  const isGk = player.position === 'arquero';
+  return {
+    id: `${sc.kind}_${sc.opponent.id}_${Math.random().toString(36).slice(2, 7)}`,
+    kind: sc.kind,
+    isTitle: true,
+    titleKind: sc.kind,
+    tournament: sc.tournament,
+    weight: sc.weight,
+    label: sc.label,
+    title: `${sc.tournament} vs ${sc.opponent.name}`,
+    opponentName: sc.opponent.name,
+    opponentClubId: sc.opponent.id,
+    context: pick(isGk ? GK_CONTEXTS : KEY_CONTEXTS),
+    difficulty: sc.difficulty,
+    minigame: pickMinigameType(player),
+    stakes: { win: { fama: sc.kind === 'intercontinental' ? 8 : 3 }, lose: {} },
+  };
+}
+
+/** The title matches that open this season (only if you still play for the club that earned them). */
+export function seasonOpeners(player) {
+  return (player.pendingSupercups || [])
+    .filter(sc => sc.clubId === player.currentClub?.id && sc.opponent)
+    .map(sc => makeSupercupEvent(player, sc));
+}
+
 /** 1 or 2 key matches for the season: the derby (or a decisive league game) plus maybe a cup night or a national team game. */
 export function generateKeyMatches(player) {
   const club = player.currentClub;
@@ -819,8 +858,18 @@ export function makeContract(salary, years) {
  */
 export function generateOffseasonMarket(player) {
   const contract = player.contract;
-  if (!contract || contract.yearsLeft <= 0) {
-    return { free: true, offers: generateTransferOffers(player) };
+  const released = player.relegationRelease && player.relegationRelease === player.currentClub?.id;
+  if (!contract || contract.yearsLeft <= 0 || released) {
+    const offers = generateTransferOffers(player);
+    if (released) {
+      offers.forEach(o => {
+        if (o.isRenewal) {
+          o.loyalRelegation = true;
+          o.message = `${player.currentClub.name} descendió. Si te quedás para devolverlo a primera, la hinchada no lo va a olvidar nunca.`;
+        }
+      });
+    }
+    return { free: true, offers, released: Boolean(released) };
   }
 
   const overall = getPlayerOverall(player);

@@ -15,10 +15,10 @@ function clearManagerSave() {
 }
 
 const VERDICT = {
-  praised: { text: 'La dirigencia te ama: ¡renovación asegurada!', cls: 'bg-[#22E748]/10 border-[#22E748]/40 text-[#22E748]' },
+  praised: { text: 'La dirigencia te ama: ¡objetivo cumplido y renovación asegurada!', cls: 'bg-[#22E748]/10 border-[#22E748]/40 text-[#22E748]' },
   ok: { text: 'Temporada dentro de lo esperado. La dirigencia te respalda.', cls: 'bg-white/5 border-white/10 text-gray-300' },
   warning: { text: '⚠️ La dirigencia está preocupada: otra mala temporada y te echan.', cls: 'bg-amber-500/10 border-amber-500/40 text-amber-300' },
-  fired: { text: '🚪 ¡Te echaron! Elegí un club nuevo para seguir tu carrera.', cls: 'bg-red-500/10 border-red-500/40 text-red-300' },
+  fired: { text: '🚪 ¡Te echaron! (un descenso o dos malas temporadas no se perdonan). Elegí un club nuevo.', cls: 'bg-red-500/10 border-red-500/40 text-red-300' },
 };
 
 export default function ManagerModeModal({ initialDtName = 'El Míster', legacy = null, onClose }) {
@@ -216,7 +216,7 @@ export default function ManagerModeModal({ initialDtName = 'El Míster', legacy 
                     </span>
                     <h3 className="text-xl font-black text-white truncate">{manager.name}</h3>
                     <p className="text-[11px] text-gray-400">
-                      Prestigio {getPrestige(manager)}{manager.inCup ? ` · Juega la ${getDtLeagues().find(l => l.id === manager.club.league)?.continentalCup || 'copa continental'}` : ''}
+                      Prestigio {getPrestige(manager)}{manager.qualifiedFor?.name ? ` · Juega la ${manager.qualifiedFor.name}` : ''}
                       {manager.strikes > 0 && <span className="text-amber-400"> · Cargo en peligro</span>}
                     </p>
                   </div>
@@ -281,9 +281,24 @@ export default function ManagerModeModal({ initialDtName = 'El Míster', legacy 
                     </div>
                   </div>
 
+                  {seasonLog.relegated && (
+                    <div className="p-3 rounded-xl border text-xs font-black text-center bg-red-950/40 border-red-500/50 text-red-200">⬇️ ¡DESCENSO! El club se va a segunda.</div>
+                  )}
+                  {seasonLog.promoted && (
+                    <div className="p-3 rounded-xl border text-xs font-black text-center bg-emerald-950/40 border-[#22E748]/50 text-[#22E748]">🎖️ ¡ASCENSO! {seasonLog.playoff ? 'Ganaste el reducido.' : 'Ascenso directo.'}</div>
+                  )}
+                  {seasonLog.domestic && (
+                    <div className={`p-3 rounded-xl border text-xs font-bold text-center ${seasonLog.domestic.won ? 'bg-amber-500/15 border-amber-400/40 text-amber-300' : 'bg-white/5 border-white/10 text-gray-300'}`}>
+                      {seasonLog.domestic.won
+                        ? `🏆 ¡GANASTE LA ${seasonLog.domestic.name.toUpperCase()}!`
+                        : `${seasonLog.domestic.name}: ${seasonLog.domestic.reached === 'Final' ? 'perdiste la final' : `afuera en ${seasonLog.domestic.reached.toLowerCase()}`}${seasonLog.domestic.eliminatedBy ? ` (${seasonLog.domestic.eliminatedBy})` : ''}.`}
+                    </div>
+                  )}
                   {seasonLog.cup && (
                     <div className={`p-3 rounded-xl border text-xs font-bold text-center ${seasonLog.cup.won ? 'bg-amber-500/15 border-amber-400/40 text-amber-300' : 'bg-white/5 border-white/10 text-gray-300'}`}>
-                      {seasonLog.cup.won ? `🏆 ¡GANASTE LA ${seasonLog.cup.name.toUpperCase()}!` : `${seasonLog.cup.name}: eliminado en ${seasonLog.cup.reached}.`}
+                      {seasonLog.cup.won
+                        ? `🏆 ¡GANASTE LA ${seasonLog.cup.name.toUpperCase()}!`
+                        : `${seasonLog.cup.name}: ${seasonLog.cup.reached === 'Final' ? 'perdiste la final' : `afuera en ${seasonLog.cup.reached.toLowerCase()}`}${seasonLog.cup.eliminatedBy ? ` (${seasonLog.cup.eliminatedBy})` : ''}.`}
                     </div>
                   )}
 

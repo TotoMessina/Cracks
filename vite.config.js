@@ -37,4 +37,7 @@ export default defineConfig({
     tailwindcss(),
     precacheManifestPlugin(),
   ],
+  test: {
+    setupFiles: ['src/game/__tests__/setup.js'],
+  },
 })

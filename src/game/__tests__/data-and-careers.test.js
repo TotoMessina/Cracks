@@ -65,7 +65,7 @@ describe('full careers (smoke test)', () => {
         expect(computeGlory(p).total).toBeGreaterThan(0);
       }
     }
-  });
+  }, 60000); // 9 full careers per difficulty: slow on purpose
 });
 
 describe('manager mode', () => {
@@ -81,7 +81,7 @@ describe('manager mode', () => {
     const m = createManager({ clubId: club.id });
     const r = simulateManagerSeason(m);
     expect(r.table.length).toBe(CLUBS.filter(c => c.league === 'arg_ascenso').length);
-    const next = applyManagerSeason(m, { ...r, isChampion: true, titles: ['Ascenso'], verdict: 'praised' });
+    const next = applyManagerSeason(m, { ...r, promoted: true, relegated: false, titles: ['Ascenso'], verdict: 'praised' });
     expect(next.club.league).toBe('arg_primera');
   });
 });

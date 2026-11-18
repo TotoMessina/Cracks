@@ -11,6 +11,7 @@ import {
   normalizePlayer,
   simulateSeasonMatches,
   generateKeyMatches,
+  seasonOpeners,
   getDifficulty,
   getNationalCallUp,
   nationalFinalBonus,
@@ -38,7 +39,8 @@ import { getContinentalEntry, domesticCupName } from './game/competitions';
 import { applyEffects, addIdolatry, withStatueCheck, seasonsAtCurrentClub, STATUE_MIN_SEASONS } from './game/effects';
 import { drawPreseasonCards } from './data/cards';
 import { DILEMMAS, getRandomDilemma } from './data/dilemmas';
-import { areRivals } from './data/clubs';
+import { areRivals, setWorld } from './data/clubs';
+import { getClubObjective } from './game/world';
 import { sound } from './utils/audio';
 import {
   Play, Sparkles, Coins, Flame, Target, Zap, Save, Crown, Award, Briefcase,
@@ -121,6 +123,8 @@ export default function App() {
 
   /** Single source of truth: every change goes through here with a NEW object. */
   const commitPlayer = useCallback((next) => {
+    // Clubs' divisions follow this career's world (promotions / relegations)
+    if (next?.world !== playerRef.current?.world) setWorld(next?.world || {});
     playerRef.current = next;
     setPlayerState(next);
   }, []);
@@ -230,7 +234,7 @@ export default function App() {
     } else if (p.offseasonStep === 'transfers' && !p.pendingOffers?.length) {
       const market = generateOffseasonMarket(p);
       next = market
-        ? { ...p, pendingOffers: market.offers, pendingMarketFree: market.free }
+        ? { ...p, pendingOffers: market.offers, pendingMarketFree: market.free, pendingMarketReleased: Boolean(market.released) }
         : { ...p, pendingOffers: null, offseasonStep: 'cards', pendingCards: drawCardsFor(p) };
     } else if (p.offseasonStep === 'cards' && !p.pendingCards?.length) {
       next = { ...p, pendingCards: drawCardsFor(p) };
@@ -280,6 +284,7 @@ export default function App() {
       next.offseasonStep = 'transfers';
       next.pendingOffers = market.offers;
       next.pendingMarketFree = market.free;
+      next.pendingMarketReleased = Boolean(market.released);
     } else {
       next.offseasonStep = 'cards';
       next.pendingOffers = null;
@@ -296,6 +301,10 @@ export default function App() {
 
     if (offer.isStay) {
       // Keep the current contract as it is
+    } else if (offer.isRenewal && offer.loyalRelegation) {
+      // Staying to bring the club back up: the fans will never forget it
+      next.idolatry = addIdolatry(prev.idolatry, 12);
+      Object.assign(next, addMoment(next, { type: 'loyal_relegation', icon: '🫡', text: `Te quedaste en ${prev.currentClub.name} después del descenso` }));
     } else if (offer.isRenewal) {
       next.idolatry = addIdolatry(prev.idolatry, 5);
     } else {
@@ -344,6 +353,8 @@ export default function App() {
     }
     next.pendingOffers = null;
     next.pendingMarketFree = null;
+    next.pendingMarketReleased = null;
+    next.relegationRelease = null;
     // Market-related promises are used up once you sign
     if (prev.flags?.europeanAgent || prev.flags?.boardAngry) {
       next.flags = { ...(next.flags || prev.flags), europeanAgent: false, boardAngry: offer.isStay ? prev.flags.boardAngry : false };
@@ -464,7 +475,7 @@ export default function App() {
       sip = {
         ntCall: needsDecision ? { name: call.name, icon: call.icon, isMajor: true } : null,
         ntDecision: needsDecision ? null : (call ? 'auto' : null),
-        matches: needsDecision ? null : generateKeyMatches(p),
+        matches: needsDecision ? null : [...seasonOpeners(p), ...generateKeyMatches(p)],
         results: [],
       };
       commitPlayer({ ...p, seasonInProgress: sip });
@@ -475,7 +486,7 @@ export default function App() {
       return;
     }
     if (!sip.matches) {
-      sip = { ...sip, matches: generateKeyMatches(playerRef.current) };
+      sip = { ...sip, matches: [...seasonOpeners(playerRef.current), ...generateKeyMatches(playerRef.current)] };
       commitPlayer({ ...playerRef.current, seasonInProgress: sip });
     }
     // 1) Key matches first (persisted, so a reload can't skip or replay them)
@@ -495,7 +506,7 @@ export default function App() {
     const sip = { ...p.seasonInProgress, ntDecision: decision };
     const withSip = { ...decided, seasonInProgress: sip };
     // Key matches depend on the decision (no national-team game if you stay home)
-    commitPlayer({ ...withSip, seasonInProgress: { ...sip, matches: generateKeyMatches(withSip) } });
+    commitPlayer({ ...withSip, seasonInProgress: { ...sip, matches: [...seasonOpeners(withSip), ...generateKeyMatches(withSip)] } });
     setNtCallOpen(false);
     setTimeout(() => handlePlaySeasonRef.current?.(), 0);
   };
@@ -506,7 +517,10 @@ export default function App() {
     if (!sip) return;
     const event = sip.matches[sip.results.length];
     if (!event) return;
-    const results = [...sip.results, { id: event.id, kind: event.kind, label: event.label, title: event.title, stakes: event.stakes, won, auto }];
+    const results = [...sip.results, {
+      id: event.id, kind: event.kind, label: event.label, title: event.title, stakes: event.stakes, won, auto,
+      isTitle: event.isTitle, titleKind: event.titleKind, tournament: event.tournament, weight: event.weight, opponentName: event.opponentName,
+    }];
     const next = { ...p, seasonInProgress: { ...sip, results } };
     commitPlayer(next);
     if (results.length >= sip.matches.length) {
@@ -833,6 +847,9 @@ export default function App() {
                         {player.bonusFinal > 0 && <span className="chip chip-gold">🎯 Bonus final +{player.bonusFinal}%</span>}
                         <span className="chip">⏳ {player.gameMode === 'ultra' ? `${yearsLeft} temporadas restantes` : `Retiro en ${yearsLeft} años`}</span>
                         <span className={`chip ${player.difficulty === 'leyenda' ? 'chip-gold' : ''}`} title={getDifficulty(player).desc}>{getDifficulty(player).icon} {getDifficulty(player).label}</span>
+                        <span className="chip chip-gold" title="Objetivo de la dirigencia para esta temporada">
+                          {getClubObjective(player.currentClub).icon} Objetivo: {getClubObjective(player.currentClub).label}
+                        </span>
                         <span className="chip" title="Copa nacional (también la juegan los de segunda)">🥇 {domesticCupName(player.currentClub.league)}</span>
                         <span className={`chip ${getContinentalEntry(player) ? 'chip-up' : ''}`} title="Copa internacional de esta temporada">
                           🌎 {getContinentalEntry(player)?.name || 'Sin copa internacional'}
@@ -1027,6 +1044,7 @@ export default function App() {
           player={player}
           offers={player.pendingOffers}
           isFreeAgent={player.pendingMarketFree !== false}
+          released={Boolean(player.pendingMarketReleased)}
           yearsRange={contractYearsRange(player.age)}
           onAcceptOffer={handleAcceptOffer}
         />

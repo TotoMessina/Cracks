@@ -1,7 +1,7 @@
 // Real season structure: league decided by the table, national cup (open to second divisions),
 // international cups by tier (Champions / Europa / Conference, Libertadores / Sudamericana, ...)
 // and qualification for next season from the final league position or winning the cup.
-import { CLUBS, CONTINENTAL_COMPETITIONS, getLeague } from '../data/clubs';
+import { CLUBS, CONTINENTAL_COMPETITIONS, CONTINENTAL_SUPERCUP, INTERCONTINENTAL, getLeague } from '../data/clubs';
 
 const TIER_INDEX = { main: 0, second: 1, third: 2 };
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -11,6 +11,7 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 export const TITLE_WEIGHT = {
   continental_main: 30, continental_second: 18, continental_third: 12,
   league: 25, cup: 15, promotion: 15,
+  supercup: 8, continental_supercup: 12, intercontinental: 30,
 };
 
 export function competitionName(continent, tier) {
@@ -174,12 +175,14 @@ export function simulateDomesticCup(club, power, adj = 0) {
 export function leagueOutcome(club, table, position) {
   const league = getLeague(club.league);
   const me = table[position - 1];
-  const out = { name: league.short, position, total: table.length, points: me?.points ?? 0, champion: false, decider: null, directPromotion: false, playoff: false };
+  const out = { name: league.short, position, total: table.length, points: me?.points ?? 0, champion: false, decider: null, directPromotion: false, playoff: false, relegated: false };
   if (league.secondTier) {
-    if (position === 1) out.directPromotion = true;
-    else if (position <= 5) out.playoff = true;
+    const direct = league.directUp || 1;
+    if (position <= direct) out.directPromotion = true;
+    else if (position <= direct + 4) out.playoff = true;
     return out;
   }
+  if (league.relegations && position > table.length - league.relegations) out.relegated = true;
   if (position === 1) {
     const second = table[1];
     if (second && me.points - second.points <= 4) out.decider = { opponent: second.name, leading: true };
@@ -221,4 +224,67 @@ export function buildFinals(club, competitions) {
     });
   }
   return finals;
+}
+
+// ---------------------------------------------------------------------------
+// Phase 2: one-off title matches at the start of next season
+// ---------------------------------------------------------------------------
+const clubByName = (name) => CLUBS.find(c => c.shortName === name || c.name === name) || null;
+const asOpponent = (c) => (c ? { id: c.id, name: c.name, rep: c.reputation } : null);
+
+/**
+ * Which title matches your club earned for next season.
+ * titles: [{ kind: 'league'|'cup'|'continental'|..., tier }] won this season.
+ * table: final league table (to find the league runner-up / champion).
+ */
+export function buildSupercups(club, titles, table = []) {
+  const league = getLeague(club.league);
+  const topLeague = league.secondTier && league.promotesTo ? getLeague(league.promotesTo) : league;
+  const out = [];
+  const wonLeague = titles.some(t => t.kind === 'league');
+  const wonCup = titles.some(t => t.kind === 'cup');
+
+  // National supercup: league champion vs cup champion
+  if (topLeague.supercup && (wonLeague || wonCup)) {
+    let opp = null;
+    if (wonLeague && wonCup) opp = clubByName(table[1]?.name); // double: you face the runner-up
+    else if (wonLeague) {
+      const contenders = CLUBS.filter(c => getLeague(c.league).country === topLeague.country && c.id !== club.id)
+        .sort((a, b) => b.reputation - a.reputation).slice(0, 12);
+      opp = pick(contenders); // whoever won the cup
+    } else if (!league.secondTier && table[0] && clubByName(table[0].name)?.id !== club.id) {
+      opp = clubByName(table[0].name); // the league champion
+    } else {
+      opp = pick(CLUBS.filter(c => c.league === topLeague.id && c.id !== club.id).sort((a, b) => b.reputation - a.reputation).slice(0, 5));
+    }
+    if (opp) {
+      out.push({
+        kind: 'supercup', tournament: topLeague.supercup, opponent: asOpponent(opp), weight: TITLE_WEIGHT.supercup,
+        difficulty: opp.reputation >= 85 ? 'medium' : 'normal', label: 'Supercopa',
+      });
+    }
+  }
+
+  const continent = topLeague.continent;
+  const wonMain = titles.some(t => t.kind === 'continental' && t.tier === 'main');
+  const wonSecond = titles.some(t => t.kind === 'continental' && t.tier === 'second');
+  // Recopa / UEFA Super Cup: main cup winner vs second cup winner
+  if (CONTINENTAL_SUPERCUP[continent] && (wonMain || wonSecond)) {
+    const pool = continentalPool(continent, wonMain ? 'second' : 'main', club.id);
+    const opp = pick(pool.slice(0, wonMain ? 20 : 10));
+    out.push({
+      kind: 'continental_supercup', tournament: CONTINENTAL_SUPERCUP[continent], opponent: asOpponent(opp),
+      weight: TITLE_WEIGHT.continental_supercup, difficulty: 'medium', label: 'Recopa',
+    });
+  }
+  // Intercontinental: champion of South America vs champion of Europe (and the rest vs Europe)
+  if (wonMain) {
+    const rivalContinent = INTERCONTINENTAL.rival[continent] || 'eu';
+    const opp = pick(continentalPool(rivalContinent, 'main', club.id).slice(0, 8));
+    out.push({
+      kind: 'intercontinental', tournament: INTERCONTINENTAL.name, opponent: asOpponent(opp),
+      weight: TITLE_WEIGHT.intercontinental, difficulty: 'hard', label: 'Intercontinental',
+    });
+  }
+  return out.filter(sc => sc.opponent).map(sc => ({ ...sc, clubId: club.id }));
 }

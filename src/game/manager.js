@@ -1,5 +1,7 @@
 // Manager (DT) career engine — pure functions, no React.
-import { CLUBS, LEAGUES, getClubById, getLeague, refreshClub } from '../data/clubs';
+import { CLUBS, LEAGUES, getClubById, getLeague, refreshClub, withWorld } from '../data/clubs';
+import { estimatedQualification, simulateContinental, simulateDomesticCup, leagueOutcome, computeQualification } from './competitions';
+import { updateWorld } from './world';
 import { START_YEAR } from './career';
 
 export const DT_STYLES = [
@@ -42,7 +44,11 @@ export function getDtClubs(leagueId = null) {
   return leagueId ? CLUBS.filter(c => c.league === leagueId) : CLUBS;
 }
 
-const qualifiesForCup = (club) => club.reputation >= 84 && !getLeague(club.league).secondTier;
+/** International cup for a club with no previous table (estimated from its standing in the league). */
+const estimatedEntry = (club) => {
+  const q = estimatedQualification(club);
+  return { clubId: club.id, tier: q?.tier || null, name: q?.name || null };
+};
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -75,7 +81,9 @@ export function createManager({ name, clubId, style = 'lirico', cabala = 'traje_
     trophyNames: [],
     history: [],
     strikes: 0,
-    inCup: qualifiesForCup(club),
+    inCup: Boolean(estimatedEntry(club).tier),
+    qualifiedFor: estimatedEntry(club),
+    world: {}, // the manager career has its own promotions/relegations
     pendingOffers: null,
     fired: false,
   };
@@ -85,7 +93,17 @@ export function createManager({ name, clubId, style = 'lirico', cabala = 'traje_
 export function normalizeManager(raw) {
   if (!raw) return null;
   if (raw.version === 2 && raw.club) {
-    return { ...raw, club: refreshClub(raw.club), pendingOffers: raw.pendingOffers?.map(c => refreshClub(c)) || null };
+    const world = raw.world || {};
+    return withWorld(world, () => {
+      const club = refreshClub(raw.club);
+      return {
+        ...raw,
+        world,
+        club,
+        qualifiedFor: raw.qualifiedFor || estimatedEntry(club),
+        pendingOffers: raw.pendingOffers?.map(c => refreshClub(c)) || null,
+      };
+    });
   }
   const byName = raw.team?.name ? CLUBS.find(c => raw.team.name.startsWith(c.name) || c.name.startsWith(raw.team.name)) : null;
   const club = byName || getClubById(451);
@@ -138,7 +156,7 @@ function playMatch(power, tactics, oppPower, home, cabala, incidents, label) {
   return { gf, ga };
 }
 
-export function simulateManagerSeason(m) {
+function simulateManagerSeasonInWorld(m) {
   const tactics = getTactics(m);
   const power = m.club.reputation + tactics.legacyHome;
   const leagueClubs = CLUBS.filter(c => c.league === m.club.league && c.id !== m.club.id);
@@ -177,59 +195,84 @@ export function simulateManagerSeason(m) {
       const res = playMatch(c.reputation + rnd(-3, 3), neutral, opp.reputation + rnd(-4, 4), i % 2 === 0, null, [], '');
       pts += res.gf > res.ga ? 3 : res.gf === res.ga ? 1 : 0;
     }
-    return { name: c.shortName, points: pts, isUs: false };
+    return { clubId: c.id, name: c.shortName, points: pts, isUs: false };
   });
-  table.push({ name: m.club.shortName, points, isUs: true });
+  table.push({ clubId: m.club.id, name: m.club.shortName, points, isUs: true });
   table.sort((a, b) => b.points - a.points || (a.isUs ? -1 : 1));
   const position = table.findIndex(t => t.isUs) + 1;
-  const isChampion = position === 1;
 
   // Expected finishing position by reputation
   const expected = [...leagueClubs, m.club].sort((a, b) => b.reputation - a.reputation).findIndex(c => c.id === m.club.id) + 1;
-
-  // Continental cup
-  let cup = null;
   const league = getLeague(m.club.league);
-  if (m.inCup && !league.secondTier) {
-    const stages = ['Octavos', 'Cuartos', 'Semifinal', 'Final'];
-    let reached = 'Grupos';
-    let won = false;
-    for (const stage of stages) {
-      const opp = rnd(80, 95);
-      const p = clamp(0.5 + (power + (tactics.att + tactics.def) / 2 - opp) / 50 + tactics.cupBonus, 0.12, 0.85);
-      if (Math.random() < p) {
-        reached = stage;
-        if (stage === 'Final') won = true;
-      } else {
-        reached = stage;
-        break;
-      }
-    }
-    cup = { name: league.continentalCup, reached, won };
+  const cupPower = power + (tactics.att + tactics.def) / 2;
+  const finalWin = (oppRep) => Math.random() < clamp(0.5 + (cupPower - oppRep) / 50 + tactics.cupBonus, 0.15, 0.85);
+
+  // League: title, promotion (direct or play-off) and relegation
+  const lg = leagueOutcome(m.club, table, position);
+  const isChampion = !league.secondTier && position === 1;
+  let promoted = lg.directPromotion;
+  let playoffWon = null;
+  if (lg.playoff) {
+    playoffWon = Math.random() < clamp(0.3 + (power - 70) / 40, 0.15, 0.7);
+    promoted = playoffWon;
   }
+  const relegated = lg.relegated;
+
+  // National cup (lower divisions included) and international cup (if qualified)
+  const domestic = simulateDomesticCup(m.club, cupPower, tactics.cupBonus);
+  const domesticWon = Boolean(domestic?.final && finalWin(domestic.final.opponentRep));
+  const entry = m.qualifiedFor?.clubId === m.club.id
+    ? (m.qualifiedFor.tier ? { tier: m.qualifiedFor.tier, name: m.qualifiedFor.name } : null)
+    : (estimatedEntry(m.club).tier ? { tier: estimatedEntry(m.club).tier, name: estimatedEntry(m.club).name } : null);
+  const continental = simulateContinental(entry, m.club, cupPower, tactics.cupBonus);
+  const continentalWon = Boolean(continental?.final && finalWin(continental.final.opponentRep));
+  const cup = continental ? {
+    name: continental.name,
+    reached: continental.final ? 'Final' : continental.reached,
+    won: continentalWon,
+    eliminatedBy: continental.final && !continentalWon ? continental.final.opponent : continental.eliminatedBy,
+  } : null;
 
   const titles = [];
   const year = START_YEAR + m.seasons;
-  if (isChampion) {
-    titles.push(league.secondTier ? `Ascenso a ${getLeague(league.promotesTo).short} (${m.club.shortName}, ${year})` : `${league.short} (${m.club.shortName}, ${year})`);
-  }
-  if (cup?.won) titles.push(`${cup.name} (${m.club.shortName}, ${year})`);
+  if (isChampion) titles.push(`${league.short} (${m.club.shortName}, ${year})`);
+  if (promoted && league.promotesTo) titles.push(`Ascenso a ${getLeague(league.promotesTo).short} (${m.club.shortName}, ${year})`);
+  if (domesticWon) titles.push(`${domestic.name} (${m.club.shortName}, ${year})`);
+  if (continentalWon) titles.push(`${continental.name} (${m.club.shortName}, ${year})`);
 
-  // Board verdict
-  // Two bad seasons in a row (or finishing last) gets you fired
+  // Next season and the world
+  const qualifiedFor = computeQualification(m.club, league.secondTier ? null : position, domesticWon);
+  const { world, moves } = updateWorld(m.world || {}, {
+    playerLeague: m.club.league,
+    playerTable: table.map(t => ({ clubId: t.clubId, points: t.points })),
+    playerClubId: m.club.id,
+    playerPromotion: playoffWon,
+  });
+
+  // Board verdict: relegation = sacked; two bad seasons in a row (or finishing last) too
   let verdict = 'ok';
   const bad = position > expected + 4;
-  if (isChampion || cup?.won) verdict = 'praised';
+  if (relegated) verdict = 'fired';
+  else if (isChampion || continentalWon || promoted || domesticWon) verdict = 'praised';
   else if (position === table.length && table.length >= 6) verdict = 'fired';
   else if (bad) verdict = m.strikes >= 1 ? 'fired' : 'warning';
 
   return {
     year, games, w, d, l, gf, ga, points, position, expected,
-    table, isChampion, cup, titles, incidents, verdict,
+    table, isChampion, cup, domestic: domestic ? { name: domestic.name, reached: domestic.final ? 'Final' : domestic.reached, won: domesticWon, eliminatedBy: domestic.eliminatedBy } : null,
+    titles, incidents, verdict, promoted, relegated, playoff: lg.playoff, qualifiedFor, world, moves,
   };
 }
 
+export function simulateManagerSeason(m) {
+  return withWorld(m.world || {}, () => simulateManagerSeasonInWorld(m));
+}
+
 export function generateManagerOffers(m, prestige = getPrestige(m)) {
+  return withWorld(m.world || {}, () => offersInWorld(m, prestige));
+}
+
+function offersInWorld(m, prestige) {
   const pool = getDtClubs().filter(c => c.id !== m.club.id && c.reputation <= prestige + 4);
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
   const up = shuffled.filter(c => c.reputation > m.club.reputation).slice(0, 2);
@@ -258,22 +301,31 @@ export function applyManagerSeason(m, result) {
       wins: result.w, draws: result.d, losses: result.l, gf: result.gf, ga: result.ga,
       isChampion: result.isChampion, cup: result.cup,
     }, ...m.history].slice(0, 40),
-    inCup: result.position <= 3 && !getLeague(m.club.league).secondTier,
+    inCup: Boolean(result.qualifiedFor?.tier),
+    qualifiedFor: result.qualifiedFor,
+    world: result.world || m.world || {},
     strikes: result.verdict === 'warning' ? m.strikes + 1 : 0,
     fired: result.verdict === 'fired',
   };
-  // Promotion from the Ascenso
+  // Promotion / relegation of your club
   const lg = getLeague(m.club.league);
-  if (result.isChampion && lg.secondTier && lg.promotesTo) {
+  if (result.promoted && lg.secondTier && lg.promotesTo) {
     next.club = { ...m.club, league: lg.promotesTo, reputation: Math.min(82, m.club.reputation + 5) };
+  } else if (result.relegated) {
+    const second = LEAGUES.find(l => l.secondTier && l.promotesTo === m.club.league);
+    if (second) next.club = { ...m.club, league: second.id };
   }
-  next.pendingOffers = next.fired || result.isChampion || result.cup?.won || Math.random() < 0.5
+  next.pendingOffers = next.fired || result.isChampion || result.cup?.won || result.promoted || Math.random() < 0.5
     ? generateManagerOffers(next)
     : null;
   return next;
 }
 
 export function signWithClub(m, clubId) {
+  return withWorld(m.world || {}, () => signInWorld(m, clubId));
+}
+
+function signInWorld(m, clubId) {
   const club = getClubById(clubId);
   return {
     ...m,
@@ -281,6 +333,7 @@ export function signWithClub(m, clubId) {
     strikes: 0,
     fired: false,
     pendingOffers: null,
-    inCup: qualifiesForCup(club),
+    inCup: Boolean(estimatedEntry(club).tier),
+    qualifiedFor: estimatedEntry(club),
   };
 }

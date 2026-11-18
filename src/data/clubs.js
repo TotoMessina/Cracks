@@ -12,6 +12,10 @@ const CONTINENTAL_CUP = {
   as: 'AFC Champions League Elite',
 };
 
+/** Continental supercup (main cup winner vs second cup winner) and intercontinental opponent continent. */
+export const CONTINENTAL_SUPERCUP = { sa: 'Recopa Sudamericana', eu: 'Supercopa de la UEFA' };
+export const INTERCONTINENTAL = { name: 'Copa Intercontinental', rival: { sa: 'eu', eu: 'sa', na: 'eu', as: 'eu' } };
+
 /** International club competitions by continent, from the most to the least prestigious. */
 export const CONTINENTAL_COMPETITIONS = {
   sa: ['Copa Libertadores de América', 'Copa Sudamericana'],
@@ -21,25 +25,25 @@ export const CONTINENTAL_COMPETITIONS = {
 };
 
 const LEAGUE_META = {
-  1: { key: 'arg_primera', short: 'Liga Profesional', country: 'ar', continent: 'sa', salaryMult: 1, cup: 'Copa Argentina', slots: { main: 5, second: 6 }, cupTo: 'main' },
-  16: { key: 'arg_ascenso', short: 'Primera Nacional', country: 'ar', continent: 'sa', salaryMult: 0.5, secondTier: true, promotesTo: 'arg_primera', promotionFinal: 'Final del Reducido por el Ascenso a Primera' },
-  2: { key: 'eng_premier', short: 'Premier League', country: 'en', continent: 'eu', salaryMult: 2.3, cup: 'FA Cup', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second' },
-  15: { key: 'eng_championship', short: 'Championship', country: 'en', continent: 'eu', salaryMult: 1, secondTier: true, promotesTo: 'eng_premier', promotionFinal: 'Final del Play-off por el Ascenso a la Premier' },
-  3: { key: 'esp_laliga', short: 'LaLiga', country: 'es', continent: 'eu', salaryMult: 2.2, cup: 'Copa del Rey', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second' },
-  4: { key: 'ita_seriea', short: 'Serie A', country: 'it', continent: 'eu', salaryMult: 2, cup: 'Coppa Italia', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second' },
-  5: { key: 'ger_bundesliga', short: 'Bundesliga', country: 'de', continent: 'eu', salaryMult: 2, cup: 'DFB-Pokal', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second' },
-  6: { key: 'fra_ligue1', short: 'Ligue 1', country: 'fr', continent: 'eu', salaryMult: 1.8, cup: 'Copa de Francia', slots: { main: 3, second: 2, third: 1 }, cupTo: 'second' },
-  7: { key: 'br_primera', short: 'Brasileirão', country: 'br', continent: 'sa', salaryMult: 1.2, cup: 'Copa do Brasil', slots: { main: 6, second: 6 }, cupTo: 'main' },
-  8: { key: 'por_primeira', short: 'Liga Portugal', country: 'pt', continent: 'eu', salaryMult: 1.2, cup: 'Taça de Portugal', slots: { main: 2, second: 2, third: 1 }, cupTo: 'second' },
-  9: { key: 'ned_eredivisie', short: 'Eredivisie', country: 'nl', continent: 'eu', salaryMult: 1.2, cup: 'KNVB Beker', slots: { main: 2, second: 2, third: 1 }, cupTo: 'second' },
+  1: { key: 'arg_primera', short: 'Liga Profesional', country: 'ar', continent: 'sa', salaryMult: 1, cup: 'Copa Argentina', slots: { main: 5, second: 6 }, cupTo: 'main', supercup: 'Supercopa Argentina', relegations: 2 },
+  16: { key: 'arg_ascenso', short: 'Primera Nacional', country: 'ar', continent: 'sa', salaryMult: 0.5, secondTier: true, promotesTo: 'arg_primera', promotionFinal: 'Final del Reducido por el Ascenso a Primera', directUp: 1 },
+  2: { key: 'eng_premier', short: 'Premier League', country: 'en', continent: 'eu', salaryMult: 2.3, cup: 'FA Cup', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second', supercup: 'Community Shield', relegations: 3 },
+  15: { key: 'eng_championship', short: 'Championship', country: 'en', continent: 'eu', salaryMult: 1, secondTier: true, promotesTo: 'eng_premier', promotionFinal: 'Final del Play-off por el Ascenso a la Premier', directUp: 2 },
+  3: { key: 'esp_laliga', short: 'LaLiga', country: 'es', continent: 'eu', salaryMult: 2.2, cup: 'Copa del Rey', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second', supercup: 'Supercopa de España' },
+  4: { key: 'ita_seriea', short: 'Serie A', country: 'it', continent: 'eu', salaryMult: 2, cup: 'Coppa Italia', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second', supercup: 'Supercoppa Italiana' },
+  5: { key: 'ger_bundesliga', short: 'Bundesliga', country: 'de', continent: 'eu', salaryMult: 2, cup: 'DFB-Pokal', slots: { main: 4, second: 2, third: 1 }, cupTo: 'second', supercup: 'DFL-Supercup' },
+  6: { key: 'fra_ligue1', short: 'Ligue 1', country: 'fr', continent: 'eu', salaryMult: 1.8, cup: 'Copa de Francia', slots: { main: 3, second: 2, third: 1 }, cupTo: 'second', supercup: 'Trophée des Champions' },
+  7: { key: 'br_primera', short: 'Brasileirão', country: 'br', continent: 'sa', salaryMult: 1.2, cup: 'Copa do Brasil', slots: { main: 6, second: 6 }, cupTo: 'main', supercup: 'Supercopa do Brasil' },
+  8: { key: 'por_primeira', short: 'Liga Portugal', country: 'pt', continent: 'eu', salaryMult: 1.2, cup: 'Taça de Portugal', slots: { main: 2, second: 2, third: 1 }, cupTo: 'second', supercup: 'Supertaça Cândido de Oliveira' },
+  9: { key: 'ned_eredivisie', short: 'Eredivisie', country: 'nl', continent: 'eu', salaryMult: 1.2, cup: 'KNVB Beker', slots: { main: 2, second: 2, third: 1 }, cupTo: 'second', supercup: 'Johan Cruijff Schaal' },
   10: { key: 'usa_mls', short: 'MLS', country: 'us', continent: 'na', salaryMult: 1.5, cup: 'U.S. Open Cup', slots: { main: 5 }, cupTo: 'main' },
-  11: { key: 'mex_ligamx', short: 'Liga MX', country: 'mx', continent: 'na', salaryMult: 1.2, cup: 'Copa MX', slots: { main: 4 }, cupTo: 'main' },
-  12: { key: 'uy_primera', short: 'Campeonato Uruguayo', country: 'uy', continent: 'sa', salaryMult: 0.75, cup: 'Copa AUF Uruguay', slots: { main: 3, second: 4 }, cupTo: 'main' },
-  13: { key: 'col_primera', short: 'Liga BetPlay', country: 'co', continent: 'sa', salaryMult: 0.7, cup: 'Copa Colombia', slots: { main: 2, second: 4 }, cupTo: 'main' },
-  14: { key: 'chi_primera', short: 'Primera de Chile', country: 'cl', continent: 'sa', salaryMult: 0.7, cup: 'Copa Chile', slots: { main: 3, second: 4 }, cupTo: 'main' },
-  17: { key: 'tur_superlig', short: 'Süper Lig', country: 'tr', continent: 'eu', salaryMult: 1.3, cup: 'Copa de Turquía', slots: { main: 2, second: 1, third: 1 }, cupTo: 'second' },
+  11: { key: 'mex_ligamx', short: 'Liga MX', country: 'mx', continent: 'na', salaryMult: 1.2, cup: 'Copa MX', slots: { main: 4 }, cupTo: 'main', supercup: 'Campeón de Campeones' },
+  12: { key: 'uy_primera', short: 'Campeonato Uruguayo', country: 'uy', continent: 'sa', salaryMult: 0.75, cup: 'Copa AUF Uruguay', slots: { main: 3, second: 4 }, cupTo: 'main', supercup: 'Supercopa Uruguaya' },
+  13: { key: 'col_primera', short: 'Liga BetPlay', country: 'co', continent: 'sa', salaryMult: 0.7, cup: 'Copa Colombia', slots: { main: 2, second: 4 }, cupTo: 'main', supercup: 'Superliga de Colombia' },
+  14: { key: 'chi_primera', short: 'Primera de Chile', country: 'cl', continent: 'sa', salaryMult: 0.7, cup: 'Copa Chile', slots: { main: 3, second: 4 }, cupTo: 'main', supercup: 'Supercopa de Chile' },
+  17: { key: 'tur_superlig', short: 'Süper Lig', country: 'tr', continent: 'eu', salaryMult: 1.3, cup: 'Copa de Turquía', slots: { main: 2, second: 1, third: 1 }, cupTo: 'second', supercup: 'Supercopa de Turquía' },
   18: { key: 'sco_premiership', short: 'Scottish Premiership', country: 'sco', continent: 'eu', salaryMult: 1, cup: 'Scottish Cup', slots: { main: 1, second: 1, third: 2 }, cupTo: 'second' },
-  19: { key: 'sau_pro', short: 'Saudi Pro League', country: 'ksa', continent: 'as', salaryMult: 3, cup: 'Copa del Rey Saudí', slots: { main: 3, second: 1 }, cupTo: 'main' },
+  19: { key: 'sau_pro', short: 'Saudi Pro League', country: 'ksa', continent: 'as', salaryMult: 3, cup: 'Copa del Rey Saudí', slots: { main: 3, second: 1 }, cupTo: 'main', supercup: 'Supercopa Saudí' },
 };
 
 // Old club ids are kept so existing saves keep pointing to the same club
@@ -146,6 +150,9 @@ function buildLeagues(raw) {
       // Qualification spots to international competitions (by final league position)
       slots: meta.slots || (meta.secondTier ? {} : { main: 2, second: 2 }),
       cupTo: meta.cupTo || 'second',
+      supercup: meta.supercup || null, // league champion vs cup champion, at the start of next season
+      relegations: meta.relegations || 0, // clubs that go down (only leagues with a second division)
+      directUp: meta.directUp || 1, // second division: direct promotions (then a play-off for one more)
       continentalCup: CONTINENTAL_CUP[continent],
       season: l.temporada,
       startingAllowed: true,
@@ -199,6 +206,7 @@ function buildClubs(leagues) {
         tier: tierFor(reputation),
         profile: t.perfil_competitivo || '',
         league: league.id,
+        baseLeague: league.id,
         country: league.country,
       });
     });
@@ -235,6 +243,37 @@ export const COUNTRIES = [
 
 export function getCountryById(id) {
   return COUNTRIES.find(c => c.id === id) || COUNTRIES[0];
+}
+
+// ---------------------------------------------------------------------------
+// World state: promotions and relegations change which league a club plays in.
+// The save stores { [clubId]: leagueId } for clubs that moved; this applies it.
+// ---------------------------------------------------------------------------
+let currentWorld = {};
+
+/** Applies a world (league overrides) to CLUBS. Entries are replaced, never mutated. */
+export function setWorld(overrides = {}) {
+  currentWorld = overrides || {};
+  for (let i = 0; i < CLUBS.length; i++) {
+    const c = CLUBS[i];
+    const league = currentWorld[c.id] || c.baseLeague;
+    if (c.league !== league) CLUBS[i] = { ...c, league };
+  }
+}
+
+export function getWorld() {
+  return currentWorld;
+}
+
+/** Runs fn with another world applied (e.g. the manager career), then restores the previous one. */
+export function withWorld(overrides, fn) {
+  const previous = currentWorld;
+  setWorld(overrides);
+  try {
+    return fn();
+  } finally {
+    setWorld(previous);
+  }
 }
 
 export function findClub(id) {
