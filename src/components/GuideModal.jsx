@@ -48,6 +48,17 @@ export default function GuideModal({ onClose, onOpenTutorial }) {
             </p>
           </Section>
 
+          <Section icon={<Star className="w-4 h-4 text-red-300" />} title="Tu generación y los premios">
+            <p>
+              Jugás contra una generación de rivales con nombre que hacen su propia carrera: crecen, cambian de club, se retiran y aparecen pibes nuevos.
+              Uno es tu <strong className="text-white">némesis</strong>: misma edad y puesto que vos, con techo de crack. Aparece en los partidos clave cuando te toca su club.
+            </p>
+            <p>
+              El <strong className="text-white">Balón de Oro</strong> es una votación real contra ellos (nivel, goles o vallas, títulos, Selección y club), y el Botín de Oro,
+              el Rey de las Asistencias y el Guante de Oro son rankings contra los rivales de tu puesto. Mirá tu generación en la pestaña Palmarés.
+            </p>
+          </Section>
+
           <Section icon={<Star className="w-4 h-4 text-amber-300" />} title="Dificultad">
             <p>
               Se elige al crear la carrera. <strong className="text-white">Fácil</strong>: tu equipo rinde más en la tabla y en las copas, minijuegos más amables (+8%), menos lesiones y la hinchada te quiere más rápido.

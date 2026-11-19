@@ -12,6 +12,7 @@ import {
 } from './career';
 import { getLeague, setWorld, findClub, LEAGUES } from '../data/clubs';
 import { updateWorld, evaluateObjective } from './world';
+import { generateRivals, advanceRivals, computeAwards, creditRivalAwards } from './rivals';
 import { addIdolatry, withStatueCheck, applyEffects } from './effects';
 import { addMoment } from './moments';
 import { TITLE_WEIGHT, computeQualification, buildSupercups } from './competitions';
@@ -168,14 +169,6 @@ export function finalizeSeasonState(prev, seasonData, {
     });
   }
 
-  if (next.position === 'delantero' && seasonData.goals >= 24) {
-    next.awards.push({ name: 'Botín de Oro de la Temporada', year, description: `Máximo artillero con ${seasonData.goals} goles.`, icon: '👟' });
-  } else if (next.position === 'arquero' && seasonData.cleanSheets >= 16) {
-    next.awards.push({ name: 'Guante de Oro al Mejor Arquero', year, description: `Récord de ${seasonData.cleanSheets} vallas invictas.`, icon: '🧤' });
-  } else if (next.position === 'enganche' && seasonData.assists >= 18) {
-    next.awards.push({ name: 'Rey de las Asistencias', year, description: `Líder en creación con ${seasonData.assists} asistencias.`, icon: '🎯' });
-  }
-
   // Natural development (growth / decline) — computed after aging
   const { stats, changes } = applySeasonDevelopment(next, seasonData);
   next.stats = stats;
@@ -188,8 +181,39 @@ export function finalizeSeasonState(prev, seasonData, {
   if (finalWon && Math.random() < 0.75) {
     next.awards.push({ name: `Figura de la Final (${finalWon.title})`, year, description: 'Determinante en la noche más importante.', icon: '🎖️' });
   }
-  if (overall >= 86 && (wonFinal || wonNationalFinal) && Math.random() < 0.6) {
-    next.awards.push({ name: 'Balón de Oro / Mejor Jugador', year, description: 'Elegido el futbolista más determinante del continente.', icon: '🌕' });
+  // ---- Individual awards: a real ranking against your generation of rivals ----
+  const rivalsBefore = prev.rivals?.length ? prev.rivals : generateRivals(prev);
+  const { rivals: advancedRivals, seasonStats } = advanceRivals(rivalsBefore, { difficultyAdj: getDifficulty(prev).rivalAdj || 0, playerAge: next.age });
+  const nationalBonus = wonNationalFinal ? (nationalTournamentName?.includes('Mundo') ? 25 : 15) : 0;
+  const ranking = computeAwards({
+    name: prev.name, position: prev.position, ovr: overall,
+    goals: seasonData.goals, assists: seasonData.assists, cleanSheets: seasonData.cleanSheets,
+    titleWeight, nationalBonus, rep: prev.currentClub.reputation || 75, clubName: prev.currentClub.name, country: prev.country,
+  }, seasonStats);
+  next.rivals = creditRivalAwards(advancedRivals, ranking);
+  const runnerUp = (rank) => rank.top.find(r => !r.isPlayer);
+  if (ranking.ballon.playerPos === 1) {
+    next.awards.push({ name: `Balón de Oro (${year})`, year, description: `Votado el mejor jugador del mundo, por delante de ${runnerUp(ranking.ballon)?.name || 'todos'}.`, icon: '🌕' });
+  }
+  if (ranking.boot.playerPos === 1 && seasonData.goals > 0) {
+    next.awards.push({ name: `Botín de Oro (${year})`, year, description: `Máximo goleador con ${seasonData.goals} goles (2°: ${runnerUp(ranking.boot)?.name}, ${runnerUp(ranking.boot)?.goals}).`, icon: '👟' });
+  }
+  if (prev.position === 'enganche' && ranking.assists.playerPos === 1) {
+    next.awards.push({ name: `Rey de las Asistencias (${year})`, year, description: `${seasonData.assists} asistencias, nadie dio más.`, icon: '🎯' });
+  }
+  if (prev.position === 'arquero' && ranking.glove.playerPos === 1) {
+    next.awards.push({ name: `Guante de Oro (${year})`, year, description: `${seasonData.cleanSheets} vallas invictas, el mejor arquero del mundo.`, icon: '🧤' });
+  }
+  // The duel with your nemesis (who finished higher in the Ballon d'Or vote)
+  const nemesisStats = seasonStats.find(s => s.nemesis);
+  let nemesisInfo = null;
+  if (nemesisStats) {
+    const allVotes = [{ isPlayer: true }, ...seasonStats].length; // for "out of"
+    const nemesisPos = ranking.ballon.top.find(r => r.rivalId === nemesisStats.rivalId)?.pos ?? null;
+    const youAhead = nemesisPos === null || ranking.ballon.playerPos < nemesisPos;
+    const duel = prev.nemesisDuel || { wins: 0, losses: 0 };
+    next.nemesisDuel = youAhead ? { ...duel, wins: duel.wins + 1 } : { ...duel, losses: duel.losses + 1 };
+    nemesisInfo = { ...nemesisStats, ballonPos: nemesisPos, youAhead, duel: next.nemesisDuel, total: allVotes };
   }
   if (next.totalGoals >= 100 && !next.awards.some(a => a.name === 'Club de los 100 Goles')) {
     next.awards.push({ name: 'Club de los 100 Goles', year, description: `Hito histórico: ${next.totalGoals} goles oficiales.`, icon: '⚽' });
@@ -266,6 +290,8 @@ export function finalizeSeasonState(prev, seasonData, {
     contractYearsLeft: next.contract?.yearsLeft ?? 0,
     servedMods: prev.nextSeasonMods?.labels || [],
     newAwards: next.awards.slice((prev.awards || []).length),
+    ranking,
+    nemesis: nemesisInfo,
   };
 
   // The table reflects the last-match-day decider (the winner overtakes / keeps the lead)
@@ -341,6 +367,12 @@ export function finalizeSeasonState(prev, seasonData, {
     if (/Balón de Oro/.test(a.name)) checked = addMoment(checked, { ...at, type: 'ballon', icon: '🌕', text: `Ganaste el ${a.name}` });
     else if (/Botín de Oro|Guante de Oro|Rey de las Asistencias/.test(a.name)) checked = addMoment(checked, { ...at, type: 'award', icon: a.icon, text: `${a.name}: ${a.description}` });
   });
+  if (ranking.ballon.playerPos === 2 || ranking.ballon.playerPos === 3) {
+    checked = addMoment(checked, { ...at, type: 'award', icon: '🌕', text: `Quedaste ${ranking.ballon.playerPos}° en el Balón de Oro, detrás de ${ranking.ballon.top[0].name}` });
+  }
+  if (nemesisInfo && ranking.ballon.top[0]?.rivalId === nemesisInfo.rivalId) {
+    checked = addMoment(checked, { ...at, type: 'nemesis', icon: '😤', text: `Tu némesis ${nemesisInfo.name} ganó el Balón de Oro` });
+  }
   const isGkPos = prev.position === 'arquero';
   if ((!isGkPos && seasonData.goals >= 30) || (isGkPos && seasonData.cleanSheets >= 20) || seasonData.assists >= 22) {
     const what = isGkPos ? `${seasonData.cleanSheets} vallas invictas` : seasonData.goals >= 30 ? `${seasonData.goals} goles` : `${seasonData.assists} asistencias`;

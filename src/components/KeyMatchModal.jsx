@@ -91,6 +91,9 @@ export default function KeyMatchModal({ event, player, index, total, onDone, aut
 
         {phase === 'intro' && (
           <div className="mg-card text-center space-y-4 animate-pop">
+            {event.nemesis && (
+              <span className="inline-block text-[11px] font-black uppercase px-2 py-0.5 rounded-full border border-red-500/50 bg-red-500/10 text-red-300">😤 Duelo con tu némesis</span>
+            )}
             <p className="text-base sm:text-lg font-black text-white">{event.context}</p>
             <p className="text-xs text-gray-400">
               Te toca: <strong className="text-white">{MINIGAME_LABEL[event.minigame]}</strong> · Dificultad{' '}

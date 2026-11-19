@@ -6,7 +6,7 @@ const MAX_MOMENTS = 80;
 // Higher = more important (used to pick the best ones for the share card)
 export const MOMENT_WEIGHT = {
   statue: 10, world_cup: 10, intercontinental: 10, captain: 8, continental: 8, title: 7, national_title: 8, ballon: 9,
-  promotion: 6, relegation: 6, loyal_relegation: 7, betrayal: 6, record: 5, transfer: 4, nt_debut: 4, final_lost: 3, clasico: 2, debut: 3, retire: 5, award: 4,
+  promotion: 6, nemesis: 5, relegation: 6, loyal_relegation: 7, betrayal: 6, record: 5, transfer: 4, nt_debut: 4, final_lost: 3, clasico: 2, debut: 3, retire: 5, award: 4,
 };
 
 /** Returns a new player with the moment appended (never mutates). */

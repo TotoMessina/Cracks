@@ -184,6 +184,14 @@ export const ACHIEVEMENTS = [
     check: (p) => (p.awards || []).some(a => a.name.includes('Balón de Oro'))
   },
   {
+    id: "duelo_nemesis",
+    title: "Le Ganaste la Pulseada",
+    desc: "Terminar por encima de tu némesis en el Balón de Oro 10 veces.",
+    category: "premios",
+    icon: "😤",
+    check: (p) => (p.nemesisDuel?.wins || 0) >= 10
+  },
+  {
     id: "pibe_revelacion",
     title: "Joyita del Semillero",
     desc: "Ser premiado como Pibe Revelación del Año con 21 años o menos.",

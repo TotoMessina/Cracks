@@ -1,5 +1,6 @@
 import React from 'react';
 import Flag from './Flag';
+import { AwardRanking } from './RivalsPanel';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { EFFECT_LABELS, describeEffects } from '../game/effects';
 import { leagueName } from '../game/career';
@@ -288,6 +289,26 @@ export default function SeasonRecap({ recap, player, onContinue }) {
           <div className="text-4xl">🗽</div>
           <p className="text-sm font-black text-gold mt-1">¡INAUGURARON TU ESTATUA EN {player?.currentClub?.name?.toUpperCase()}!</p>
           <p className="text-[11px] text-amber-200/80">Sos leyenda eterna del club.</p>
+        </div>
+      )}
+
+      {recap.ranking && (
+        <div className="mb-3 space-y-1.5">
+          <span className="text-[10px] uppercase font-black text-gray-400 block">Premios individuales</span>
+          {recap.nemesis && (
+            <div className={`px-3 py-2 rounded-xl border text-xs font-bold ${recap.nemesis.youAhead ? 'border-[#22E748]/40 bg-[#22E748]/10 text-[#22E748]' : 'border-red-500/40 bg-red-500/10 text-red-300'}`}>
+              😤 Tu némesis {recap.nemesis.name} ({recap.nemesis.clubName}): {recap.nemesis.position === 'arquero' ? `${recap.nemesis.cleanSheets} vallas invictas` : recap.nemesis.position === 'enganche' ? `${recap.nemesis.assists} asistencias` : `${recap.nemesis.goals} goles`}
+              {' · '}{recap.nemesis.youAhead ? 'esta vez le ganaste en el Balón de Oro' : 'te superó en el Balón de Oro'} (duelo {recap.nemesis.duel.wins}-{recap.nemesis.duel.losses})
+            </div>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+            <AwardRanking title={`Balón de Oro ${recap.year}`} icon="🌕" rank={recap.ranking.ballon} />
+            {player?.position === 'arquero'
+              ? <AwardRanking title="Guante de Oro" icon="🧤" rank={recap.ranking.glove} statKey="cleanSheets" statLabel="Vallas invictas" />
+              : player?.position === 'enganche'
+              ? <AwardRanking title="Rey de las Asistencias" icon="🎯" rank={recap.ranking.assists} statKey="assists" statLabel="Asistencias" />
+              : <AwardRanking title="Botín de Oro" icon="👟" rank={recap.ranking.boot} statKey="goals" statLabel="Goles" />}
+          </div>
         </div>
       )}
 

@@ -1,6 +1,7 @@
 // Career Engine & Season Simulator for El Ídolo
 import { CLUBS, COUNTRIES, getClubById, getCountryById, getLeague, refreshClub, setWorld } from '../data/clubs';
 import { getClubObjective } from './world';
+import { generateRivals, getNemesis } from './rivals';
 import { getContinentalEntry, simulateContinental, simulateDomesticCup, leagueOutcome, buildFinals, pickContinentalOpponent, estimatedQualification } from './competitions';
 
 export const START_YEAR = 2026;
@@ -68,17 +69,17 @@ export const DIFFICULTIES = {
   facil: {
     id: 'facil', label: 'Fácil', icon: '🌱',
     desc: 'Tu equipo rinde más en la tabla y en las copas, minijuegos más amables, menos lesiones y la hinchada te quiere rápido. La gloria vale ×0,8.',
-    powerAdj: 1.5, cupAdj: 0.04, minigameBonus: 8, tierShift: 0, injury: -3, idolatryMult: 1.2, keyAuto: 0.06, gloryMult: 0.8,
+    powerAdj: 1.5, cupAdj: 0.04, rivalAdj: -2, minigameBonus: 8, tierShift: 0, injury: -3, idolatryMult: 1.2, keyAuto: 0.06, gloryMult: 0.8,
   },
   normal: {
     id: 'normal', label: 'Normal', icon: '⚽',
     desc: 'La experiencia pensada: los títulos cuestan y cada decisión pesa.',
-    powerAdj: -1.5, cupAdj: -0.03, minigameBonus: 0, tierShift: 0, injury: 0, idolatryMult: 1, keyAuto: 0, gloryMult: 1,
+    powerAdj: -1.5, cupAdj: -0.03, rivalAdj: 0, minigameBonus: 0, tierShift: 0, injury: 0, idolatryMult: 1, keyAuto: 0, gloryMult: 1,
   },
   leyenda: {
     id: 'leyenda', label: 'Leyenda', icon: '👑',
     desc: 'Tu equipo rinde menos en la tabla y en las copas, minijuegos un nivel más difíciles, más lesiones y una hinchada exigente. La gloria vale ×1,3.',
-    powerAdj: -4, cupAdj: -0.08, minigameBonus: -5, tierShift: 1, injury: 3, idolatryMult: 0.8, keyAuto: -0.06, gloryMult: 1.3,
+    powerAdj: -4, cupAdj: -0.08, rivalAdj: 2, minigameBonus: -5, tierShift: 1, injury: 3, idolatryMult: 0.8, keyAuto: -0.06, gloryMult: 1.3,
   },
 };
 
@@ -201,6 +202,8 @@ export function createInitialPlayer({
 
   player.salary = computeSalary(initialClub, getPlayerOverall(player));
   player.contract = makeContract(player.salary, 3); // first professional contract
+  player.rivals = generateRivals(player); // your generation (and your nemesis)
+  player.nemesisDuel = { wins: 0, losses: 0 };
   return player;
 }
 
@@ -224,6 +227,8 @@ export function normalizePlayer(saved) {
   p.difficulty ??= 'normal';
   p.moments ??= [];
   p.pendingSupercups ??= [];
+  if (!Array.isArray(p.rivals) || !p.rivals.length) p.rivals = generateRivals(p);
+  p.nemesisDuel ??= { wins: 0, losses: 0 };
   if (p.qualifiedFor === undefined) {
     const q = estimatedQualification(p.currentClub);
     p.qualifiedFor = { clubId: p.currentClub.id, tier: q?.tier || null, name: q?.name || null };
@@ -812,6 +817,16 @@ export function generateKeyMatches(player) {
       const country = pick(COUNTRIES.filter(c => c.id !== player.country));
       events.push(makeKeyEvent(player, 'seleccion', { id: country.id, country: country.id, name: country.name, rep: 85 }));
     }
+  }
+  // Your nemesis plays for that club? Everybody talks about the duel
+  const nemesis = getNemesis(player);
+  if (nemesis) {
+    events.forEach(ev => {
+      if (ev.opponentClubId && ev.opponentClubId === nemesis.clubId) {
+        ev.nemesis = nemesis.name;
+        ev.context = `Enfrente está ${nemesis.name}, tu némesis. ${ev.context}`;
+      }
+    });
   }
   return events;
 }

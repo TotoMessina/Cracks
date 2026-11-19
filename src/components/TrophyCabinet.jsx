@@ -5,6 +5,7 @@ import ClubShield from './ClubShield';
 import { getClubById, COUNTRIES } from '../data/clubs';
 import { getNationalCareer, NT_STATUS_LABEL } from '../game/career';
 import CareerHighlights from './CareerHighlights';
+import RivalsPanel from './RivalsPanel';
 
 export default function TrophyCabinet({ player }) {
   if (!player) return null;
@@ -252,6 +253,7 @@ export default function TrophyCabinet({ player }) {
           </table>
         </div>
       </div>
+      <RivalsPanel player={player} />
       <CareerHighlights player={player} compact />
     </div>
   );
