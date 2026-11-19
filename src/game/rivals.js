@@ -213,3 +213,20 @@ export function creditRivalAwards(rivals, awards) {
     boots: r.boots + (r.id === bootId ? 1 : 0),
   }));
 }
+
+/** Stable pseudo-random number in [0, 1) from any string (same input, same output). */
+export function seededRandom(key) {
+  let h = 2166136261;
+  const s = String(key);
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995); h ^= h >>> 15;
+  return (h >>> 0) / 4294967296;
+}
+
+/** A stable fictional name for a country (club legends, coaches...). */
+export function seededName(country, key) {
+  const pool = NAMES[COUNTRY_LANG[country] || 'es'];
+  const a = Math.floor(seededRandom(`${key}:first`) * pool.first.length);
+  const b = Math.floor(seededRandom(`${key}:last`) * pool.last.length);
+  return `${pool.first[a]} ${pool.last[b]}`;
+}

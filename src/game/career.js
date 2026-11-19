@@ -2,6 +2,8 @@
 import { CLUBS, COUNTRIES, getClubById, getCountryById, getLeague, refreshClub, setWorld } from '../data/clubs';
 import { getClubObjective } from './world';
 import { generateRivals, getNemesis } from './rivals';
+import { getCoach, coachMinutesFactor } from './coach';
+import { injuryMultiplier, newChallenge, challengeStartClub } from './challenges';
 import { getContinentalEntry, simulateContinental, simulateDomesticCup, leagueOutcome, buildFinals, pickContinentalOpponent, estimatedQualification } from './competitions';
 
 export const START_YEAR = 2026;
@@ -128,11 +130,15 @@ export function createInitialPlayer({
   initialClubId = 1001,
   gameMode = "standard", // 'standard', 'ultra', 'sin_reglas'
   difficulty = 'normal', // 'facil', 'normal', 'leyenda'
+  challenge = null, // 'salvar' | 'ascenso'
+  modifiers = [], // ['glass']
 }) {
   const isWonderkid = archetype === 'pibe_maravilla';
   const stats = getPositionStats(position, isWonderkid ? 8 : 0);
   setWorld({}); // a new career starts with every club in its original league
-  const initialClub = getClubById(initialClubId);
+  const chosenClub = getClubById(initialClubId);
+  // A challenge decides where you start
+  const initialClub = (challenge && challengeStartClub(challenge, chosenClub.league)) || chosenClub;
 
   const player = {
     id: 'career_' + Date.now(),
@@ -204,6 +210,9 @@ export function createInitialPlayer({
   player.contract = makeContract(player.salary, 3); // first professional contract
   player.rivals = generateRivals(player); // your generation (and your nemesis)
   player.nemesisDuel = { wins: 0, losses: 0 };
+  player.challenge = challenge ? newChallenge(challenge, initialClub) : null;
+  player.modifiers = Array.isArray(modifiers) ? [...modifiers] : [];
+  player.marketValueHistory = [];
   return player;
 }
 
@@ -323,7 +332,8 @@ export function getInjuryRisk(player) {
   risk += getDifficulty(player).injury;
   if (player.seasonInProgress?.ntDecision === 'go') risk += 3; // a big summer tournament
   risk += player.nextSeasonMods?.injuryRisk || 0; // consequences of last season's decisions
-  return Math.max(2, Math.min(40, Math.round(risk)));
+  risk *= injuryMultiplier(player); // "Piernas de cristal"
+  return Math.max(2, Math.min(45, Math.round(risk)));
 }
 
 export function calculateInjury(player) {
@@ -375,8 +385,11 @@ export function simulateSeasonMatches(player) {
   let baseMatches = 34 + Math.floor(Math.random() * 6);
   if (managerRel < 40) baseMatches = Math.max(18, Math.round(baseMatches * 0.8));
   else if (managerRel > 80) baseMatches += 3;
-  // A kid in a club far above his level gets fewer minutes
-  if (player.age <= 20 && club.reputation - overall > 12) baseMatches = Math.round(baseMatches * 0.7);
+  // A kid in a club far above his level gets fewer minutes (less so with a coach who backs kids)
+  const coach = getCoach(player);
+  if (player.age <= 20 && club.reputation - overall > 12) baseMatches = Math.round(baseMatches * (coach?.style === 'pibes' ? 0.85 : 0.7));
+  // The coach's style: some prefer kids, others veterans
+  baseMatches = Math.round(baseMatches * coachMinutesFactor(coach, player));
   // Minutes plan (rotate / normal / play everything)
   const workload = getWorkload(player);
   baseMatches = Math.round(baseMatches * workload.matchesFactor);
@@ -605,6 +618,8 @@ export function applySeasonDevelopment(player, seasonData) {
     || (player.position === 'enganche' && seasonData.assists >= 16)
     || (player.position === 'arquero' && seasonData.cleanSheets >= 14);
   if (greatSeason && age <= 32) bump(keyStat, 1);
+  // Kids who play every week grow faster (the point of a loan)
+  if (age <= 22 && seasonData.matches >= 30) bump(keyStat, 1);
 
   // Serious injuries leave a mark
   if (seasonData.injury?.statImpact) {
@@ -614,8 +629,100 @@ export function applySeasonDevelopment(player, seasonData) {
   return { stats, changes };
 }
 
+// ---------------------------------------------------------------------------
+// Injuries with a decision: rush back (risk of relapse) or a full recovery
+// ---------------------------------------------------------------------------
+export const RELAPSE_CHANCE = { leve: 0.2, moderada: 0.3, grave: 0.45 };
+
+/** Only injuries that cost a real chunk of the season ask you to decide. */
+export const injuryNeedsDecision = (injury) => Boolean(injury) && injury.missedMatches >= 8 && !injury.choice;
+
+/**
+ * Apply the recovery choice to a simulated season.
+ * - 'full': you miss every match, but no lasting damage.
+ * - 'quick': you're back in about half the time; with a relapse you miss even more and it leaves a mark.
+ */
+export function applyInjuryChoice(result, choice, rng = Math.random) {
+  const injury = result.injury;
+  if (!injury || injury.choice) return result;
+  const missed = injury.missedMatches;
+  let delta = 0;
+  let next = { ...injury, choice };
+  if (choice === 'quick') {
+    const relapse = rng() < (RELAPSE_CHANCE[injury.type] ?? 0.3);
+    if (relapse) {
+      delta = -Math.round(missed * 0.35);
+      next = {
+        ...next,
+        relapse: true,
+        missedMatches: missed - delta,
+        statImpact: { ...(injury.statImpact || {}), resistencia: (injury.statImpact?.resistencia || 0) - 2 },
+        outcome: `Volviste antes y recaíste: otras ${-delta} fechas afuera y la lesión te dejó secuelas.`,
+      };
+    } else {
+      delta = Math.round(missed * 0.5);
+      next = { ...next, relapse: false, missedMatches: missed - delta, outcome: `Te apuraste y salió bien: volviste ${delta} fechas antes.` };
+    }
+  } else {
+    next = { ...next, statImpact: null, outcome: 'Recuperación completa: te perdiste todo lo que había que perderse, pero volviste sin secuelas.' };
+  }
+  const matches = Math.max(8, result.matches + delta);
+  const ratio = result.matches > 0 ? matches / result.matches : 1;
+  const scale = (v) => Math.max(0, Math.round((v || 0) * ratio));
+  return {
+    ...result,
+    injury: next,
+    matches,
+    missedMatches: Math.max(0, (result.missedMatches || 0) - delta),
+    goals: scale(result.goals),
+    assists: scale(result.assists),
+    cleanSheets: scale(result.cleanSheets),
+    endEnergy: choice === 'quick' ? Math.max(10, (result.endEnergy ?? 70) - 6) : result.endEnergy,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Market value: level + last season + age + fame. It decides who comes for you.
+// ---------------------------------------------------------------------------
+const POSITION_NORM = { delantero: ['goals', 18], enganche: ['assists', 13], arquero: ['cleanSheets', 12] };
+
+/** How your last season went compared with what's expected for your position (≈0.75..1.3). */
+export function performanceIndex(player) {
+  const last = player.seasonHistory?.[player.seasonHistory.length - 1];
+  if (!last) return 1;
+  const [stat, norm] = POSITION_NORM[player.position] || POSITION_NORM.delantero;
+  const value = last[stat] ?? (stat === 'assists' ? Math.round((last.goals || 0) * 1.6) : 0);
+  let idx = 0.75 + 0.3 * Math.min(1.7, value / norm);
+  if (last.wonTitle) idx += 0.05;
+  if ((last.matches || 0) < 20) idx -= 0.08;
+  idx += (player.form || 0) * 0.02;
+  return Math.max(0.75, Math.min(1.3, idx));
+}
+
+/** The level clubs see in you (it can be above or below your real level). */
+export function marketRating(player) {
+  const age = player.age;
+  const ageAdj = age <= 21 ? 3 : age <= 24 ? 1 : age >= 33 ? -4 : age >= 30 ? -2 : 0;
+  return Math.round(getPlayerOverall(player) + (performanceIndex(player) - 1) * 20 + ageAdj);
+}
+
+/** Market value in dollars. */
+export function marketValue(player) {
+  const rating = marketRating(player);
+  const raw = 500000 * Math.pow(1.18, rating - 60) * (1 + (player.fame || 0) / 300);
+  const step = raw >= 10000000 ? 100000 : 10000;
+  return Math.max(50000, Math.round(raw / step) * step);
+}
+
+/** "$72,4 M" / "$850 mil" */
+export function formatValue(v) {
+  if (v >= 1000000) return `$${(v / 1000000).toLocaleString('es-AR', { maximumFractionDigits: 1 })} M`;
+  return `$${Math.round(v / 1000).toLocaleString('es-AR')} mil`;
+}
+
 export function generateTransferOffers(player) {
-  const overall = getPlayerOverall(player);
+  // Clubs look at your market value (level + how you played + age), not only your level
+  const overall = marketRating(player);
   const currentClub = player.currentClub;
   const offers = [];
   const lawyerMultiplier = player.lifestyle?.includes('abogado_deportivo_top') ? 1.15 : 1.0;
@@ -872,6 +979,11 @@ export function makeContract(salary, years) {
  * Returns { free, offers } or null when there is nothing to decide.
  */
 export function generateOffseasonMarket(player) {
+  if (player.loan) return withContractTerms(player, loanEndMarket(player));
+  return withContractTerms(player, buildOffseasonMarket(player));
+}
+
+function buildOffseasonMarket(player) {
   const contract = player.contract;
   const released = player.relegationRelease && player.relegationRelease === player.currentClub?.id;
   if (!contract || contract.yearsLeft <= 0 || released) {
@@ -914,7 +1026,7 @@ export function generateOffseasonMarket(player) {
   }
 
   // A bigger club pays the release clause (more likely if you outgrew your club)
-  const chance = Math.max(0.05, Math.min(0.6, 0.15 + (overall - club.reputation) * 0.03 + (player.fame || 0) / 400));
+  const chance = Math.max(0.05, Math.min(0.6, 0.15 + (marketRating(player) - club.reputation) * 0.03 + (player.fame || 0) / 400));
   if (Math.random() < chance) {
     const buyers = generateTransferOffers(player)
       .filter(o => !o.isRenewal && !o.isRival && o.club.reputation > club.reputation)
@@ -932,7 +1044,177 @@ export function generateOffseasonMarket(player) {
     if (agentOffer) offers.push(agentOffer);
   }
 
+  // A kid without minutes: your club offers to loan you out for a year
+  if (canGoOnLoan(player)) offers.push(...generateLoanOffers(player));
+
   return offers.length > 1 ? { free: false, offers } : null;
+}
+
+// ---------------------------------------------------------------------------
+// Loans: a kid with no minutes at a big club goes to a smaller one for a year
+// ---------------------------------------------------------------------------
+export const LOAN_MAX_AGE = 21;
+
+/** A kid too far below his club's level (the same gap that costs him minutes). */
+export function canGoOnLoan(player, parentClub = player.currentClub) {
+  if (!parentClub || player.age > LOAN_MAX_AGE) return false;
+  return parentClub.reputation - getPlayerOverall(player) > 10;
+}
+
+/** Smaller clubs (same continent, ideally same country) where the kid would play every week. */
+export function generateLoanOffers(player, parentClub = player.currentClub, count = 2) {
+  const overall = getPlayerOverall(player);
+  const home = getLeague(parentClub.league);
+  const fits = (c) => c.id !== parentClub.id
+    && c.id !== player.currentClub?.id
+    && !(parentClub.rivals || []).includes(c.id)
+    && c.reputation <= parentClub.reputation - 8
+    && c.reputation >= overall - 8
+    && c.reputation <= overall + 6;
+  const sameCountry = CLUBS.filter(c => fits(c) && getLeague(c.league).countryName === home.countryName);
+  const sameContinent = CLUBS.filter(c => fits(c) && getLeague(c.league).continent === home.continent);
+  const pool = sameCountry.length >= count ? sameCountry : sameContinent;
+  return [...pool].sort(() => Math.random() - 0.5).slice(0, count).map(club => ({
+    club,
+    isLoan: true,
+    keepsContract: true,
+    isRenewal: false,
+    isRival: false,
+    salary: player.contract?.salary || player.salary || 0,
+    message: `${parentClub.shortName || parentClub.name} te cede un año a ${club.name} (${leagueName(club.league)}) para que sumes minutos. Seguís cobrando tu contrato y después elegís si volver.`,
+  }));
+}
+
+/** End of a loan: go back to your club, stay for good, or (if you're still a kid) another loan. */
+export function loanEndMarket(player) {
+  const loan = player.loan;
+  const parent = getClubById(loan.parentClubId) || player.currentClub;
+  const loanClub = player.currentClub;
+  const overall = getPlayerOverall(player);
+  const yearsLeft = player.contract?.yearsLeft ?? 0;
+  const lawyer = player.lifestyle?.includes('abogado_deportivo_top') ? 1.15 : 1.0;
+  const offers = [];
+
+  offers.push(yearsLeft > 0
+    ? {
+      club: parent,
+      isLoanReturn: true,
+      keepsContract: true,
+      isRenewal: false,
+      isRival: false,
+      salary: player.contract.salary,
+      message: `Volvés a ${parent.name} con más rodaje. Te ${yearsLeft === 1 ? 'queda 1 año' : `quedan ${yearsLeft} años`} de contrato.`,
+    }
+    : {
+      club: parent,
+      isLoanReturn: true,
+      isRenewal: false,
+      isRival: false,
+      salary: Math.round(Math.max(player.salary || 0, computeSalary(parent, overall)) * 1.05 * lawyer),
+      message: `Se terminó tu contrato, pero ${parent.name} te quiere de vuelta con un contrato nuevo.`,
+    });
+
+  // The loan club wants to keep you (if you were important there)
+  if (overall >= loanClub.reputation - 6) {
+    offers.push({
+      club: loanClub,
+      isLoanBuy: true,
+      isRenewal: false,
+      isRival: false,
+      salary: Math.round(computeSalary(loanClub, overall) * 1.1 * lawyer),
+      message: `${loanClub.name} quiere comprarte y ${parent.shortName || parent.name} acepta venderte. Te quedás donde jugás todos los domingos.`,
+    });
+  }
+
+  // Still a kid without a place: another loan
+  if (yearsLeft > 0 && canGoOnLoan(player, parent)) {
+    offers.push(...generateLoanOffers(player, parent, 1));
+  }
+
+  return { free: yearsLeft <= 0, offers, loanEnd: true };
+}
+
+// ---------------------------------------------------------------------------
+// Contract negotiation: ask for more money or more years, the club may walk away
+// ---------------------------------------------------------------------------
+/** Does accepting this offer mean signing a new contract? */
+export function offerSignsContract(offer) {
+  return Boolean(offer) && !offer.isStay && !offer.keepsContract;
+}
+
+/** Longest deal this club puts on the table (old players get shorter offers). */
+export function offerMaxYears(player, offer) {
+  const range = contractYearsRange(player.age);
+  if (offer.isRenewal || offer.isLoanReturn) return range.max;
+  return Math.max(1, range.max - (player.age >= 28 ? 1 : 0));
+}
+
+export const NEGOTIATION_ASKS = {
+  money: { id: 'money', label: '+15% de sueldo', salary: 0.15, years: 0, risk: 0.15 },
+  bigMoney: { id: 'bigMoney', label: '+30% de sueldo', salary: 0.30, years: 0, risk: 0.35 },
+  years: { id: 'years', label: '+1 año de contrato', salary: 0, years: 1, risk: 0.12 },
+};
+
+/** How strong your position is in front of this club (0 = none, ~1 = a lot). */
+export function negotiationLeverage(player, offer) {
+  const overall = getPlayerOverall(player);
+  let lev = 0.5 + (overall - offer.club.reputation) * 0.03 + (player.fame || 0) / 250;
+  if (player.lifestyle?.includes('abogado_deportivo_top')) lev += 0.1;
+  if (offer.isRival || offer.fromAgent) lev += 0.15; // they came for you
+  if (offer.isRenewal && (player.idolatry || 0) >= 70) lev += 0.1; // the fans want you to stay
+  if (offer.isRenewal && player.flags?.boardAngry) lev -= 0.2;
+  return Math.max(0, Math.min(1.2, lev));
+}
+
+/** Chance the club says yes to an ask. */
+export function negotiationOdds(player, offer, askId) {
+  const ask = NEGOTIATION_ASKS[askId];
+  const accept = Math.max(0.1, Math.min(0.9, 0.5 + negotiationLeverage(player, offer) * 0.45 - ask.risk));
+  // If they don't accept, most of the time they counter; sometimes they walk away
+  return { accept, counter: (1 - accept) * 0.6, withdraw: (1 - accept) * 0.4 };
+}
+
+/**
+ * Ask the club for better terms. One try per offer.
+ * Returns { outcome: 'accepted' | 'countered' | 'withdrawn', offer }.
+ * `canWithdraw` is false when this is your only option (the club then counters).
+ */
+export function negotiateOffer(player, offer, askId, { rng = Math.random, canWithdraw = true } = {}) {
+  const ask = NEGOTIATION_ASKS[askId];
+  if (!ask || !offerSignsContract(offer) || offer.negotiated) return { outcome: null, offer };
+  const odds = negotiationOdds(player, offer, askId);
+  const roll = rng();
+  const baseMax = offer.maxYears ?? offerMaxYears(player, offer);
+  const club = offer.club.shortName || offer.club.name;
+  let outcome = roll < odds.accept ? 'accepted' : roll < odds.accept + odds.counter || !canWithdraw ? 'countered' : 'withdrawn';
+
+  if (outcome === 'withdrawn') {
+    return {
+      outcome,
+      offer: { ...offer, negotiated: true, withdrawn: true, negotiation: { outcome, text: `${club} se ofendió y retiró la oferta.` } },
+    };
+  }
+  const share = outcome === 'accepted' ? 1 : 0.5;
+  const salary = Math.round((offer.salary * (1 + ask.salary * share)) / 1000) * 1000;
+  const maxYears = outcome === 'accepted' ? Math.min(6, baseMax + ask.years) : baseMax;
+  const text = outcome === 'accepted'
+    ? `${club} aceptó: ${ask.salary ? `sueldo de $${salary.toLocaleString('es-AR')}` : `hasta ${maxYears} años de contrato`}.`
+    : ask.salary
+      ? `${club} no llega a tanto, pero sube a $${salary.toLocaleString('es-AR')}. Lo tomás o lo dejás.`
+      : `${club} no da más años, pero mantiene la oferta.`;
+  return {
+    outcome,
+    offer: { ...offer, salary, maxYears, negotiated: true, negotiation: { outcome, text } },
+  };
+}
+
+/** Every market offer that signs a contract says how many years the club offers. */
+function withContractTerms(player, market) {
+  if (!market) return market;
+  return {
+    ...market,
+    offers: market.offers.map(o => (offerSignsContract(o) && o.maxYears === undefined ? { ...o, maxYears: offerMaxYears(player, o) } : o)),
+  };
 }
 
 /** Offer from the "European super-agent" (flag europeanAgent): a club from Europe near your level. */

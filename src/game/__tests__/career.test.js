@@ -88,7 +88,8 @@ describe('salaries and contracts', () => {
 
   it('under contract with nobody interested there is no market', () => {
     mockRandom(0.99); // no club pays the clause
-    const p = createInitialPlayer({ initialClubId: 451 });
+    // An adult (a kid this far below Boca would get loan offers)
+    const p = { ...createInitialPlayer({ initialClubId: 451 }), age: 24 };
     expect(generateOffseasonMarket(p)).toBeNull();
   });
 

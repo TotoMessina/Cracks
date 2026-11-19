@@ -1,260 +1,205 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Flag from './Flag';
-import { Trophy, Award, Shield } from 'lucide-react';
 import ClubShield from './ClubShield';
 import { getClubById, COUNTRIES } from '../data/clubs';
 import { getNationalCareer, NT_STATUS_LABEL } from '../game/career';
 import CareerHighlights from './CareerHighlights';
+import CareerTimeline from './CareerTimeline';
 import RivalsPanel from './RivalsPanel';
+import { clubRecord, nationalRecord, RECORD_INFO } from '../game/records';
+import { CHALLENGES } from '../game/challenges';
+
+/** Groups repeated entries ("Liga Profesional" x4) so the cabinet stays short. */
+function groupBy(items, keyOf) {
+  const map = new Map();
+  items.forEach(it => {
+    const key = keyOf(it);
+    const g = map.get(key) || { key, item: it, count: 0, years: [] };
+    g.count += 1;
+    if (it.year) g.years.push(it.year);
+    map.set(key, g);
+  });
+  return [...map.values()].sort((a, b) => b.count - a.count);
+}
+
+const yearsText = (years) => {
+  const ys = [...new Set(years)].sort();
+  return ys.length > 4 ? `${ys.slice(0, 3).join(', ')}… ${ys[ys.length - 1]}` : ys.join(', ');
+};
+
+function Empty({ children }) {
+  return <p className="text-center text-sm text-gray-400 py-8 bg-black/20 rounded-2xl border border-white/5">{children}</p>;
+}
+
+function StatusBadge({ ch }) {
+  if (ch.leftAsRival) return <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-red-950 text-red-400 border border-red-700/60">Traidor</span>;
+  if (ch.maxIdolatry >= 95) return <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-yellow-950 text-yellow-400 border border-yellow-700/60">Leyenda 🗽</span>;
+  if (ch.maxIdolatry >= 70) return <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/60">Ídolo ⭐</span>;
+  return <span className="text-[10px] text-gray-400">Respetado</span>;
+}
 
 export default function TrophyCabinet({ player }) {
+  const [tab, setTab] = useState('titulos');
   if (!player) return null;
 
   const isGk = player.position === 'arquero';
   const country = COUNTRIES.find(c => c.id === player.country) || COUNTRIES[0];
   const ntStats = player.nationalTeamStats || { matches: 0, goals: 0, cleanSheets: 0, titles: 0, trophies: [] };
+  const nt = getNationalCareer(player);
+  const trophies = groupBy(player.trophies || [], t => t.title);
+  const awards = groupBy(player.awards || [], a => a.name.replace(/\s\d{4}$/, ''));
+
+  const tabs = [
+    { id: 'titulos', label: 'Títulos' },
+    { id: 'premios', label: 'Premios' },
+    { id: 'clubes', label: 'Clubes' },
+    { id: 'rivales', label: 'Rivales' },
+    { id: 'historia', label: 'Historia' },
+  ];
 
   return (
-    <div className="bg-[#0b130e] border border-white/10 rounded-2xl p-6 shadow-2xl space-y-8">
-      {/* Header */}
-      <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <span className="text-[10px] font-black uppercase tracking-widest text-[#22E748] bg-[#22E748]/10 px-3 py-1 rounded-full border border-[#22E748]/20">
-            Palmarés & Legado Histórico
-          </span>
-          <h2 className="text-2xl font-black text-white mt-2">
-            Vitrina de Trofeos de {player.name}
-          </h2>
+    <div className="panel p-3.5 sm:p-6 space-y-3 sm:space-y-4">
+      {/* Header: name + career totals in one row */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#22E748]">Palmarés</span>
+          <h2 className="text-lg sm:text-2xl font-black text-white leading-tight truncate">{player.name}</h2>
         </div>
-
-        {/* Global career totals */}
-        <div className="flex items-center space-x-6 text-center">
+        <div className="flex items-center gap-3 sm:gap-6 text-center shrink-0">
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block">
-              Partidos
-            </span>
-            <span className="text-xl font-black text-white font-mono">
-              {player.totalMatches}
-            </span>
+            <span className="text-[9px] uppercase font-bold text-gray-400 block">PJ</span>
+            <span className="text-base sm:text-xl font-black text-white font-mono">{player.totalMatches}</span>
           </div>
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block">
-              {isGk ? "Vallas Invictas" : "Goles Totales"}
-            </span>
-            <span className="text-xl font-black text-[#22E748] font-mono">
-              {isGk ? player.totalCleanSheets : player.totalGoals}
-            </span>
+            <span className="text-[9px] uppercase font-bold text-gray-400 block">{isGk ? 'Vallas' : 'Goles'}</span>
+            <span className="text-base sm:text-xl font-black text-[#22E748] font-mono">{isGk ? player.totalCleanSheets : player.totalGoals}</span>
           </div>
           <div>
-            <span className="text-[10px] uppercase font-bold text-gray-400 block">
-              Títulos
-            </span>
-            <span className="text-xl font-black text-yellow-400 font-mono">
-              {player.trophies.length}
-            </span>
+            <span className="text-[9px] uppercase font-bold text-gray-400 block">Títulos</span>
+            <span className="text-base sm:text-xl font-black text-yellow-400 font-mono">{player.trophies.length}</span>
           </div>
         </div>
       </div>
 
-      {/* Statue Feature if Unlocked */}
-      {player.hasStatue ? (
-        <div className="bg-gradient-to-r from-amber-950/40 via-yellow-950/30 to-amber-950/40 border-2 border-[#F6B40E] rounded-2xl p-5 flex items-center space-x-5 shadow-[0_0_35px_rgba(246,180,14,0.2)]">
-          <div className="text-6xl select-none filter drop-shadow-[0_0_10px_#F6B40E]">
-            🗽
-          </div>
-          <div>
-            <span className="text-xs font-black uppercase tracking-wider text-[#F6B40E] bg-[#F6B40E]/20 px-2.5 py-0.5 rounded border border-[#F6B40E]/40">
-              Estatua de Bronce Erigida
-            </span>
-            <h3 className="text-xl font-black text-white mt-1">
-              Monumento Histórico en las Puertas del Estadio
-            </h3>
-            <p className="text-xs text-amber-200/80 mt-1 max-w-xl">
-              Alcanzaste el estatus sagrado de Leyenda. El club inmortalizó tu figura en bronce para que las futuras generaciones recuerden tus hazañas.
-            </p>
-          </div>
+      {player.challenge && (
+        <div className={`px-3 py-2 rounded-xl border text-xs font-bold ${player.challenge.status === 'done' ? 'border-[#F6B40E]/60 bg-[#F6B40E]/10 text-[#F6B40E]' : player.challenge.status === 'failed' ? 'border-red-500/40 bg-red-950/30 text-red-300' : 'border-white/10 bg-black/30 text-gray-300'}`}>
+          {CHALLENGES[player.challenge.id]?.icon} Desafío "{CHALLENGES[player.challenge.id]?.title}" con {player.challenge.clubName}: {player.challenge.status === 'done' ? 'cumplido' : player.challenge.status === 'failed' ? 'no cumplido' : 'en curso'}
         </div>
-      ) : (
-        <div className="bg-[#0e1712] border border-dashed border-white/10 rounded-2xl p-5 flex items-center space-x-4 text-gray-400">
-          <div className="text-4xl opacity-30 select-none">🗽</div>
-          <div>
-            <h4 className="text-sm font-bold text-gray-300">
-              Estatua del Club: Pendiente
-            </h4>
-            <p className="text-xs text-gray-400">
-              Necesitás alcanzar 95 puntos de Idolatría en un mismo club con lealtad, goles y campeonatos para que construyan tu monumento.
-            </p>
-          </div>
+      )}
+      {player.hasStatue && (
+        <div className="px-3 py-2 rounded-xl border border-[#F6B40E]/60 bg-[#F6B40E]/10 text-xs font-black text-[#F6B40E] flex items-center gap-2">
+          <span className="text-xl">🗽</span> Tenés tu estatua en {player.statueClubName || 'el club'}
         </div>
       )}
 
-      {/* National Team Career Showcase */}
-      {(ntStats.matches > 0 || ntStats.calledUp) && (
-        <div className="bg-gradient-to-r from-sky-950/40 via-[#071724]/60 to-sky-950/30 border border-sky-500/30 rounded-2xl p-5 shadow-lg">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 pb-3 border-b border-sky-500/20">
-            <div className="flex items-center space-x-3">
-              <Flag code={country.id} size={26} title={country.name} />
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-sky-400 bg-sky-950 px-2 py-0.5 rounded border border-sky-500/30">
-                  Trayectoria Internacional
-                </span>
-                <h3 className="text-base font-black text-white mt-0.5">
-                  {country.nationalTeam}
-                </h3>
-                <span className="text-[11px] text-sky-300 font-bold">
-                  {NT_STATUS_LABEL[getNationalCareer(player).status]}
-                  {getNationalCareer(player).shirt ? ` · camiseta ${getNationalCareer(player).shirt}` : ''}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-6 text-center">
-              <div>
-                <span className="text-[10px] text-gray-400 uppercase font-bold block">Partidos</span>
-                <span className="text-base font-black text-white font-mono">{ntStats.matches}</span>
-              </div>
-              <div>
-                <span className="text-[10px] text-gray-400 uppercase font-bold block">{isGk ? 'Vallas Invictas' : 'Goles'}</span>
-                <span className="text-base font-black text-sky-400 font-mono">{isGk ? ntStats.cleanSheets : ntStats.goals}</span>
-              </div>
-              <div>
-                <span className="text-[10px] text-gray-400 uppercase font-bold block">Títulos</span>
-                <span className="text-base font-black text-yellow-400 font-mono">{ntStats.titles || 0}</span>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-xs text-sky-200/70">
-            Defendiendo los colores patrios en Eliminatorias, Copas Continentales y Copas del Mundo FIFA.
-          </p>
-        </div>
-      )}
-
-      {/* Trophies Grid */}
-      <div>
-        <h3 className="text-sm font-black uppercase tracking-wider text-gray-300 mb-4 flex items-center space-x-2">
-          <Trophy className="w-4 h-4 text-yellow-400" />
-          <span>Campeonatos Conquistados ({player.trophies.length})</span>
-        </h3>
-
-        {player.trophies.length === 0 ? (
-          <div className="text-center py-8 bg-[#09110d] rounded-2xl border border-white/5">
-            <Trophy className="w-10 h-10 text-gray-600 mx-auto mb-2 opacity-40" />
-            <p className="text-sm text-gray-400">
-              Todavía no ganaste ningún título oficial. ¡Seguí peleando las finales!
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {player.trophies.map((tr, idx) => (
-              <div
-                key={idx}
-                className="bg-[#0e1812] border border-yellow-500/30 hover:border-yellow-400 rounded-xl p-3 text-center transition-all hover:-translate-y-1 shadow-lg"
-              >
-                <div className="text-3xl mb-1 select-none">
-                  {tr.icon || '🏆'}
-                </div>
-                <h4 className="text-xs font-black text-white leading-tight">
-                  {tr.title}
-                </h4>
-                <p className="text-[10px] text-gray-400 mt-1">
-                  {tr.clubName} • {tr.year}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="segmented overflow-x-auto no-scrollbar" role="tablist">
+        {tabs.map(t => (
+          <button key={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? 'is-active' : ''} onClick={() => setTab(t.id)}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* Individual Awards */}
-      {player.awards && player.awards.length > 0 && (
-        <div>
-          <h3 className="text-sm font-black uppercase tracking-wider text-gray-300 mb-4 flex items-center space-x-2">
-            <Award className="w-4 h-4 text-[#22E748]" />
-            <span>Premios y Distinciones Individuales</span>
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {player.awards.map((aw, idx) => (
-              <div
-                key={idx}
-                className="bg-[#0e1812] border border-[#22E748]/30 rounded-xl p-3 flex items-center space-x-3"
-              >
-                <div className="text-2xl">{aw.icon || '🎖️'}</div>
-                <div>
-                  <h4 className="text-xs font-black text-white">{aw.name}</h4>
-                  <p className="text-[10px] text-gray-400">{aw.description} ({aw.year})</p>
+      {tab === 'titulos' && (
+        trophies.length === 0 ? <Empty>Todavía no ganaste ningún título. ¡Seguí peleando las finales!</Empty> : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            {trophies.map(g => (
+              <div key={g.key} className="bg-[#0e1812] border border-yellow-500/30 rounded-xl p-2.5 flex items-center gap-2 min-w-0">
+                <span className="text-2xl select-none shrink-0">{g.item.icon || '🏆'}</span>
+                <div className="min-w-0">
+                  <h4 className="text-[11px] font-black text-white leading-tight line-clamp-2">
+                    {g.key}{g.count > 1 && <span className="text-yellow-400"> ×{g.count}</span>}
+                  </h4>
+                  <p className="text-[10px] text-gray-400 truncate">{yearsText(g.years)}</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        )
       )}
 
-      {/* Club History Table */}
-      <div>
-        <h3 className="text-sm font-black uppercase tracking-wider text-gray-300 mb-4 flex items-center space-x-2">
-          <Shield className="w-4 h-4 text-blue-400" />
-          <span>Trayectoria por Clubes</span>
-        </h3>
+      {tab === 'premios' && (
+        awards.length === 0 ? <Empty>Sin premios individuales por ahora.</Empty> : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+            {awards.map(g => (
+              <div key={g.key} className="bg-[#0e1812] border border-[#22E748]/30 rounded-xl p-2.5 flex items-center gap-2.5">
+                <span className="text-xl shrink-0">{g.item.icon || '🎖️'}</span>
+                <div className="min-w-0">
+                  <h4 className="text-xs font-black text-white truncate">
+                    {g.key}{g.count > 1 && <span className="text-[#22E748]"> ×{g.count}</span>}
+                  </h4>
+                  <p className="text-[10px] text-gray-400 truncate">{yearsText(g.years) || g.item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      )}
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border border-white/10 rounded-xl overflow-hidden">
-            <thead className="bg-[#060c09] text-gray-400 uppercase tracking-wider text-[10px]">
-              <tr>
-                <th className="p-3">Club</th>
-                <th className="p-3 text-center">Temporadas</th>
-                <th className="p-3 text-center">Partidos</th>
-                <th className="p-3 text-center">{isGk ? "Vallas" : "Goles"}</th>
-                <th className="p-3 text-center">Títulos</th>
-                <th className="p-3 text-right">Estatus</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5 bg-[#09110d]">
-              {player.clubHistory.map((ch, idx) => {
-                const club = getClubById(ch.clubId);
-
+      {tab === 'clubes' && (
+        <div className="space-y-2">
+          {(ntStats.matches > 0 || ntStats.calledUp) && (
+            <div className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl border border-sky-500/30 bg-sky-950/30">
+              <div className="flex items-center gap-2 min-w-0">
+                <Flag code={country.id} size={18} title={country.name} />
+                <div className="min-w-0">
+                  <span className="text-xs font-black text-white block truncate">{country.nationalTeam}</span>
+                  <span className="text-[10px] text-sky-300 font-bold">{NT_STATUS_LABEL[nt.status]}{nt.shirt ? ` · #${nt.shirt}` : ''}</span>
+                </div>
+              </div>
+              {(() => {
+                const rec = nationalRecord(player.country, player.position);
+                const beaten = (player.recordsBroken || []).includes(`national:${player.country}`);
                 return (
-                  <tr key={idx} className="hover:bg-white/5 transition-colors">
-                    <td className="p-3 flex items-center space-x-3 font-bold text-white">
-                      <ClubShield club={club} size={28} />
-                      <span>{ch.clubName}</span>
-                    </td>
-                    <td className="p-3 text-center font-mono">{ch.seasons}</td>
-                    <td className="p-3 text-center font-mono">{ch.matches}</td>
-                    <td className="p-3 text-center font-mono font-bold text-[#22E748]">
-                      {isGk ? ch.cleanSheets : ch.goals}
-                    </td>
-                    <td className="p-3 text-center font-mono font-bold text-yellow-400">
-                      {ch.titles}
-                    </td>
-                    <td className="p-3 text-right">
-                      {ch.leftAsRival ? (
-                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-700/60">
-                          Traidor
-                        </span>
-                      ) : ch.maxIdolatry >= 95 ? (
-                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-yellow-950 text-yellow-400 border border-yellow-700/60">
-                          Leyenda 🗽
-                        </span>
-                      ) : ch.maxIdolatry >= 70 ? (
-                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700/60">
-                          Ídolo ⭐
-                        </span>
-                      ) : (
-                        <span className="text-[10px] text-gray-400">
-                          Respetado
-                        </span>
-                      )}
-                    </td>
-                  </tr>
+                  <span className={`hidden sm:block text-[10px] ${beaten ? 'text-amber-300 font-bold' : 'text-gray-400'}`}>
+                    📜 {beaten ? 'Récord tuyo' : `Récord: ${rec.holder} (${rec.value})`}
+                  </span>
                 );
-              })}
-            </tbody>
-          </table>
+              })()}
+              <span className="text-[11px] font-mono text-sky-200 shrink-0">
+                {ntStats.matches} PJ · {isGk ? ntStats.cleanSheets : ntStats.goals} {isGk ? 'VI' : 'G'} · {ntStats.titles || 0} 🏆
+              </span>
+            </div>
+          )}
+          {player.clubHistory.map((ch, idx) => (
+            <div key={idx} className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-[#09110d] border border-white/5">
+              <ClubShield club={getClubById(ch.clubId)} size={26} />
+              <div className="min-w-0 flex-1">
+                <span className="text-xs font-black text-white block truncate">{ch.clubName}{ch.loan && <span className="text-sky-300 font-bold"> · cedido</span>}</span>
+                <span className="text-[10px] font-mono text-gray-400">
+                  {ch.seasons} temp. · {ch.matches} PJ · <span className="text-[#22E748]">{isGk ? ch.cleanSheets : ch.goals} {isGk ? 'VI' : 'G'}</span> · <span className="text-yellow-400">{ch.titles} 🏆</span>
+                </span>
+                {(() => {
+                  const rec = clubRecord(getClubById(ch.clubId), player.position);
+                  if (!rec) return null;
+                  const mine = ch[rec.stat] || 0;
+                  const beaten = (player.recordsBroken || []).includes(`club:${ch.clubId}`);
+                  return (
+                    <span className={`block text-[10px] ${beaten ? 'text-amber-300 font-bold' : 'text-gray-500'}`}>
+                      📜 {beaten ? `Récord tuyo: superaste a ${rec.holder} (${rec.value})` : `Récord: ${rec.holder}, ${rec.value} ${RECORD_INFO[rec.stat].unit} · vos ${mine}`}
+                    </span>
+                  );
+                })()}
+              </div>
+              <StatusBadge ch={ch} />
+            </div>
+          ))}
+          {!player.hasStatue && (
+            <p className="text-[11px] text-gray-400 px-1">🗽 Estatua: 95 de idolatría y 5 temporadas en un mismo club.</p>
+          )}
         </div>
-      </div>
-      <RivalsPanel player={player} />
-      <CareerHighlights player={player} compact />
+      )}
+
+      {tab === 'rivales' && (
+        (player.rivals || []).length ? <RivalsPanel player={player} /> : <Empty>Tu generación aparece al jugar la primera temporada.</Empty>
+      )}
+
+      {tab === 'historia' && (
+        <div className="space-y-3">
+          <CareerTimeline player={player} />
+          <CareerHighlights player={player} compact />
+        </div>
+      )}
     </div>
   );
 }

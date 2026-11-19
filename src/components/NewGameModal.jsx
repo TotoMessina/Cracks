@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Flag from './Flag';
 import { CLUBS, COUNTRIES, LEAGUES } from '../data/clubs';
 import { DIFFICULTIES } from '../game/career';
+import { CHALLENGES, MODIFIERS, challengeStartClub } from '../game/challenges';
 import ClubShield from './ClubShield';
 import { sound } from '../utils/audio';
 import { User, X } from 'lucide-react';
@@ -16,9 +17,13 @@ export default function NewGameModal({ onStartGame, onClose, replacing = null })
   const [selectedClubId, setSelectedClubId] = useState(1001); // Chacarita
   const [gameMode, setGameMode] = useState('standard'); // 'standard', 'ultra', 'sin_reglas'
   const [difficulty, setDifficulty] = useState('normal');
+  const [challenge, setChallenge] = useState(null);
+  const [modifiers, setModifiers] = useState([]);
 
   const availableClubs = CLUBS.filter(c => c.league === selectedLeagueId).sort((a, b) => a.reputation - b.reputation);
-  const selectedClub = CLUBS.find(c => c.id === selectedClubId);
+  const challengeClub = challenge ? challengeStartClub(challenge, selectedLeagueId) : null;
+  const selectedClub = challengeClub || CLUBS.find(c => c.id === selectedClubId);
+  const toggleModifier = (id) => setModifiers(m => (m.includes(id) ? m.filter(x => x !== id) : [...m, id]));
 
   const handleLeagueChange = (leagueId) => {
     setSelectedLeagueId(leagueId);
@@ -41,6 +46,8 @@ export default function NewGameModal({ onStartGame, onClose, replacing = null })
       initialClubId: Number(selectedClubId),
       gameMode,
       difficulty,
+      challenge: challengeClub ? challenge : null,
+      modifiers,
     };
 
     onStartGame(initialPlayerConfig);
@@ -274,14 +281,62 @@ export default function NewGameModal({ onStartGame, onClose, replacing = null })
                   Club donde Debutás
                 </label>
                 <select
-                  value={selectedClubId}
+                  value={selectedClub?.id ?? selectedClubId}
+                  disabled={Boolean(challengeClub)}
                   onChange={(e) => setSelectedClubId(Number(e.target.value))}
                   className="w-full bg-[#121c16] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-[#22E748]"
                 >
-                  {availableClubs.map(c => (
+                  {(challengeClub && !availableClubs.some(c => c.id === challengeClub.id) ? [challengeClub, ...availableClubs] : availableClubs).map(c => (
                     <option key={c.id} value={c.id}>{c.name} · nivel {c.reputation}</option>
                   ))}
                 </select>
+              </div>
+            </div>
+
+            {/* Challenges and modifiers */}
+            <div>
+              <label className="text-xs font-black uppercase text-gray-300 block mb-1.5">Desafío (opcional)</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => { sound.playClick(); setChallenge(null); }}
+                  className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${!challenge ? 'border-[#22E748] bg-[#14261b]' : 'border-white/10 bg-[#0e1712] hover:border-white/20'}`}
+                  aria-pressed={!challenge}
+                >
+                  <span className="text-xs font-black block text-white">🎯 Carrera libre</span>
+                  <span className="text-[10px] text-gray-400 block leading-snug mt-0.5">Elegís tu club y tus metas.</span>
+                </button>
+                {Object.values(CHALLENGES).map(c => {
+                  const available = Boolean(challengeStartClub(c.id, selectedLeagueId));
+                  return (
+                    <button
+                      type="button"
+                      key={c.id}
+                      disabled={!available}
+                      onClick={() => { sound.playClick(); setChallenge(c.id); }}
+                      className={`p-2.5 rounded-xl border text-left transition-all ${!available ? 'opacity-40 cursor-not-allowed border-white/5' : challenge === c.id ? 'border-[#F6B40E] bg-[#F6B40E]/10 cursor-pointer' : 'border-white/10 bg-[#0e1712] hover:border-white/20 cursor-pointer'}`}
+                      aria-pressed={challenge === c.id}
+                      title={available ? c.desc : 'Este país no tiene segunda división en el juego'}
+                    >
+                      <span className="text-xs font-black block text-white">{c.icon} {c.title}</span>
+                      <span className="text-[10px] text-gray-400 block leading-snug mt-0.5">{available ? c.desc : 'No disponible para esta liga.'}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {Object.values(MODIFIERS).map(m => (
+                  <button
+                    type="button"
+                    key={m.id}
+                    onClick={() => { sound.playClick(); toggleModifier(m.id); }}
+                    className={`px-3 py-2 rounded-xl border text-left transition-all cursor-pointer ${modifiers.includes(m.id) ? 'border-red-400 bg-red-500/10' : 'border-white/10 bg-[#0e1712] hover:border-white/20'}`}
+                    aria-pressed={modifiers.includes(m.id)}
+                  >
+                    <span className="text-xs font-black text-white">{modifiers.includes(m.id) ? '☑' : '☐'} {m.icon} {m.title}</span>
+                    <span className="text-[10px] text-gray-400 block leading-snug">{m.desc}</span>
+                  </button>
+                ))}
               </div>
             </div>
 

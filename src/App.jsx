@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
-import PlayerCard from './components/PlayerCard';
+import PlayerCard, { PlayerStrip } from './components/PlayerCard';
 import CareerTimeline from './components/CareerTimeline';
 import SeasonRecap from './components/SeasonRecap';
 import AppHeader from './components/AppHeader';
@@ -17,6 +17,10 @@ import {
   nationalFinalBonus,
   autoResolveKeyMatch,
   generateOffseasonMarket,
+  offerSignsContract,
+  negotiateOffer,
+  injuryNeedsDecision,
+  applyInjuryChoice,
   makeContract,
   WORKLOADS,
   getWorkload,
@@ -41,10 +45,13 @@ import { drawPreseasonCards } from './data/cards';
 import { DILEMMAS, getRandomDilemma } from './data/dilemmas';
 import { areRivals, setWorld } from './data/clubs';
 import { getClubObjective } from './game/world';
+import { getCoach, coachFit, COACH_STYLES } from './game/coach';
+import { recordChase, RECORD_INFO } from './game/records';
+import { CHALLENGES } from './game/challenges';
 import { sound } from './utils/audio';
 import {
-  Play, Sparkles, Coins, Flame, Target, Zap, Save, Crown, Award, Briefcase,
-  X, ShoppingBag, Dumbbell, HeartPulse, Flag,
+  Play, Sparkles, Flame, Target, Zap, Save, Crown, Award, Briefcase,
+  X, ShoppingBag, Dumbbell, Flag,
 } from 'lucide-react';
 
 // Windows and minigames load on demand (smaller first load)
@@ -64,6 +71,7 @@ const ManagerModeModal = lazy(() => import('./components/ManagerModeModal'));
 const InteractiveTutorialModal = lazy(() => import('./components/InteractiveTutorialModal'));
 const FinalSeries = lazy(() => import('./components/FinalSeries'));
 const KeyMatchModal = lazy(() => import('./components/KeyMatchModal'));
+const InjuryModal = lazy(() => import('./components/InjuryModal'));
 const NationalCallModal = lazy(() => import('./components/NationalCallModal'));
 
 const SIM_DURATION_MS = 2400;
@@ -98,6 +106,16 @@ function loadInitialPlayer() {
   } catch {
     return null;
   }
+}
+
+const MINI_TONE = { good: 'text-[#22E748]', warn: 'text-amber-300', bad: 'text-red-400', gold: 'text-[#F6B40E]' };
+function MiniStat({ label, value, tone = '', title }) {
+  return (
+    <div className="mini-stat" title={title}>
+      <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400 block">{label}</span>
+      <span className={`text-sm font-black font-mono ${MINI_TONE[tone] || 'text-white'}`}>{value}</span>
+    </div>
+  );
 }
 
 function LoadingOverlay() {
@@ -143,10 +161,12 @@ export default function App() {
     try { return localStorage.getItem('el_idolo_fast_sim') === 'true'; } catch { return false; }
   });
   const [confirmRetire, setConfirmRetire] = useState(false);
+  const [showPlayerCard, setShowPlayerCard] = useState(false);
   const [keyMatchOpen, setKeyMatchOpen] = useState(false);
   const [ntCallOpen, setNtCallOpen] = useState(false);
   const simRef = useRef({ timer: null, result: null });
   const [simResult, setSimResult] = useState(null);
+  const [injuryDecision, setInjuryDecision] = useState(null); // { result, resolved }
 
   // Persist the active career
   useEffect(() => {
@@ -274,6 +294,7 @@ export default function App() {
       // You already changed club in the dilemma: no market this off-season
       next.offseasonStep = 'cards';
       next.pendingOffers = null;
+      next.loan = null;
       next.pendingCards = drawCardsFor(next);
       commitPlayer(next);
       return;
@@ -299,8 +320,43 @@ export default function App() {
     const next = { ...prev, clubHistory: prev.clubHistory.map(h => ({ ...h })) };
     const oldClubId = prev.currentClub.id;
 
+    if (offer.withdrawn) return;
     if (offer.isStay) {
       // Keep the current contract as it is
+    } else if (offer.isLoan) {
+      // Loaned out for a year: same contract, new club, your club keeps you in mind
+      const loanClub = offer.club;
+      next.loan = {
+        parentClubId: prev.loan?.parentClubId ?? oldClubId,
+        parentClubName: prev.loan?.parentClubName ?? prev.currentClub.name,
+        parentIdolatry: prev.loan?.parentIdolatry ?? prev.idolatry,
+        year: START_YEAR + prev.seasonsPlayed,
+      };
+      next.currentClub = loanClub;
+      const existing = next.clubHistory.find(h => h.clubId === loanClub.id);
+      next.idolatry = existing ? Math.round(existing.maxIdolatry * 0.6) : 15;
+      next.managerRelationship = 75; // they asked for you: you'll play
+      next.lockerRoomChemistry = 65;
+      if (!existing) {
+        next.clubHistory.push({
+          clubId: loanClub.id, clubName: loanClub.name, seasons: 0, goals: 0, matches: 0,
+          cleanSheets: 0, titles: 0, maxIdolatry: next.idolatry, leftAsRival: false, loan: true,
+        });
+      }
+      Object.assign(next, addMoment(next, { type: 'loan', icon: '🔁', text: `Cedido a ${loanClub.name} para sumar minutos` }));
+    } else if (offer.isLoanReturn) {
+      // Back home after the loan, with more experience
+      next.currentClub = offer.club;
+      next.idolatry = addIdolatry(prev.loan?.parentIdolatry ?? 10, 3);
+      next.managerRelationship = 70;
+      next.lockerRoomChemistry = 65;
+      if (!next.clubHistory.some(h => h.clubId === offer.club.id)) {
+        next.clubHistory.push({
+          clubId: offer.club.id, clubName: offer.club.name, seasons: 0, goals: 0, matches: 0,
+          cleanSheets: 0, titles: 0, maxIdolatry: next.idolatry, leftAsRival: false,
+        });
+      }
+      Object.assign(next, addMoment(next, { type: 'loan_return', icon: '🏠', text: `Volviste a ${offer.club.name} después del préstamo` }));
     } else if (offer.isRenewal && offer.loyalRelegation) {
       // Staying to bring the club back up: the fans will never forget it
       next.idolatry = addIdolatry(prev.idolatry, 12);
@@ -333,10 +389,13 @@ export default function App() {
       }
     }
 
-    if (!offer.isStay) {
+    // Any choice other than a new loan ends the current one
+    if (!offer.isLoan) next.loan = null;
+
+    if (offerSignsContract(offer)) {
       const salary = offer.salary || computeSalary(next.currentClub, getPlayerOverall(next));
       const range = contractYearsRange(prev.age);
-      const length = Math.max(range.min, Math.min(range.max, years || range.suggested));
+      const length = Math.max(range.min, Math.min(offer.maxYears ?? range.max, years || range.suggested));
       next.salary = salary;
       next.contract = makeContract(salary, length);
       next.money = (prev.money || 0) + signingBonus(salary, length);
@@ -345,11 +404,11 @@ export default function App() {
     }
     Object.assign(next, withStatueCheck(next));
     // Career highlight: changing club (and betrayals)
-    if (!offer.isRenewal && !offer.isStay && offer.club?.id !== oldClubId) {
+    if (!offer.isRenewal && !offer.isStay && !offer.isLoan && !offer.isLoanReturn && offer.club?.id !== oldClubId) {
       const betrayal = offer.isRival || areRivals(oldClubId, offer.club.id);
       Object.assign(next, addMoment(next, betrayal
         ? { type: 'betrayal', icon: '🐍', text: `La traición: dejaste ${prev.currentClub.name} por el clásico rival, ${offer.club.name}` }
-        : { type: 'transfer', icon: '✈️', text: `Pase a ${offer.club.name}${offer.paysClause ? ' (pagaron tu cláusula)' : ''}` }));
+        : { type: 'transfer', icon: '✈️', text: `${offer.isLoanBuy ? 'Compra definitiva de' : 'Pase a'} ${offer.club.name}${offer.paysClause ? ' (pagaron tu cláusula)' : ''}` }));
     }
     next.pendingOffers = null;
     next.pendingMarketFree = null;
@@ -363,6 +422,20 @@ export default function App() {
     next.pendingCards = drawCardsFor(next);
     commitPlayer(next);
     pushAchievements(next);
+  };
+
+  /** Ask a club for better terms (one try per offer). */
+  const handleNegotiate = (index, askId) => {
+    const prev = playerRef.current;
+    const offers = prev.pendingOffers || [];
+    const offer = offers[index];
+    if (!offer) return null;
+    const alive = offers.filter(o => !o.withdrawn).length;
+    const { outcome, offer: updated } = negotiateOffer(prev, offer, askId, { canWithdraw: alive > 1 });
+    if (!outcome) return null;
+    if (outcome === 'withdrawn') sound.playBuzzer(); else if (outcome === 'accepted') sound.playCoin(); else sound.playClick();
+    commitPlayer({ ...prev, pendingOffers: offers.map((o, i) => (i === index ? updated : o)) });
+    return outcome;
   };
 
   const handleSelectCard = (selected) => {
@@ -393,7 +466,7 @@ export default function App() {
   const BOOSTS = [
     {
       id: 'finalBonus', cost: 10, Icon: Target, color: 'amber',
-      title: 'Ventaja de final', done: '✓ Ventaja lista',
+      title: 'Ventaja final', done: '✓ Ventaja lista',
       desc: '+15% en los minijuegos si llegás a una final.',
       apply: (p) => ({ bonusFinal: Math.min(40, (p.bonusFinal || 0) + 15) }),
     },
@@ -406,7 +479,7 @@ export default function App() {
     },
     {
       id: 'recoveryPhysio', cost: 5, Icon: Zap, color: 'cyan',
-      title: 'Fisio y masajes', done: '✓ Fisio lista',
+      title: 'Fisioterapia', done: '✓ Fisio lista',
       desc: '+25 de energía y −3% de riesgo de lesión.',
       apply: (p) => ({ energy: Math.min(100, (p.energy ?? 100) + 25) }),
     },
@@ -532,6 +605,29 @@ export default function App() {
   const runSeasonSimulation = (p) => {
     sound.playWhistle();
     const result = simulateSeasonMatches(p);
+    // A serious injury: you decide how to recover before the season plays out
+    if (injuryNeedsDecision(result.injury)) {
+      sound.playCrowdGasp();
+      setInjuryDecision({ result, resolved: null });
+      return;
+    }
+    playSimulation(result);
+  };
+
+  const handleInjuryChoice = (choice) => {
+    if (!injuryDecision) return;
+    const resolved = applyInjuryChoice(injuryDecision.result, choice);
+    if (resolved.injury?.relapse) sound.playBuzzer(); else sound.playCoin();
+    setInjuryDecision({ ...injuryDecision, resolved });
+  };
+
+  const handleInjuryContinue = () => {
+    const resolved = injuryDecision?.resolved;
+    setInjuryDecision(null);
+    if (resolved) playSimulation(resolved);
+  };
+
+  const playSimulation = (result) => {
     simRef.current.result = result;
     setSimResult(result);
 
@@ -722,6 +818,10 @@ export default function App() {
   const showRecap = Boolean(player.lastRecap && offseasonPending);
   const injuryRisk = getInjuryRisk(player);
   const isGk = player.position === 'arquero';
+  const coach = getCoach(player);
+  const coachFitNow = coach ? coachFit(coach, player) : 0;
+  const chase = recordChase(player).filter(r => !r.broken);
+  const activeChallenge = player.challenge?.status === 'active' ? player.challenge : null;
   const canRetire = player.age >= VOLUNTARY_RETIREMENT_AGE && !offseasonPending && !isSimulating;
   const yearsLeft = player.gameMode === 'ultra' ? Math.max(0, 2 - player.seasonsPlayed) : RETIREMENT_AGE - player.age;
 
@@ -753,9 +853,9 @@ export default function App() {
         ) : (
           <>
             {activeTab === 'carrera' && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                {/* Left column */}
-                <div className="lg:col-span-1 space-y-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-5">
+                {/* Left column (desktop): full player card */}
+                <div className="hidden lg:block lg:col-span-1 space-y-4">
                   <PlayerCard player={player} />
                   <div className="grid grid-cols-2 gap-2">
                     <button onClick={() => setModal('store')} className="quick-btn">
@@ -773,158 +873,145 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Right column: season stage (first on mobile so "Jugar" is always at hand) */}
-                <div className="lg:col-span-2 space-y-5 order-first lg:order-none">
-                  <section className="panel p-4 sm:p-6 relative overflow-hidden">
-                    <div className="season-glow" />
-                    <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-white/10">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <ClubShield club={player.currentClub} size={52} />
-                        <div className="min-w-0">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-[#22E748] bg-[#22E748]/10 px-2.5 py-0.5 rounded-full border border-[#22E748]/20">
-                            Temporada {seasonYear} · Año {player.seasonsPlayed + 1}
-                          </span>
-                          <h2 className="font-display text-3xl sm:text-4xl text-white leading-none mt-1.5 truncate">
-                            {player.currentClub?.name}
-                          </h2>
-                          <p className="text-xs text-gray-400 mt-1">
-                            {league} · {player.age} años · ${Math.round(player.salary || 0).toLocaleString('es-AR')}/año
-                            {player.contract && (
-                              <span className={player.contract.yearsLeft <= 1 ? 'text-amber-300' : ''}>
-                                {' '}· Contrato: {player.contract.yearsLeft > 0 ? `${player.contract.yearsLeft} ${player.contract.yearsLeft === 1 ? 'año' : 'años'}` : 'vence ahora'}
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                      </div>
+                <div className="lg:col-span-2 space-y-3 lg:space-y-5">
+                  {/* Mobile: one-line player strip, full card in a sheet */}
+                  <div className="lg:hidden">
+                    <PlayerStrip player={player} onOpen={() => setShowPlayerCard(true)} />
+                  </div>
 
-                      <div className="flex flex-col items-stretch sm:items-end gap-2">
-                        <button
-                          onClick={handlePlaySeason}
-                          disabled={isSimulating || offseasonPending}
-                          className={`play-btn ${isSimulating || offseasonPending ? 'play-btn-disabled' : ''}`}
-                        >
-                          <Play className="w-5 h-5 fill-current" />
-                          <span>
-                            {isSimulating ? 'Jugando…' : offseasonPending ? 'Terminá el receso' : player.seasonInProgress ? 'Seguir la temporada' : `Jugar temporada ${seasonYear}`}
-                          </span>
-                        </button>
-                        {isSimulating ? (
-                          <button onClick={handleSkipSimulation} className="text-xs font-black text-amber-400 hover:text-amber-300 underline cursor-pointer">
-                            ⚡ Ver resultado ya
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => { sound.playClick(); setFastSimulation(f => !f); }}
-                            className={`self-center sm:self-end px-3 py-1 rounded-xl text-[11px] font-bold border transition-all cursor-pointer flex items-center gap-1 ${
-                              fastSimulation ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-black/40 text-gray-400 border-white/5 hover:text-white'
-                            }`}
-                            title="Simulación animada o instantánea"
-                          >
-                            <Zap className="w-3 h-3 text-amber-400" />
-                            {fastSimulation ? 'Simulación instantánea' : 'Simulación animada'}
-                          </button>
+                  <section className="panel p-3.5 sm:p-5 relative overflow-hidden">
+                    <div className="season-glow" />
+
+                    {/* Club header */}
+                    <div className="relative flex items-center gap-3">
+                      <ClubShield club={player.currentClub} size={44} />
+                      <div className="min-w-0 flex-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-[#22E748]">
+                          Temporada {seasonYear} · Año {player.seasonsPlayed + 1}
+                        </span>
+                        <h2 className="font-display text-2xl sm:text-4xl text-white leading-none truncate">
+                          {player.currentClub?.name}
+                        </h2>
+                        <p className="text-[11px] text-gray-400 mt-0.5 truncate">
+                          {league} · ${Math.round(player.salary || 0).toLocaleString('es-AR')}/año
+                          {player.contract && (
+                            <span className={player.contract.yearsLeft <= 1 ? 'text-amber-300' : ''}>
+                              {' '}· {player.contract.yearsLeft > 0 ? `${player.contract.yearsLeft} ${player.contract.yearsLeft === 1 ? 'año' : 'años'} de contrato` : 'contrato vence'}
+                            </span>
+                          )}
+                        </p>
+                        {coach && (
+                          <p className="text-[11px] mt-0.5 truncate" title={COACH_STYLES[coach.style]?.label}>
+                            <span className="text-gray-400">DT {coach.name} · </span>
+                            <span className={coachFitNow > 0 ? 'text-[#22E748]' : coachFitNow < 0 ? 'text-red-300' : 'text-gray-300'}>
+                              {COACH_STYLES[coach.style]?.icon} {COACH_STYLES[coach.style]?.label}
+                              {coachFitNow > 0 ? ' (te favorece)' : coachFitNow < 0 ? ' (te juega en contra)' : ''}
+                            </span>
+                          </p>
                         )}
                       </div>
                     </div>
 
-                    {/* Consequences of last off-season's decisions */}
-                    {!isSimulating && !offseasonPending && player.nextSeasonMods?.labels?.length > 0 && (
-                      <div className="relative mt-4 p-3 rounded-xl border border-amber-500/30 bg-amber-500/5">
-                        <span className="text-[10px] font-black uppercase text-amber-300 block mb-1.5">Esta temporada pesan tus decisiones</span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {player.nextSeasonMods.labels.map((l, i) => <span key={i} className="chip chip-gold">{l}</span>)}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Pre-season status chips */}
                     {!isSimulating && !offseasonPending && (
-                      <div className="relative mt-4 flex flex-wrap gap-1.5">
-                        <span className="chip">⚡ Energía {player.energy ?? 100}</span>
-                        <span className={`chip ${injuryRisk >= 15 ? 'chip-down' : ''}`}><HeartPulse className="w-3 h-3" /> Riesgo de lesión {injuryRisk}%</span>
-                        <span className="chip">📈 Forma {player.form > 0 ? `+${player.form}` : player.form || 0}</span>
-                        {player.bonusFinal > 0 && <span className="chip chip-gold">🎯 Bonus final +{player.bonusFinal}%</span>}
-                        <span className="chip">⏳ {player.gameMode === 'ultra' ? `${yearsLeft} temporadas restantes` : `Retiro en ${yearsLeft} años`}</span>
-                        <span className={`chip ${player.difficulty === 'leyenda' ? 'chip-gold' : ''}`} title={getDifficulty(player).desc}>{getDifficulty(player).icon} {getDifficulty(player).label}</span>
-                        <span className="chip chip-gold" title="Objetivo de la dirigencia para esta temporada">
-                          {getClubObjective(player.currentClub).icon} Objetivo: {getClubObjective(player.currentClub).label}
-                        </span>
-                        <span className="chip" title="Copa nacional (también la juegan los de segunda)">🥇 {domesticCupName(player.currentClub.league)}</span>
-                        <span className={`chip ${getContinentalEntry(player) ? 'chip-up' : ''}`} title="Copa internacional de esta temporada">
-                          🌎 {getContinentalEntry(player)?.name || 'Sin copa internacional'}
-                        </span>
-                      </div>
-                    )}
+                      <>
+                        {/* Key numbers */}
+                        <div className="relative mt-3 grid grid-cols-4 gap-1.5">
+                          <MiniStat label="Energía" value={`${player.energy ?? 100}%`} tone={(player.energy ?? 100) >= 70 ? 'good' : (player.energy ?? 100) >= 45 ? 'warn' : 'bad'} />
+                          <MiniStat label="Lesión" value={`${injuryRisk}%`} tone={injuryRisk >= 15 ? 'bad' : injuryRisk >= 9 ? 'warn' : 'good'} />
+                          <MiniStat label="Forma" value={player.form > 0 ? `+${player.form}` : `${player.form || 0}`} tone={player.form > 0 ? 'good' : player.form < 0 ? 'bad' : ''} />
+                          <MiniStat
+                            label="Estatua"
+                            value={player.hasStatue ? '🗽' : `${Math.min(seasonsAtCurrentClub(player), STATUE_MIN_SEASONS)}/${STATUE_MIN_SEASONS}`}
+                            tone={player.hasStatue ? 'gold' : ''}
+                            title={player.hasStatue ? `Tenés tu estatua en ${player.statueClubName || 'el club'}` : `Idolatría ${player.idolatry}/95 y ${STATUE_MIN_SEASONS} temporadas en el club`}
+                          />
+                        </div>
 
-                    {/* Minutes plan */}
-                    {!isSimulating && !offseasonPending && !player.seasonInProgress?.results?.length && (
-                      <div className="relative mt-4">
-                        <div className="flex items-center justify-between mb-2.5">
-                          <span className="text-xs font-black uppercase tracking-wider text-sky-300">Plan de minutos</span>
-                          <span className="text-[11px] text-gray-400">
-                            Energía {player.energy ?? 100}%{(player.energy ?? 100) < 70 ? ' · rendís menos' : ''}
+                        {/* Season context: one swipeable line */}
+                        <div className="relative mt-2 -mx-3.5 sm:mx-0 px-3.5 sm:px-0 flex sm:flex-wrap gap-1.5 overflow-x-auto no-scrollbar">
+                          {player.nextSeasonMods?.labels?.map((l, i) => <span key={`m${i}`} className="chip chip-gold shrink-0">{l}</span>)}
+                          {activeChallenge && (
+                            <span className="chip chip-gold shrink-0" title={CHALLENGES[activeChallenge.id]?.desc}>
+                              {CHALLENGES[activeChallenge.id]?.icon} Desafío{activeChallenge.id === 'salvar' ? `: ${activeChallenge.seasonsDone || 0}/${CHALLENGES.salvar.seasons} temporadas` : ': ganar la copa grande'}
+                            </span>
+                          )}
+                          {chase.map(r => (
+                            <span key={r.scope} className="chip shrink-0" title={`Récord de ${r.teamName}: ${r.holder} (${r.value} ${RECORD_INFO[r.stat].unit})`}>
+                              📜 {r.scope === 'national' ? 'Selección' : 'Récord'}: {r.mine}/{r.value}
+                            </span>
+                          ))}
+                          {player.loan && <span className="chip chip-up shrink-0" title="Al final de la temporada elegís si volver">🔁 Cedido por {player.loan.parentClubName}</span>}
+                          <span className="chip chip-gold shrink-0" title="Objetivo de la dirigencia">
+                            {getClubObjective(player.currentClub).icon} {getClubObjective(player.currentClub).label}
                           </span>
+                          {player.bonusFinal > 0 && <span className="chip chip-gold shrink-0">🎯 Final +{player.bonusFinal}%</span>}
+                          <span className={`chip shrink-0 ${getContinentalEntry(player) ? 'chip-up' : ''}`} title="Copa internacional">
+                            🌎 {getContinentalEntry(player)?.name || 'Sin copa internacional'}
+                          </span>
+                          <span className="chip shrink-0" title="Copa nacional">🥇 {domesticCupName(player.currentClub.league)}</span>
+                          <span className="chip shrink-0" title={getDifficulty(player).desc}>{getDifficulty(player).icon} {getDifficulty(player).label}</span>
+                          <span className="chip shrink-0">⏳ {player.gameMode === 'ultra' ? `${yearsLeft} temp. restantes` : `Retiro en ${yearsLeft} años`}</span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2">
-                          {Object.values(WORKLOADS).map(w => {
-                            const active = getWorkload(player).id === w.id;
-                            return (
-                              <button
-                                key={w.id}
-                                onClick={() => { sound.playClick(); commitPlayer({ ...playerRef.current, workload: w.id }); }}
-                                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                                  active ? 'bg-sky-500/15 border-sky-400/60' : 'bg-black/30 border-white/10 hover:border-white/25'
-                                }`}
-                                aria-pressed={active}
-                              >
-                                <span className="text-xs font-black text-white block">{w.icon} {w.label}</span>
-                                <span className="text-[10px] text-gray-400 leading-snug block mt-0.5">{w.desc}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
 
-                    {/* Tactical prep */}
-                    {!isSimulating && !offseasonPending && (
-                      <div className="relative mt-4">
-                        <div className="flex items-center justify-between mb-2.5">
-                          <span className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                            <Coins className="w-4 h-4" /> Preparación táctica
-                          </span>
-                          <span className="text-xs font-mono font-bold text-gray-400">🪙 {player.coins}</span>
+                        {/* Minutes plan: segmented control */}
+                        {!player.seasonInProgress?.results?.length && (
+                          <div className="relative mt-3">
+                            <span className="section-label text-sky-300">Minutos</span>
+                            <div className="segmented mt-1">
+                              {Object.values(WORKLOADS).map(w => {
+                                const active = getWorkload(player).id === w.id;
+                                return (
+                                  <button
+                                    key={w.id}
+                                    onClick={() => { sound.playClick(); commitPlayer({ ...playerRef.current, workload: w.id }); }}
+                                    className={active ? 'is-active' : ''}
+                                    aria-pressed={active}
+                                    title={w.desc}
+                                  >
+                                    {w.icon} {w.label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <p className="text-[10px] text-gray-400 mt-1 leading-snug line-clamp-2">{getWorkload(player).desc}</p>
+                          </div>
+                        )}
+
+                        {/* Tactical prep: three compact tiles */}
+                        <div className="relative mt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="section-label text-amber-400">Preparación</span>
+                            <span className="text-[10px] font-mono font-bold text-gray-400">🪙 {player.coins}</span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-1.5 mt-1">
+                            {BOOSTS.map(b => {
+                              const bought = player.seasonBoosts?.[b.id];
+                              const blocked = !bought && ((player.coins || 0) < b.cost || b.disabled?.(player));
+                              return (
+                                <button
+                                  key={b.id}
+                                  onClick={() => handleBuyBoost(b)}
+                                  disabled={bought || blocked}
+                                  title={b.desc}
+                                  className={`boost-tile boost-${b.color} ${bought ? 'boost-bought' : blocked ? 'boost-blocked' : ''}`}
+                                >
+                                  <span className="flex items-center justify-between w-full">
+                                    <b.Icon className="w-3.5 h-3.5 boost-tile-icon" />
+                                    <span className="text-[10px] font-mono font-bold text-amber-400">{bought ? '✓' : `🪙${b.cost}`}</span>
+                                  </span>
+                                  <span className="text-[11px] font-black leading-tight block mt-1 truncate w-full text-left">{b.title}</span>
+                                  <span className="text-[9.5px] text-gray-400 leading-tight block mt-0.5 line-clamp-2 text-left">{b.desc}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                          {BOOSTS.map(b => {
-                            const bought = player.seasonBoosts?.[b.id];
-                            const blocked = !bought && ((player.coins || 0) < b.cost || b.disabled?.(player));
-                            return (
-                              <button
-                                key={b.id}
-                                onClick={() => handleBuyBoost(b)}
-                                disabled={bought || blocked}
-                                className={`boost-btn boost-${b.color} ${bought ? 'boost-bought' : blocked ? 'boost-blocked' : ''}`}
-                              >
-                                <div className="boost-icon"><b.Icon className="w-4 h-4" /></div>
-                                <div className="flex-1 min-w-0 text-left">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-xs font-black truncate">{bought ? b.done : b.title}</span>
-                                    <span className="text-[11px] font-mono font-bold text-amber-400 ml-1">🪙 {b.cost}</span>
-                                  </div>
-                                  <p className="text-[10px] text-gray-400 mt-0.5 leading-snug">{b.desc}</p>
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
+                      </>
                     )}
 
                     {/* Simulation */}
                     {isSimulating && (
-                      <div className="relative py-8 text-center space-y-4">
+                      <div className="relative py-6 text-center space-y-4">
                         <div className="text-5xl select-none animate-roll inline-block">⚽</div>
                         <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto">
                           <div className="stat-tile">
@@ -939,7 +1026,9 @@ export default function App() {
                         <div className="max-w-sm mx-auto h-2 rounded-full bg-black/50 overflow-hidden border border-white/10">
                           <div className="h-full bg-gradient-to-r from-[#16a34a] to-[#22E748]" style={{ width: `${Math.round(simProgress * 100)}%` }} />
                         </div>
-                        <p className="text-xs text-gray-400">Fechas, clásicos y noches de copa…</p>
+                        <button onClick={handleSkipSimulation} className="text-xs font-black text-amber-400 hover:text-amber-300 underline cursor-pointer">
+                          ⚡ Ver resultado ya
+                        </button>
                       </div>
                     )}
 
@@ -948,7 +1037,7 @@ export default function App() {
                       <SeasonRecap recap={player.lastRecap} player={player} onContinue={handleContinueOffseason} />
                     )}
                     {offseasonPending && !showRecap && !isSimulating && (
-                      <div className="relative mt-5 p-4 rounded-2xl border border-[#22E748]/30 bg-[#22E748]/5 text-center">
+                      <div className="relative mt-4 p-4 rounded-2xl border border-[#22E748]/30 bg-[#22E748]/5 text-center">
                         <p className="text-sm text-gray-200 font-bold mb-3">
                           {player.offseasonStep === 'cards' ? 'Elegí tu entrenamiento de pretemporada para arrancar el año.' : 'Tenés el receso de temporada pendiente.'}
                         </p>
@@ -956,52 +1045,49 @@ export default function App() {
                       </div>
                     )}
 
-                    {/* Voluntary retirement */}
-                    {canRetire && (
-                      <div className="relative mt-4 pt-3 border-t border-white/5 flex flex-wrap items-center justify-end gap-2">
-                        {confirmRetire ? (
-                          <>
-                            <span className="text-xs text-gray-300">¿Colgar los botines ahora, con {player.age} años?</span>
-                            <button onClick={handleRetire} className="px-3 py-1.5 rounded-lg bg-amber-500 text-black text-xs font-black cursor-pointer">Sí, me retiro</button>
-                            <button onClick={() => setConfirmRetire(false)} className="px-3 py-1.5 rounded-lg bg-white/10 text-xs font-bold cursor-pointer">Seguir jugando</button>
-                          </>
-                        ) : (
-                          <button onClick={() => setConfirmRetire(true)} className="text-xs font-bold text-gray-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer">
-                            <Flag className="w-3.5 h-3.5" /> Colgar los botines
+                    {/* Play */}
+                    {!isSimulating && !offseasonPending && (
+                      <div className="relative mt-3.5">
+                        <button onClick={handlePlaySeason} className="play-btn w-full">
+                          <Play className="w-5 h-5 fill-current" />
+                          <span>{player.seasonInProgress ? 'Seguir la temporada' : `Jugar temporada ${seasonYear}`}</span>
+                        </button>
+                        <div className="flex items-center justify-between gap-2 mt-2">
+                          <button
+                            onClick={() => { sound.playClick(); setFastSimulation(f => !f); }}
+                            className={`text-[11px] font-bold flex items-center gap-1 cursor-pointer ${fastSimulation ? 'text-amber-300' : 'text-gray-400 hover:text-white'}`}
+                            title="Simulación animada o instantánea"
+                          >
+                            <Zap className="w-3 h-3 text-amber-400" />
+                            {fastSimulation ? 'Instantánea' : 'Animada'}
                           </button>
-                        )}
+                          {canRetire && (confirmRetire ? (
+                            <span className="flex items-center gap-1.5">
+                              <span className="text-[11px] text-gray-300">¿Retirarte?</span>
+                              <button onClick={handleRetire} className="px-2.5 py-1 rounded-lg bg-amber-500 text-black text-[11px] font-black cursor-pointer">Sí</button>
+                              <button onClick={() => setConfirmRetire(false)} className="px-2.5 py-1 rounded-lg bg-white/10 text-[11px] font-bold cursor-pointer">No</button>
+                            </span>
+                          ) : (
+                            <button onClick={() => setConfirmRetire(true)} className="text-[11px] font-bold text-gray-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer">
+                              <Flag className="w-3 h-3" /> Colgar los botines
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </section>
 
-                  <CareerTimeline player={player} />
-
-                  <section className="panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl">🗽</div>
-                      <div>
-                        <h4 className="text-sm font-black text-white">Objetivo: la estatua en el club</h4>
-                        <p className="text-xs text-gray-400">
-                          {player.hasStatue
-                            ? `¡Conseguido! Tenés tu estatua en ${player.statueClubName || 'el club'}.`
-                            : `Idolatría ${player.idolatry}/95 · ${Math.min(seasonsAtCurrentClub(player), STATUE_MIN_SEASONS)}/${STATUE_MIN_SEASONS} temporadas en el club. Ganá títulos y sé leal.`}
-                        </p>
-                        {!player.hasStatue && (
-                          <div className="mt-1.5 w-48 h-1.5 rounded-full bg-black/50 overflow-hidden">
-                            <div className="h-full bg-gradient-to-r from-amber-600 to-[#F6B40E]" style={{ width: `${Math.min(100, (player.idolatry / 95) * 100)}%` }} />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <button onClick={() => setActiveTab('vitrina')} className="px-4 py-2 bg-[#122017] hover:bg-[#22E748] text-[#22E748] hover:text-black font-extrabold text-xs rounded-xl border border-[#22E748]/30 transition-all cursor-pointer">
-                      Ver palmarés ➔
-                    </button>
-                  </section>
+                  {/* Desktop extras (on mobile they live in Palmarés) */}
+                  <div className="hidden lg:block">
+                    <CareerTimeline player={player} />
+                  </div>
                 </div>
               </div>
             )}
 
-            {activeTab === 'vitrina' && <TrophyCabinet player={player} />}
+            {activeTab === 'vitrina' && (
+              <TrophyCabinet player={player} />
+            )}
             {activeTab === 'entrenamiento' && (
               <TrainingZone
                 rewardsLeft={player.trainingRewardsLeft ?? 0}
@@ -1047,6 +1133,8 @@ export default function App() {
           released={Boolean(player.pendingMarketReleased)}
           yearsRange={contractYearsRange(player.age)}
           onAcceptOffer={handleAcceptOffer}
+          onNegotiate={handleNegotiate}
+          loanEnd={Boolean(player.loan)}
         />
       )}
 
@@ -1058,6 +1146,14 @@ export default function App() {
       )}
 
       {/* Key matches during the season */}
+      {injuryDecision && (
+        <InjuryModal
+          injury={injuryDecision.result.injury}
+          resolved={injuryDecision.resolved}
+          onChoose={handleInjuryChoice}
+          onContinue={handleInjuryContinue}
+        />
+      )}
       {keyMatchOpen && player.seasonInProgress && player.seasonInProgress.matches[player.seasonInProgress.results.length] && (
         <KeyMatchModal
           key={player.seasonInProgress.matches[player.seasonInProgress.results.length].id}
@@ -1084,6 +1180,16 @@ export default function App() {
 
       {sharedModals}
       </Suspense>
+
+      {showPlayerCard && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center animate-fadeIn" onClick={() => setShowPlayerCard(false)}>
+          <div className="sheet animate-slideUp" onClick={e => e.stopPropagation()} role="dialog" aria-label="Ficha del jugador">
+            <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-2" />
+            <PlayerCard player={player} />
+            <button onClick={() => setShowPlayerCard(false)} className="w-full mt-2 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-gray-200 cursor-pointer">Cerrar</button>
+          </div>
+        </div>
+      )}
 
       {toasts[0] && (
         <div key={toasts[0].id} className="fixed bottom-20 md:bottom-6 right-3 left-3 sm:left-auto sm:right-6 z-[60] toast animate-slideUp sm:max-w-sm">

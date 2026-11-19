@@ -140,6 +140,47 @@ export default function GuideModal({ onClose, onOpenTutorial }) {
             </p>
           </Section>
 
+          <Section icon={<TrendingUp className="w-4 h-4 text-emerald-300" />} title="Valor de mercado y negociación">
+            <p>
+              Tu <strong className="text-white">valor de mercado</strong> sube y baja con tu nivel, cómo te fue la última temporada, tu edad y tu fama.
+              Es lo que miran los clubes: después de un gran año te buscan clubes más grandes y te pagan más; después de un mal año, al revés.
+            </p>
+            <p>
+              Cuando firmás un contrato nuevo podés <strong className="text-white">negociar una vez</strong>: pedir +15% o +30% de sueldo o un año más.
+              Ves la chance de que acepten y de que se ofendan. Pueden aceptar, ofrecerte la mitad o retirar la oferta. Tu nivel, tu fama, el abogado deportivo
+              y que el club haya venido a buscarte te dan más fuerza. Si es tu única opción, nunca se van.
+            </p>
+          </Section>
+
+          <Section icon={<Shield className="w-4 h-4 text-sky-300" />} title="Préstamos y el DT">
+            <p>
+              Si sos un pibe (hasta 21 años) en un club muy por encima de tu nivel, jugás poco. Tu club puede <strong className="text-white">cederte un año</strong> a uno más chico:
+              seguís cobrando tu contrato, sumás minutos (jugar 30 partidos de pibe te hace crecer más) y al final elegís volver, quedarte si te compran u otra cesión.
+            </p>
+            <p>
+              Cada club tiene un <strong className="text-white">DT con estilo</strong>: los que apuestan por los pibes, los que confían en los veteranos, los equilibrados y los exigentes
+              (juega el que está en forma). Eso cambia tus minutos. Si el club no cumple el objetivo, es más probable que lo echen y llegue otro con otras ideas.
+            </p>
+          </Section>
+
+          <Section icon={<AlertTriangle className="w-4 h-4 text-red-300" />} title="Lesiones">
+            <p>
+              Si te lesionás feo en plena temporada, elegís: <strong className="text-white">recuperación rápida</strong> (volvés en la mitad del tiempo, con riesgo de recaída que te deja
+              afuera más tiempo y te baja la resistencia para siempre) o <strong className="text-white">completa</strong> (te perdés todo, pero volvés sin secuelas).
+            </p>
+          </Section>
+
+          <Section icon={<Trophy className="w-4 h-4 text-amber-300" />} title="Récords y desafíos">
+            <p>
+              Cada club y cada Selección tienen una leyenda histórica: el goleador (si sos 9), el que más partidos jugó (si sos 10) o el arquero con más vallas invictas.
+              Superarla suma idolatría (o fama, en la Selección) y queda en tu historia.
+            </p>
+            <p>
+              Al crear la carrera podés elegir un <strong className="text-white">desafío</strong>: salvar al club más débil de primera del descenso 3 temporadas, o ganar la Libertadores/Champions
+              con un club que arranca en el ascenso. Cumplirlo suma mucha gloria. Con <strong className="text-white">piernas de cristal</strong> te lesionás mucho más, pero tu gloria vale ×1,3.
+            </p>
+          </Section>
+
           <Section icon={<Trophy className="w-4 h-4 text-yellow-400" />} title="Idolatría y la estatua">
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center">
               {[

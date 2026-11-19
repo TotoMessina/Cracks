@@ -72,19 +72,19 @@ export default function PreseasonCardsModal({
   const canAffordSecondSlot = coins >= 15;
 
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-[#0a120d] border border-[#22E748]/40 rounded-3xl max-w-4xl w-full p-4 sm:p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col max-h-[94vh] animate-pop">
+    <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 z-50 animate-fadeIn">
+      <div className="bg-[#0a120d] border border-[#22E748]/40 rounded-3xl max-w-4xl w-full p-3.5 sm:p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col max-h-[96dvh] animate-pop">
         {/* Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-32 bg-[#22E748]/15 blur-3xl pointer-events-none" />
 
         {/* Top Header with Coins Budget */}
-        <div className="flex flex-wrap gap-3 items-center justify-between pb-4 border-b border-white/10 relative z-10 flex-shrink-0">
+        <div className="flex gap-3 items-center justify-between pb-3 sm:pb-4 border-b border-white/10 relative z-10 flex-shrink-0">
           <div>
             <span className="text-xs uppercase font-black tracking-widest text-[#22E748] bg-[#22E748]/10 px-3 py-1 rounded-full border border-[#22E748]/20">
               Pretemporada
             </span>
-            <h2 className="text-2xl md:text-3xl font-black text-white mt-1.5 tracking-tight">
-              Elegí tu Entrenamiento {hasSecondSlot ? "(Elegís 2 Cartas)" : "(Elegís 1 Carta)"}
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-black text-white mt-1.5 tracking-tight leading-tight">
+              Elegí tu entrenamiento <span className="text-gray-400 text-sm sm:text-xl">{hasSecondSlot ? "(2 cartas)" : "(1 carta)"}</span>
             </h2>
           </div>
 
@@ -98,7 +98,7 @@ export default function PreseasonCardsModal({
         </div>
 
         {/* 3 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 my-4 overflow-y-auto p-1 relative z-10 flex-1 min-h-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-6 my-3 md:my-4 overflow-y-auto p-1 relative z-10 flex-1 min-h-0">
           {cards.map(card => {
             const config = rarityConfig[card.rarity] || rarityConfig.comun;
             const isSelected = selectedCardIds.includes(card.id);
@@ -107,7 +107,7 @@ export default function PreseasonCardsModal({
               <div
                 key={card.id}
                 onClick={() => handleCardClick(card)}
-                className={`bg-[#0e1912] border-2 rounded-2xl p-5 cursor-pointer transition-all duration-300 flex flex-col justify-between relative group ${
+                className={`bg-[#0e1912] border-2 rounded-2xl p-3 md:p-5 cursor-pointer transition-all duration-300 flex flex-col justify-between relative group ${
                   config.border
                 } ${config.glow} ${
                   isSelected
@@ -122,27 +122,27 @@ export default function PreseasonCardsModal({
                 )}
 
                 <div>
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-1.5 md:mb-3">
                     <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded border ${config.badge}`}>
                       {config.label}
                     </span>
                     <Sparkles className="w-4 h-4 text-gray-400 group-hover:text-yellow-400 transition-colors" />
                   </div>
 
-                  <h3 className="text-lg font-black text-white leading-tight mb-2">
+                  <h3 className="text-base md:text-lg font-black text-white leading-tight mb-1.5 md:mb-2">
                     {card.name}
                   </h3>
 
-                  <p className="text-xs text-gray-400 mb-4 leading-relaxed">
+                  <p className="hidden md:block text-xs text-gray-400 mb-4 leading-relaxed">
                     {card.description}
                   </p>
 
                   {/* Effects Pill */}
-                  <div className="space-y-1.5 mb-4">
+                  <div className="grid grid-cols-2 md:grid-cols-1 gap-1 md:gap-1.5 md:mb-4">
                     {describeEffects(player, card.effects).map(eff => (
                       <div
                         key={eff.key}
-                        className={`border rounded-md px-2.5 py-1 flex items-center justify-between text-xs ${
+                        className={`border rounded-md px-2 md:px-2.5 py-0.5 md:py-1 flex items-center justify-between gap-1 text-xs ${
                           eff.applies ? 'bg-black/40 border-white/5' : 'bg-black/20 border-white/5 opacity-40'
                         }`}
                         title={eff.applies ? '' : 'Este atributo no aplica a tu puesto'}
@@ -158,7 +158,7 @@ export default function PreseasonCardsModal({
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-white/5">
+                <div className="hidden md:block pt-3 border-t border-white/5">
                   <p className="text-[11px] italic text-gray-400 leading-snug">
                     "{card.quote}"
                   </p>
@@ -169,8 +169,8 @@ export default function PreseasonCardsModal({
         </div>
 
         {/* Tactical Coin Options Bar */}
-        <div className="bg-[#121c16] border border-white/10 rounded-2xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3 mb-3 relative z-10">
-          <div className="flex items-center space-x-2 text-xs">
+        <div className="bg-[#121c16] border border-white/10 rounded-2xl p-2 sm:p-3 flex items-center justify-center sm:justify-between gap-3 mb-3 relative z-10">
+          <div className="hidden sm:flex items-center space-x-2 text-xs">
             <Zap className="w-4 h-4 text-amber-400" />
             <span className="text-gray-300 font-bold">Opciones Tácticas de Monedas:</span>
           </div>
@@ -215,14 +215,14 @@ export default function PreseasonCardsModal({
 
         {/* Footer actions */}
         <div className="flex flex-col sm:flex-row gap-3 items-center justify-between pt-3 border-t border-white/10 relative z-10 flex-shrink-0">
-          <span className="text-xs text-gray-400">
+          <span className="hidden sm:inline text-xs text-gray-400">
             Seleccionadas: <strong className="text-white">{selectedCardIds.length}</strong> de {maxSelectable}
           </span>
 
           <button
             onClick={handleConfirm}
             disabled={selectedCardIds.length === 0}
-            className={`px-8 py-3.5 rounded-xl font-black text-sm tracking-wide transition-all shadow-lg ${
+            className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-black text-sm tracking-wide transition-all shadow-lg ${
               selectedCardIds.length > 0
                 ? 'bg-gradient-to-r from-[#22E748] to-[#16a34a] text-black hover:brightness-110 active:scale-98 cursor-pointer'
                 : 'bg-gray-800 text-gray-500 cursor-not-allowed'

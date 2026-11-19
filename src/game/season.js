@@ -9,7 +9,11 @@ import {
   updateNationalCareer,
   applySeasonDevelopment,
   computeSalary,
+  marketValue,
 } from './career';
+import { checkRecords } from './records';
+import { rollCoachChange, coachFit } from './coach';
+import { updateChallenge, CHALLENGES } from './challenges';
 import { getLeague, setWorld, findClub, LEAGUES } from '../data/clubs';
 import { updateWorld, evaluateObjective } from './world';
 import { generateRivals, advanceRivals, computeAwards, creditRivalAwards } from './rivals';
@@ -267,6 +271,7 @@ export function finalizeSeasonState(prev, seasonData, {
     ovr: overall,
     matches: seasonData.matches,
     goals: seasonData.goals,
+    assists: seasonData.assists,
     cleanSheets: seasonData.cleanSheets,
     trophiesCount: next.trophies.length,
     wonTitle: wonFinal || wonNationalFinal,
@@ -439,6 +444,46 @@ export function finalizeSeasonState(prev, seasonData, {
     if (met) checked.coins = (checked.coins || 0) + 3;
     recap.objective = { ...seasonData.objective, met, effects };
   }
+
+  // ---- Club and national-team records: beating the legends ----
+  const records = checkRecords(checked);
+  checked.recordsBroken = records.recordsBroken;
+  records.fresh.forEach(r => {
+    checked = addMoment(checked, { ...at, type: 'record', icon: '📜', text: r.text });
+    if (r.scope === 'club') checked.idolatry = addIdolatry(checked.idolatry, 5);
+    else checked.fame = Math.min(100, (checked.fame || 0) + 5);
+  });
+  recap.records = records.fresh.map(r => ({ text: r.text, scope: r.scope }));
+
+  // ---- The coach: the board may change him ----
+  if (!checked.isRetired) {
+    const roll = rollCoachChange(prev, { objectiveMet: recap.objective ? recap.objective.met : true, relegated });
+    checked.coach = roll.coach;
+    if (roll.changed) {
+      const fit = coachFit(roll.coach, checked);
+      checked.managerRelationship = 60 + fit * 10;
+      recap.coachChange = { from: roll.previous.name, to: roll.coach.name, style: roll.coach.style, fit };
+    }
+  }
+
+  // ---- Career challenge ----
+  const ch = updateChallenge(prev, { titles, relegated });
+  checked.challenge = ch.challenge ?? checked.challenge ?? null;
+  if (ch.event) {
+    recap.challengeEvent = ch.event;
+    if (ch.event.status === 'done') {
+      const def = CHALLENGES[ch.challenge.id];
+      checked.awards = [...(checked.awards || []), { name: `Desafío cumplido: ${def.title}`, year, description: ch.event.text, icon: def.icon }];
+      checked = addMoment(checked, { ...at, type: 'challenge', icon: def.icon, text: ch.event.text });
+    }
+  }
+
+  // ---- Market value (it moves with how you played) ----
+  const value = marketValue(checked);
+  const history = prev.marketValueHistory || [];
+  const before = history.length ? history[history.length - 1].value : marketValue(prev);
+  checked.marketValueHistory = [...history, { year, value }].slice(-40);
+  recap.marketValue = { value, before };
 
   checked.lastRecap = recap;
   return { next: checked, recap };

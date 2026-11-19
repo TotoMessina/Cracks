@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Flag from './Flag';
 import ClubShield from './ClubShield';
-import { getPlayerOverall, getIdolatryRank, checkNationalTeamCallUp, getNationalCareer, NT_STATUS_LABEL } from '../game/career';
+import { marketValue, formatValue, getPlayerOverall, getIdolatryRank, checkNationalTeamCallUp, getNationalCareer, NT_STATUS_LABEL } from '../game/career';
 import { COUNTRIES } from '../data/clubs';
 import { Star, Trophy, Coins, Zap, UserCheck, Users, HelpCircle } from 'lucide-react';
 
@@ -17,6 +17,57 @@ const STAT_TOOLTIPS = {
   salida: "Seguridad para descolgar centros aéreos y achicar en el área chica.",
   mando: "Voz de mando sobre la defensa que reduce los goles concedidos por el equipo."
 };
+
+/** Current market value and how it moved since the last season. */
+function valueTrend(player) {
+  const value = marketValue(player);
+  const h = player.marketValueHistory || [];
+  const before = h.length >= 2 ? h[h.length - 2].value : null;
+  const pct = before ? Math.round((h[h.length - 1].value / before - 1) * 100) : 0;
+  return { value, text: formatValue(value), pct };
+}
+
+/** One-row summary of the player for small screens; tapping opens the full card. */
+export function PlayerStrip({ player, onOpen }) {
+  if (!player) return null;
+  const overall = getPlayerOverall(player);
+  const idol = getIdolatryRank(player.idolatry);
+  const pos = { delantero: 'DEL', enganche: 'ENG', arquero: 'ARQ' }[player.position] || 'DEL';
+  return (
+    <button
+      onClick={onOpen}
+      className="w-full flex items-center gap-3 p-2.5 rounded-2xl bg-[#0c1611] border border-[#22E748]/25 text-left cursor-pointer active:scale-[0.99] transition"
+      aria-label={`Ver ficha de ${player.name}`}
+    >
+      <div className="w-11 h-11 shrink-0 rounded-xl bg-black/50 border border-white/10 grid place-items-center leading-none">
+        <span className="text-lg font-black text-white">{overall}</span>
+        <span className="text-[8px] font-black text-[#22E748] -mt-1">{pos}</span>
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5">
+          <Flag code={player.country} size={11} />
+          <span className="text-sm font-black text-white truncate">{player.name}</span>
+          <span className="text-[11px] text-gray-400 shrink-0">{player.age} años</span>
+        </div>
+        <div className="flex items-center gap-2 mt-1">
+          <div className="flex-1 h-1.5 rounded-full bg-black/50 overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-emerald-500 to-[#22E748]" style={{ width: `${Math.min(100, player.idolatry)}%` }} />
+          </div>
+          <span className={`text-[10px] font-bold shrink-0 ${idol.color}`}>{idol.icon} {player.idolatry}</span>
+        </div>
+      </div>
+      <span className="text-right shrink-0 leading-tight">
+        <span className="block text-[9px] font-bold uppercase text-gray-400">Valor</span>
+        <span className="block text-xs font-black font-mono text-emerald-300">{valueTrend(player).text}</span>
+        {valueTrend(player).pct !== 0 && (
+          <span className={`block text-[9px] font-mono font-bold ${valueTrend(player).pct > 0 ? 'text-[#22E748]' : 'text-red-400'}`}>
+            {valueTrend(player).pct > 0 ? '▲' : '▼'} {Math.abs(valueTrend(player).pct)}%
+          </span>
+        )}
+      </span>
+    </button>
+  );
+}
 
 export default function PlayerCard({ player }) {
   const [activeTooltip, setActiveTooltip] = useState(null);
@@ -149,6 +200,19 @@ export default function PlayerCard({ player }) {
             🗽 La hinchada ya te ama: falta seguir en el club hasta cumplir 5 temporadas para la estatua.
           </div>
         )}
+      </div>
+
+      {/* Market value */}
+      <div className="mt-3 flex items-center justify-between px-3 py-2 rounded-xl bg-emerald-950/30 border border-emerald-500/20" title="Cuánto vale tu pase: sube y baja con tu rendimiento, edad y fama. Define qué clubes te ofertan.">
+        <span className="text-[11px] font-bold text-gray-300">💰 Valor de mercado</span>
+        <span className="font-mono text-sm font-black text-emerald-300">
+          {valueTrend(player).text}
+          {valueTrend(player).pct !== 0 && (
+            <span className={`ml-1.5 text-[10px] ${valueTrend(player).pct > 0 ? 'text-[#22E748]' : 'text-red-400'}`}>
+              {valueTrend(player).pct > 0 ? '▲' : '▼'}{Math.abs(valueTrend(player).pct)}%
+            </span>
+          )}
+        </span>
       </div>
 
       {/* Energy & Dynamics Row */}

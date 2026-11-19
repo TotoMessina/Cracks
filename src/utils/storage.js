@@ -1,5 +1,6 @@
 // Centralized persistence & storage helpers for El Ídolo
 import { getCountryById } from '../data/clubs';
+import { challengeGlory, modifiersGloryMult } from '../game/challenges';
 
 const GLORY_MULT = { facil: 0.8, normal: 1, leyenda: 1.3 };
 
@@ -12,9 +13,10 @@ export function computeGlory(player) {
   const statPoints = isGk ? (player.totalCleanSheets || 0) * 2 : Math.round((player.totalGoals || 0) * 1.2);
   const awardPoints = (player.awards?.length || 0) * 25;
   const statuePoints = player.hasStatue ? 100 : 0;
+  const challengePoints = challengeGlory(player);
   const famePoints = (player.fame || 0) * 3;
-  const base = titlePoints + statPoints + awardPoints + statuePoints + famePoints;
-  const mult = GLORY_MULT[player.difficulty] ?? 1;
+  const base = titlePoints + statPoints + awardPoints + statuePoints + famePoints + challengePoints;
+  const mult = (GLORY_MULT[player.difficulty] ?? 1) * modifiersGloryMult(player);
   const total = Math.round(base * mult);
 
   let tier = 0;
