@@ -1,7 +1,7 @@
 // Manager (DT) career engine — pure functions, no React.
 import { CLUBS, LEAGUES, getClubById, getLeague, refreshClub, withWorld } from '../data/clubs';
 import { estimatedQualification, simulateContinental, simulateDomesticCup, leagueOutcome, computeQualification } from './competitions';
-import { updateWorld } from './world';
+import { updateWorld, evolveClubs, relevantNews } from './world';
 import { START_YEAR } from './career';
 
 export const DT_STYLES = [
@@ -242,11 +242,19 @@ function simulateManagerSeasonInWorld(m) {
 
   // Next season and the world
   const qualifiedFor = computeQualification(m.club, league.secondTier ? null : position, domesticWon);
-  const { world, moves } = updateWorld(m.world || {}, {
+  const moved = updateWorld(m.world || {}, {
     playerLeague: m.club.league,
     playerTable: table.map(t => ({ clubId: t.clubId, points: t.points })),
     playerClubId: m.club.id,
     playerPromotion: playoffWon,
+  });
+  const moves = moved.moves;
+  // Clubs grow and shrink in the manager's world too
+  const { world, news: worldNews } = evolveClubs(moved.world, {
+    playerTable: table.map(t => ({ clubId: t.clubId, points: t.points })),
+    playerClubId: m.club.id,
+    playerTitles: titles.map(() => ({ weight: 15 })),
+    moves,
   });
 
   // Board verdict: relegation = sacked; two bad seasons in a row (or finishing last) too
@@ -261,6 +269,7 @@ function simulateManagerSeasonInWorld(m) {
     year, games, w, d, l, gf, ga, points, position, expected,
     table, isChampion, cup, domestic: domestic ? { name: domestic.name, reached: domestic.final ? 'Final' : domestic.reached, won: domesticWon, eliminatedBy: domestic.eliminatedBy } : null,
     titles, incidents, verdict, promoted, relegated, playoff: lg.playoff, qualifiedFor, world, moves,
+    worldNews: relevantNews(worldNews, { clubId: m.club.id, leagueId: m.club.league, limit: 4 }),
   };
 }
 
@@ -307,13 +316,17 @@ export function applyManagerSeason(m, result) {
     strikes: result.verdict === 'warning' ? m.strikes + 1 : 0,
     fired: result.verdict === 'fired',
   };
+  // Your club's level after a year of change in the world
+  const worldRep = result.world?.rep?.[m.club.id];
+  const level = worldRep !== undefined ? Math.round(worldRep) : (getClubById(m.club.id).baseReputation ?? m.club.reputation);
+  next.club = { ...m.club, reputation: level };
   // Promotion / relegation of your club
   const lg = getLeague(m.club.league);
   if (result.promoted && lg.secondTier && lg.promotesTo) {
-    next.club = { ...m.club, league: lg.promotesTo, reputation: Math.min(82, m.club.reputation + 5) };
+    next.club = { ...next.club, league: lg.promotesTo };
   } else if (result.relegated) {
     const second = LEAGUES.find(l => l.secondTier && l.promotesTo === m.club.league);
-    if (second) next.club = { ...m.club, league: second.id };
+    if (second) next.club = { ...next.club, league: second.id };
   }
   next.pendingOffers = next.fired || result.isChampion || result.cup?.won || result.promoted || Math.random() < 0.5
     ? generateManagerOffers(next)

@@ -4,6 +4,7 @@ import { getClubObjective } from './world';
 import { generateRivals, getNemesis } from './rivals';
 import { getCoach, coachMinutesFactor } from './coach';
 import { injuryMultiplier, newChallenge, challengeStartClub } from './challenges';
+import { getAgent, clauseBuyerMult, CLAUSE_OPTIONS, DEFAULT_TERMS, DEFAULT_AGENT } from './agents';
 import { getContinentalEntry, simulateContinental, simulateDomesticCup, leagueOutcome, buildFinals, pickContinentalOpponent, estimatedQualification } from './competitions';
 
 export const START_YEAR = 2026;
@@ -185,6 +186,7 @@ export function createInitialPlayer({
     lifestyle: [],
     seasonHistory: [],
     world: {},
+    agent: DEFAULT_AGENT,
     moments: [{ year: START_YEAR, age: 16, type: 'debut', icon: '🌱', text: `Debut profesional en ${initialClub.name}` }],
     seenDilemmas: [],
     gameMode,
@@ -263,6 +265,7 @@ export function normalizePlayer(saved) {
   p.pendingDilemmaId ??= null;
   p.pendingOffers ??= null;
   p.world ??= {};
+  p.agent ??= DEFAULT_AGENT;
   setWorld(p.world);
   p.currentClub = refreshClub(p.currentClub);
   if (Array.isArray(p.pendingOffers)) p.pendingOffers = p.pendingOffers.map(o => ({ ...o, club: refreshClub(o.club) }));
@@ -758,13 +761,15 @@ export function generateTransferOffers(player) {
   // 3. Clubs that match your level (a bit above or below).
   // Going abroad needs a decent level; the richest leagues want proven players.
   const homeContinent = getLeague(currentClub.league).continent;
+  // Your agent decides how far the offers can come from
+  const agent = getAgent(player);
   const canMoveTo = (c) => {
     const lg = getLeague(c.league);
-    if (lg.salaryMult >= 1.8 && overall < 78) return false;
-    if (lg.continent !== homeContinent && overall < 74) return false;
+    if (lg.salaryMult >= 1.8 && overall < agent.richLevel) return false;
+    if (lg.continent !== homeContinent && overall < agent.abroadLevel) return false;
     return true;
   };
-  const maxRep = overall + 10 + fameBoost;
+  const maxRep = overall + 10 + fameBoost + agent.reach;
   const minRep = Math.min(currentClub.reputation - 6, overall - 8);
   let candidates = CLUBS.filter(c =>
     c.id !== currentClub.id &&
@@ -783,7 +788,7 @@ export function generateTransferOffers(player) {
   const picks = stepUp ? [stepUp, ...shuffled.filter(c => c.id !== stepUp.id)] : shuffled;
 
   const hasYacht = player.lifestyle?.includes('yate_mediterraneo') || player.lifestyle?.includes('yate_lujo');
-  const maxClubs = hasYacht ? 3 : 2;
+  const maxClubs = (hasYacht ? 3 : 2) + agent.extraOffers;
   picks.slice(0, maxClubs).forEach(club => {
     offers.push({
       club,
@@ -961,13 +966,16 @@ export function signingBonus(salary, years) {
   return Math.round((salary * 0.1 * years) / 1000) * 1000;
 }
 
-export function makeContract(salary, years) {
+export function makeContract(salary, years, terms = DEFAULT_TERMS) {
   const y = Math.max(1, Math.round(years));
+  const t = { ...DEFAULT_TERMS, ...(terms || {}) };
+  const clauseMult = CLAUSE_OPTIONS.release.options[t.release]?.clauseMult ?? 1;
   return {
     salary: Math.round(salary),
     years: y,
     yearsLeft: y,
-    releaseClause: Math.round((salary * (3 + y)) / 10000) * 10000,
+    releaseClause: Math.round((salary * (3 + y) * clauseMult) / 10000) * 10000,
+    terms: t,
   };
 }
 
@@ -1026,15 +1034,22 @@ function buildOffseasonMarket(player) {
   }
 
   // A bigger club pays the release clause (more likely if you outgrew your club)
-  const chance = Math.max(0.05, Math.min(0.6, 0.15 + (marketRating(player) - club.reputation) * 0.03 + (player.fame || 0) / 400));
-  if (Math.random() < chance) {
+  // A low clause makes it easy; a high one scares buyers away
+  const chance = Math.max(0.03, Math.min(0.75, (0.15 + (marketRating(player) - club.reputation) * 0.03 + (player.fame || 0) / 400) * clauseBuyerMult(contract)));
+  // A super-agent pushes clubs to pay it (he earns from every move)
+  const lucky = Math.random() < chance;
+  const forced = !lucky && Math.random() < getAgent(player).forceExit;
+  if (lucky || forced) {
     const buyers = generateTransferOffers(player)
       .filter(o => !o.isRenewal && !o.isRival && o.club.reputation > club.reputation)
-      .slice(0, 2);
+      .slice(0, forced ? 1 : 2);
     buyers.forEach(o => offers.push({
       ...o,
       paysClause: true,
-      message: `${o.club.name} pagó tu cláusula de rescisión ($${contract.releaseClause.toLocaleString('es-AR')}) y te quiere ya. ${o.club.profile || ''}`.trim(),
+      forcedByAgent: forced,
+      message: forced
+        ? `Tu representante movió todo: ${o.club.name} pagó tu cláusula ($${contract.releaseClause.toLocaleString('es-AR')}). Si te quedás, se va a armar lío en los medios.`
+        : `${o.club.name} pagó tu cláusula de rescisión ($${contract.releaseClause.toLocaleString('es-AR')}) y te quiere ya. ${o.club.profile || ''}`.trim(),
     }));
   }
 
@@ -1160,6 +1175,7 @@ export function negotiationLeverage(player, offer) {
   const overall = getPlayerOverall(player);
   let lev = 0.5 + (overall - offer.club.reputation) * 0.03 + (player.fame || 0) / 250;
   if (player.lifestyle?.includes('abogado_deportivo_top')) lev += 0.1;
+  lev += getAgent(player).leverage; // a good agent squeezes clubs
   if (offer.isRival || offer.fromAgent) lev += 0.15; // they came for you
   if (offer.isRenewal && (player.idolatry || 0) >= 70) lev += 0.1; // the fans want you to stay
   if (offer.isRenewal && player.flags?.boardAngry) lev -= 0.2;

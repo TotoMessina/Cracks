@@ -203,6 +203,7 @@ function buildClubs(leagues) {
         prestige: prestigio,
         level: nivel,
         reputation,
+        baseReputation: reputation, // the level in the data; the world can move it
         tier: tierFor(reputation),
         profile: t.perfil_competitivo || '',
         league: league.id,
@@ -254,10 +255,15 @@ let currentWorld = {};
 /** Applies a world (league overrides) to CLUBS. Entries are replaced, never mutated. */
 export function setWorld(overrides = {}) {
   currentWorld = overrides || {};
+  const reps = currentWorld.rep || {};
   for (let i = 0; i < CLUBS.length; i++) {
     const c = CLUBS[i];
     const league = currentWorld[c.id] || c.baseLeague;
-    if (c.league !== league) CLUBS[i] = { ...c, league };
+    // Club strength changes over the years (stored with one decimal; the game uses the rounded value)
+    const reputation = reps[c.id] !== undefined ? Math.round(reps[c.id]) : c.baseReputation;
+    if (c.league !== league || c.reputation !== reputation) {
+      CLUBS[i] = { ...c, league, reputation, tier: tierFor(reputation) };
+    }
   }
 }
 
@@ -293,7 +299,7 @@ export function refreshClub(saved) {
   const fresh = findClub(saved.id) || CLUBS.find(c => c.name === saved.name);
   if (!fresh) return isKnownLeague(saved.league) ? saved : { ...saved, league: CLUBS[0].league };
   const promoted = isKnownLeague(saved.league) && saved.league !== fresh.league;
-  return promoted ? { ...fresh, league: saved.league, reputation: Math.max(fresh.reputation, saved.reputation || 0) } : fresh;
+  return promoted ? { ...fresh, league: saved.league } : fresh;
 }
 
 export function areRivals(clubId1, clubId2) {

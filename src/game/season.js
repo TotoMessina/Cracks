@@ -14,8 +14,9 @@ import {
 import { checkRecords } from './records';
 import { rollCoachChange, coachFit } from './coach';
 import { updateChallenge, CHALLENGES } from './challenges';
+import { getAgent, agentFee, contractPayouts } from './agents';
 import { getLeague, setWorld, findClub, LEAGUES } from '../data/clubs';
-import { updateWorld, evaluateObjective } from './world';
+import { updateWorld, evaluateObjective, evolveClubs, relevantNews } from './world';
 import { generateRivals, advanceRivals, computeAwards, creditRivalAwards } from './rivals';
 import { addIdolatry, withStatueCheck, applyEffects } from './effects';
 import { addMoment } from './moments';
@@ -401,9 +402,17 @@ export function finalizeSeasonState(prev, seasonData, {
     playerClubId: prev.currentClub.id,
     playerPromotion: promoFinal ? promoFinal.won : null,
   });
-  setWorld(world);
-  checked.world = world;
+  // Clubs grow and shrink: results, money, the board, history
+  const evolved = evolveClubs(world, {
+    playerTable: seasonData.leagueStanding?.fullTable || null,
+    playerClubId: prev.currentClub.id,
+    playerTitles: titles,
+    moves,
+  });
+  setWorld(evolved.world);
+  checked.world = evolved.world;
   recap.worldMoves = moves.map(mv => ({ ...mv, name: findClub(mv.clubId)?.name || '' }));
+  recap.worldNews = relevantNews(evolved.news, { clubId: prev.currentClub.id, leagueId: prev.currentClub.league });
   if (relegated) {
     const secondTier = LEAGUES.find(l => l.secondTier && l.promotesTo === prev.currentClub.league);
     if (secondTier) {
@@ -413,6 +422,12 @@ export function finalizeSeasonState(prev, seasonData, {
     }
   } else if (checked.relegationRelease) {
     checked.relegationRelease = null;
+  }
+  // Your club's new level (it may have grown or shrunk this year)
+  const freshClub = findClub(prev.currentClub.id);
+  if (freshClub) {
+    checked.currentClub = { ...checked.currentClub, reputation: freshClub.reputation, tier: freshClub.tier };
+    recap.clubLevel = { from: prev.currentClub.reputation, to: freshClub.reputation };
   }
   recap.relegated = relegated;
 
@@ -476,6 +491,21 @@ export function finalizeSeasonState(prev, seasonData, {
       checked.awards = [...(checked.awards || []), { name: `Desafío cumplido: ${def.title}`, year, description: ch.event.text, icon: def.icon }];
       checked = addMoment(checked, { ...at, type: 'challenge', icon: def.icon, text: ch.event.text });
     }
+  }
+
+  // ---- Contract clauses (bonuses) and your agent's cut ----
+  const payouts = contractPayouts(prev, seasonData, { qualified: Boolean(checked.qualifiedFor?.tier) });
+  const agent = getAgent(prev);
+  const fee = agentFee(prev, (seasonData.earnings || 0) + payouts.total);
+  checked.money = (checked.money || 0) + payouts.total - fee;
+  recap.contractBonus = payouts;
+  recap.agentFee = fee;
+  recap.agentName = agent.short;
+  // A media-hungry agent stirs things up
+  if (!checked.isRetired && agent.drama && Math.random() < agent.drama) {
+    checked.idolatry = Math.max(0, (checked.idolatry || 0) - 4);
+    checked.fame = Math.min(100, (checked.fame || 0) + 3);
+    recap.agentDrama = `${agent.name} filtró a la prensa que te querés ir de ${prev.currentClub.name}: la hinchada se enojó (−4 idolatría), pero tu nombre está en todos lados (+3 fama).`;
   }
 
   // ---- Market value (it moves with how you played) ----

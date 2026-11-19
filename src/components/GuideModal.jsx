@@ -150,6 +150,14 @@ export default function GuideModal({ onClose, onOpenTutorial }) {
               Ves la chance de que acepten y de que se ofendan. Pueden aceptar, ofrecerte la mitad o retirar la oferta. Tu nivel, tu fama, el abogado deportivo
               y que el club haya venido a buscarte te dan más fuerza. Si es tu única opción, nunca se van.
             </p>
+            <p>
+              Tu <strong className="text-white">representante</strong> (lo cambiás una vez por temporada desde Carrera): el amigo del barrio cobra 5% pero no te lleva a Europa fácil;
+              la agencia cobra 10% y te mueve bien; el superagente cobra 18%, te consigue los clubes más grandes y negocia mejor, pero fuerza salidas y arma líos en los medios.
+            </p>
+            <p>
+              Al firmar elegís <strong className="text-white">cláusulas</strong>: rescisión baja (salís fácil, cobrás menos) o alta (más sueldo, casi nadie te saca),
+              sueldo fijo o con primas por gol/asistencia/valla y por clasificar a copas, y un 10% de tu próximo pase si un club paga tu cláusula.
+            </p>
           </Section>
 
           <Section icon={<Shield className="w-4 h-4 text-sky-300" />} title="Préstamos y el DT">
@@ -160,6 +168,14 @@ export default function GuideModal({ onClose, onOpenTutorial }) {
             <p>
               Cada club tiene un <strong className="text-white">DT con estilo</strong>: los que apuestan por los pibes, los que confían en los veteranos, los equilibrados y los exigentes
               (juega el que está en forma). Eso cambia tus minutos. Si el club no cumple el objetivo, es más probable que lo echen y llegue otro con otras ideas.
+            </p>
+          </Section>
+
+          <Section icon={<TrendingUp className="w-4 h-4 text-sky-300" />} title="El mundo cambia">
+            <p>
+              Los clubes no son siempre iguales: cada año crecen o se achican según sus resultados, la plata de su liga, los ascensos y descensos
+              y su dirigencia (inversores, crisis, camadas de las inferiores). Los grandes que caen tienden a recuperarse y ningún club se aleja más de 15 puntos
+              de su nivel original. Tus títulos hacen crecer a tu club. Lo ves en el resumen, en la pestaña Copas.
             </p>
           </Section>
 

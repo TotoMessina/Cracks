@@ -3,6 +3,7 @@ import ClubShield from './ClubShield';
 import { AlertOctagon, Check, X } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { signingBonus, offerSignsContract, negotiationOdds, NEGOTIATION_ASKS } from '../game/career';
+import { CLAUSE_OPTIONS, DEFAULT_TERMS, salaryWithTerms, getAgent } from '../game/agents';
 
 export default function TransfersModal({
   player,
@@ -16,12 +17,17 @@ export default function TransfersModal({
 }) {
   const [selectedOfferIndex, setSelectedOfferIndex] = useState(() => Math.max(0, offers.findIndex(o => !o.withdrawn)));
   const [years, setYears] = useState(yearsRange.suggested);
+  const [terms, setTerms] = useState(DEFAULT_TERMS);
+  const [panel, setPanel] = useState(null); // 'clauses' | 'negotiate' | null
+  const togglePanel = (id) => { sound.playClick(); setPanel(p => (p === id ? null : id)); };
   const [showRivalConfirmation, setShowRivalConfirmation] = useState(false);
 
   const selectedOffer = offers[selectedOfferIndex] || offers[0];
   const signs = offerSignsContract(selectedOffer);
   const maxYears = Math.max(yearsRange.min, selectedOffer?.maxYears ?? yearsRange.max);
   const effectiveYears = Math.min(years, maxYears);
+  const finalSalary = salaryWithTerms(selectedOffer?.salary || 0, terms);
+  const agent = getAgent(player);
 
   const handleNegotiate = (askId) => {
     const outcome = onNegotiate?.(selectedOfferIndex, askId);
@@ -45,7 +51,7 @@ export default function TransfersModal({
       return;
     }
     sound.playFanfare();
-    onAcceptOffer(selectedOffer, effectiveYears);
+    onAcceptOffer(selectedOffer, effectiveYears, terms);
   };
 
   return (
@@ -235,8 +241,9 @@ export default function TransfersModal({
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
               <span className="text-xs font-black uppercase text-gray-300">Duración del contrato</span>
               <span className="text-xs font-mono text-gray-400">
-                Total: <strong className="text-[#22E748]">${((selectedOffer.salary || 0) * effectiveYears).toLocaleString('es-AR')}</strong> en {effectiveYears} {effectiveYears === 1 ? 'año' : 'años'}
-                {' '}· Prima por firma: <strong className="text-amber-300">${signingBonus(selectedOffer.salary || 0, effectiveYears).toLocaleString('es-AR')}</strong>
+                Sueldo: <strong className="text-[#22E748]">${finalSalary.toLocaleString('es-AR')}</strong>/año · Total: <strong className="text-[#22E748]">${(finalSalary * effectiveYears).toLocaleString('es-AR')}</strong> en {effectiveYears} {effectiveYears === 1 ? 'año' : 'años'}
+                {' '}· Prima por firma: <strong className="text-amber-300">${signingBonus(finalSalary, effectiveYears).toLocaleString('es-AR')}</strong>
+                {' '}· {agent.icon} se lleva {Math.round(agent.commission * 100)}%
               </span>
             </div>
             <div className="flex gap-1.5">
@@ -252,10 +259,47 @@ export default function TransfersModal({
                 </button>
               ))}
             </div>
+            {/* Contract clauses */}
+            <div className="mt-2.5 pt-2.5 border-t border-white/10 space-y-1.5">
+              <button type="button" onClick={() => togglePanel('clauses')} className="w-full flex items-center justify-between gap-2 cursor-pointer" aria-expanded={panel === 'clauses'}>
+                <span className="text-[10px] font-black uppercase text-sky-300">📑 Cláusulas</span>
+                <span className="text-[10px] text-gray-400 truncate">
+                  {Object.entries(CLAUSE_OPTIONS).map(([key, group]) => `${key === 'release' ? 'Rescisión ' : ''}${group.options[terms[key]].label}`).join(' · ')} {panel === 'clauses' ? '▴' : '▾'}
+                </span>
+              </button>
+              {panel === 'clauses' && Object.entries(CLAUSE_OPTIONS).map(([key, group]) => (
+                <div key={key} className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 w-24 sm:w-32 shrink-0 leading-tight">{group.label}</span>
+                  <div className="segmented flex-1">
+                    {Object.entries(group.options).map(([id, opt]) => (
+                      <button
+                        key={id}
+                        type="button"
+                        title={opt.desc}
+                        className={terms[key] === id ? 'is-active' : ''}
+                        onClick={() => { sound.playClick(); setTerms(t => ({ ...t, [key]: id })); }}
+                      >
+                        {opt.label}
+                        {opt.salary ? <span className={`ml-1 text-[9px] ${opt.salary > 0 ? 'text-[#22E748]' : 'text-red-300'}`}>{opt.salary > 0 ? '+' : ''}{Math.round(opt.salary * 100)}%</span> : null}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {panel === 'clauses' && (
+                <p className="text-[10px] text-gray-400 leading-snug">
+                  {Object.entries(CLAUSE_OPTIONS).filter(([key]) => terms[key] !== DEFAULT_TERMS[key]).map(([key, group]) => group.options[terms[key]].desc).join(' ') || 'Contrato estándar: sin primas y con cláusula normal.'}
+                </p>
+              )}
+            </div>
+
             {!selectedOffer.negotiated && onNegotiate && (
               <div className="mt-2.5 pt-2.5 border-t border-white/10">
-                <span className="text-[10px] font-black uppercase text-amber-300">🤝 Negociar · un solo intento: si te pasás, pueden retirar la oferta</span>
-                <div className="grid grid-cols-3 gap-1.5 mt-1.5">
+                <button type="button" onClick={() => togglePanel('negotiate')} className="w-full flex items-center justify-between gap-2 cursor-pointer" aria-expanded={panel === 'negotiate'}>
+                  <span className="text-[10px] font-black uppercase text-amber-300">🤝 Negociar</span>
+                  <span className="text-[10px] text-gray-400">un solo intento {panel === 'negotiate' ? '▴' : '▾'}</span>
+                </button>
+                {panel === 'negotiate' && <div className="grid grid-cols-3 gap-1.5 mt-1.5">
                   {Object.values(NEGOTIATION_ASKS).map(ask => {
                     const odds = negotiationOdds(player, selectedOffer, ask.id);
                     return (
@@ -271,7 +315,7 @@ export default function TransfersModal({
                       </button>
                     );
                   })}
-                </div>
+                </div>}
               </div>
             )}
             <p className="hidden sm:block text-[11px] text-gray-400 mt-2 leading-snug">

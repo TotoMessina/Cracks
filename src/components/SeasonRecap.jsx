@@ -134,6 +134,24 @@ function CompetitionsSummary({ recap }) {
           {downs.length > 0 && <span className="block">⬇️ Descienden: {downs.map(m => m.name).join(', ')}</span>}
         </div>
       )}
+      {(recap.clubLevel && recap.clubLevel.to !== recap.clubLevel.from) && (
+        <div className={`px-3 py-2 rounded-xl border text-xs font-bold ${recap.clubLevel.to > recap.clubLevel.from ? 'border-[#22E748]/40 bg-[#22E748]/10 text-[#22E748]' : 'border-red-500/40 bg-red-500/10 text-red-300'}`}>
+          {recap.clubLevel.to > recap.clubLevel.from ? '📈' : '📉'} Tu club {recap.clubLevel.to > recap.clubLevel.from ? 'creció' : 'se achicó'}: nivel {recap.clubLevel.from} → {recap.clubLevel.to}
+        </div>
+      )}
+      {recap.worldNews?.length > 0 && (
+        <div className="px-3 py-2 rounded-xl border border-white/10 bg-black/30 space-y-1">
+          <span className="text-[10px] uppercase font-black text-gray-400 block">Noticias del mundo</span>
+          {recap.worldNews.map(n => (
+            <div key={n.clubId} className="flex items-start justify-between gap-2 text-[11px]">
+              <span className="text-gray-200 min-w-0">{n.icon} {n.text}</span>
+              <span className={`font-mono font-bold shrink-0 ${n.to > n.from ? 'text-[#22E748]' : n.to < n.from ? 'text-red-400' : 'text-gray-500'}`}>
+                {n.from}→{n.to}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
       {nextSc.length > 0 && (
         <div className="px-3 py-2 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs font-bold text-amber-200">
           🏅 Te ganaste: {nextSc.map(sc => `${sc.tournament} vs ${sc.opponent.name}`).join(' · ')} (al arrancar la próxima temporada)
@@ -152,7 +170,7 @@ export default function SeasonRecap({ recap, player, onContinue }) {
   const [tab, setTab] = useState('resumen');
   if (!recap) return null;
   const isGk = player?.position === 'arquero';
-  const totalIncome = recap.earnings + (recap.passiveIncome || 0) + (recap.titleBonus || 0);
+  const totalIncome = recap.earnings + (recap.passiveIncome || 0) + (recap.titleBonus || 0) + (recap.contractBonus?.total || 0) - (recap.agentFee || 0);
   const changes = Object.entries(recap.statChanges || {});
   const league = leagueName(recap.leagueStanding?.league || player?.currentClub?.league);
 
@@ -185,6 +203,8 @@ export default function SeasonRecap({ recap, player, onContinue }) {
           sub={[
             recap.titleBonus ? `+$${recap.titleBonus.toLocaleString('es-AR')} premio` : null,
             recap.passiveIncome ? `+$${recap.passiveIncome.toLocaleString('es-AR')} rentas` : null,
+            recap.contractBonus?.total ? `+$${recap.contractBonus.total.toLocaleString('es-AR')} primas` : null,
+            recap.agentFee ? `−$${recap.agentFee.toLocaleString('es-AR')} agente` : null,
           ].filter(Boolean).join(' · ') || 'sueldo'}
         />
         <StatTile
@@ -200,6 +220,9 @@ export default function SeasonRecap({ recap, player, onContinue }) {
           🏆 ¡Levantaste {t}! La hinchada salió a festejar a las calles.
         </div>
       ))}
+      {recap.agentDrama && (
+        <div className="mb-2 p-3 bg-red-950/30 border border-red-500/40 rounded-xl text-xs font-bold text-red-200 text-center">📰 {recap.agentDrama}</div>
+      )}
       {recap.records?.map((r, i) => (
         <div key={`rec${i}`} className="mb-2 p-3 bg-amber-950/30 border border-amber-400/50 rounded-xl text-xs font-black text-amber-200 text-center animate-pop">
           📜 {r.text}

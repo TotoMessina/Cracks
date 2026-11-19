@@ -48,6 +48,7 @@ import { getClubObjective } from './game/world';
 import { getCoach, coachFit, COACH_STYLES } from './game/coach';
 import { recordChase, RECORD_INFO } from './game/records';
 import { CHALLENGES } from './game/challenges';
+import { getAgent, agentFee, salaryWithTerms, resaleShare, canChangeAgent, AGENTS } from './game/agents';
 import { sound } from './utils/audio';
 import {
   Play, Sparkles, Flame, Target, Zap, Save, Crown, Award, Briefcase,
@@ -72,6 +73,7 @@ const InteractiveTutorialModal = lazy(() => import('./components/InteractiveTuto
 const FinalSeries = lazy(() => import('./components/FinalSeries'));
 const KeyMatchModal = lazy(() => import('./components/KeyMatchModal'));
 const InjuryModal = lazy(() => import('./components/InjuryModal'));
+const AgentModal = lazy(() => import('./components/AgentModal'));
 const NationalCallModal = lazy(() => import('./components/NationalCallModal'));
 
 const SIM_DURATION_MS = 2400;
@@ -186,6 +188,9 @@ export default function App() {
 
   useEffect(() => () => clearInterval(simRef.current.timer), []);
 
+  /** A one-off notice in the same toast slot as achievements. */
+  const pushToast = (t) => setToasts(q => [...q, { id: `n${q.length}-${t.title}`, kicker: 'Aviso', ...t }]);
+
   const pushAchievements = (p) => {
     const newly = checkPlayerAchievements(p);
     if (newly.length > 0) {
@@ -275,6 +280,8 @@ export default function App() {
     const { next: resolved, result } = resolveDilemmaOption(prev, dilemma, option);
     const next = {
       ...resolved,
+      // Signing with the European mega-agent in a dilemma makes him your agent
+      ...(resolved.flags?.europeanAgent && !prev.flags?.europeanAgent ? { agent: 'super', agentChangedSeason: prev.seasonsPlayed } : {}),
       seenDilemmas: [...(prev.seenDilemmas || []), dilemma.id],
       scheduledDilemmas: (resolved.scheduledDilemmas || []).filter(sd => sd.id !== dilemma.id),
       pendingDilemmaId: null,
@@ -315,7 +322,7 @@ export default function App() {
     pushAchievements(next);
   };
 
-  const handleAcceptOffer = (offer, years) => {
+  const handleAcceptOffer = (offer, years, terms) => {
     const prev = playerRef.current;
     const next = { ...prev, clubHistory: prev.clubHistory.map(h => ({ ...h })) };
     const oldClubId = prev.currentClub.id;
@@ -392,13 +399,30 @@ export default function App() {
     // Any choice other than a new loan ends the current one
     if (!offer.isLoan) next.loan = null;
 
+    // Sold by release clause: your share of the deal (if you signed for it)
+    if (offer.paysClause && prev.contract) {
+      const share = resaleShare(prev.contract);
+      if (share > 0) {
+        next.money = (next.money ?? prev.money ?? 0) + share - agentFee(prev, share);
+        pushToast({ icon: '💰', title: 'Tu parte del pase', desc: `Cobraste $${share.toLocaleString('es-AR')} por el % de tu pase.` });
+      }
+    }
+    // Your agent forced an exit and you said no: the media mess
+    if (offer.isStay && (prev.pendingOffers || []).some(o => o.forcedByAgent)) {
+      next.idolatry = Math.max(0, (next.idolatry ?? prev.idolatry) - 3);
+      next.managerRelationship = Math.max(0, (prev.managerRelationship ?? 65) - 5);
+      pushToast({ icon: '📰', title: 'Lío mediático', desc: `${getAgent(prev).name} salió a decir que te ibas. Te quedaste, pero la hinchada y el DT quedaron molestos.` });
+    }
+
     if (offerSignsContract(offer)) {
-      const salary = offer.salary || computeSalary(next.currentClub, getPlayerOverall(next));
+      const baseSalary = offer.salary || computeSalary(next.currentClub, getPlayerOverall(next));
+      const salary = salaryWithTerms(baseSalary, terms);
       const range = contractYearsRange(prev.age);
       const length = Math.max(range.min, Math.min(offer.maxYears ?? range.max, years || range.suggested));
       next.salary = salary;
-      next.contract = makeContract(salary, length);
-      next.money = (prev.money || 0) + signingBonus(salary, length);
+      next.contract = makeContract(salary, length, terms);
+      const bonus = signingBonus(salary, length);
+      next.money = (next.money ?? prev.money ?? 0) + bonus - agentFee(prev, bonus);
       // Committing long-term to your club wins the fans over
       if (offer.isRenewal && length >= 4) next.idolatry = addIdolatry(next.idolatry, 3);
     }
@@ -422,6 +446,15 @@ export default function App() {
     next.pendingCards = drawCardsFor(next);
     commitPlayer(next);
     pushAchievements(next);
+  };
+
+  const handleChangeAgent = (agentId) => {
+    const prev = playerRef.current;
+    if (!prev || !AGENTS[agentId] || prev.agent === agentId || !canChangeAgent(prev)) return;
+    sound.playCoin();
+    commitPlayer({ ...prev, agent: agentId, agentChangedSeason: prev.seasonsPlayed });
+    pushToast({ icon: AGENTS[agentId].icon, title: 'Nuevo representante', desc: AGENTS[agentId].name });
+    setModal(null);
   };
 
   /** Ask a club for better terms (one try per offer). */
@@ -930,6 +963,9 @@ export default function App() {
                         {/* Season context: one swipeable line */}
                         <div className="relative mt-2 -mx-3.5 sm:mx-0 px-3.5 sm:px-0 flex sm:flex-wrap gap-1.5 overflow-x-auto no-scrollbar">
                           {player.nextSeasonMods?.labels?.map((l, i) => <span key={`m${i}`} className="chip chip-gold shrink-0">{l}</span>)}
+                          <button onClick={() => setModal('agent')} className="chip shrink-0 cursor-pointer hover:border-white/30" title="Tu representante">
+                            {getAgent(player).icon} {getAgent(player).short} · {Math.round(getAgent(player).commission * 100)}%
+                          </button>
                           {activeChallenge && (
                             <span className="chip chip-gold shrink-0" title={CHALLENGES[activeChallenge.id]?.desc}>
                               {CHALLENGES[activeChallenge.id]?.icon} Desafío{activeChallenge.id === 'salvar' ? `: ${activeChallenge.seasonsDone || 0}/${CHALLENGES.salvar.seasons} temporadas` : ': ganar la copa grande'}
@@ -1138,6 +1174,7 @@ export default function App() {
         />
       )}
 
+      {modal === 'agent' && <AgentModal player={player} onChoose={handleChangeAgent} onClose={closeModal} />}
       {modal === 'store' && <StoreModal player={player} onBuyItem={handleBuyStoreItem} onClose={closeModal} />}
 
       {/* National team call-up decision */}
@@ -1195,7 +1232,7 @@ export default function App() {
         <div key={toasts[0].id} className="fixed bottom-20 md:bottom-6 right-3 left-3 sm:left-auto sm:right-6 z-[60] toast animate-slideUp sm:max-w-sm">
           <div className="text-3xl flex-shrink-0">{toasts[0].icon}</div>
           <div className="min-w-0 flex-1">
-            <span className="text-[10px] font-black uppercase text-[#22E748] tracking-widest block">¡Logro desbloqueado!</span>
+            <span className="text-[10px] font-black uppercase text-[#22E748] tracking-widest block">{toasts[0].kicker || '¡Logro desbloqueado!'}</span>
             <h4 className="text-sm font-black text-white truncate">{toasts[0].title}</h4>
             <p className="text-xs text-gray-300 leading-snug">{toasts[0].desc}</p>
           </div>

@@ -326,6 +326,17 @@ export default function ManagerModeModal({ initialDtName = 'El Míster', legacy 
                       ))}
                     </div>
                   )}
+
+                  {seasonLog.worldNews?.length > 0 && (
+                    <div className="space-y-1">
+                      {seasonLog.worldNews.map(n => (
+                        <p key={n.clubId} className="text-xs text-gray-300 bg-white/5 p-2 rounded-lg flex justify-between gap-2">
+                          <span>{n.icon} {n.text}</span>
+                          <span className={`font-mono font-bold ${n.to > n.from ? 'text-[#22E748]' : 'text-red-400'}`}>{n.from}→{n.to}</span>
+                        </p>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 

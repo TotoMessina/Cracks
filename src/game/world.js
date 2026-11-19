@@ -97,3 +97,114 @@ export function evaluateObjective(objective, { position, total, titles = [], pro
     default: return true;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Clubs grow and shrink over the years: results, money, promotions/relegations,
+// the board (investors, crises) and their history (big clubs tend to come back).
+// The world stores the exact level in world.rep = { [clubId]: level }.
+// ---------------------------------------------------------------------------
+export const CLUB_DRIFT_LIMIT = 15; // never further than this from the original level
+
+const POSITIVE_EVENTS = [
+  { icon: '🤑', text: (n) => `Llega un inversor millonario a ${n}` },
+  { icon: '🏛️', text: (n) => `${n} tiene una dirigencia nueva que ordena todo` },
+  { icon: '🌱', text: (n) => `Sale una camada dorada de las inferiores de ${n}` },
+  { icon: '📺', text: (n) => `${n} firma un contrato de TV y sponsors récord` },
+];
+const NEGATIVE_EVENTS = [
+  { icon: '💸', text: (n) => `Crisis económica en ${n}: deudas y sueldos atrasados` },
+  { icon: '🧾', text: (n) => `Mala gestión en ${n}: la dirigencia vende a sus figuras` },
+  { icon: '⚖️', text: (n) => `${n} sancionado: inhibición para incorporar` },
+  { icon: '🔥', text: (n) => `Interna feroz en ${n}: renuncia la comisión directiva` },
+];
+
+/**
+ * One year of change for every club. Returns { world, news }.
+ * - playerTable: real table of the player's league ([{ clubId, points }] best first)
+ * - moves: promotions/relegations of this season (from updateWorld)
+ * - playerClubId / playerTitles: your titles make your club bigger
+ */
+export function evolveClubs(world, { playerTable = null, playerClubId = null, playerTitles = [], moves = [], rng = Math.random } = {}) {
+  const prevRep = world?.rep || {};
+  const rep = {};
+  const news = [];
+  const moved = new Map(moves.map(m => [m.clubId, m.type]));
+  const tablePos = new Map((playerTable || []).map((r, i) => [r.clubId, { pos: i, total: playerTable.length }]));
+  // Expected position in the player's league = rank by level
+  const expected = new Map();
+  if (playerTable?.length) {
+    const ids = new Set(playerTable.map(r => r.clubId));
+    CLUBS.filter(c => ids.has(c.id)).sort((a, b) => b.reputation - a.reputation).forEach((c, i) => expected.set(c.id, i));
+  }
+
+  CLUBS.forEach(c => {
+    const base = c.baseReputation ?? c.reputation;
+    const current = prevRep[c.id] ?? base;
+    const reasons = [];
+    let delta = 0;
+
+    // 1) Results: better or worse than expected
+    const t = tablePos.get(c.id);
+    if (t && expected.has(c.id)) {
+      const diff = (expected.get(c.id) - t.pos) / Math.max(1, t.total);
+      delta += Math.max(-2, Math.min(2, diff * 6));
+    } else {
+      delta += (rng() + rng() - 1) * 1.6; // a season nobody watched: good or bad
+    }
+
+    // 2) Money: rich leagues and the continental elite earn more
+    const league = getLeague(c.league);
+    delta += ((league.salaryMult ?? 1) - 1) * 0.08;
+    if (current >= 85) delta += 0.08;
+
+    // 3) Promotion / relegation
+    if (moved.get(c.id) === 'promoted') { delta += 2; reasons.push('ascenso'); }
+    if (moved.get(c.id) === 'relegated') { delta -= 3; reasons.push('descenso'); }
+
+    // 4) Your titles lift your club
+    if (c.id === playerClubId && playerTitles.length) {
+      delta += Math.min(3, playerTitles.reduce((sum, ti) => sum + (ti.weight >= 15 ? 1 : 0.5), 0));
+      reasons.push('títulos');
+    }
+
+    // 5) History: big clubs come back, small ones that grew go back little by little
+    const gap = base - current;
+    delta += gap * (gap > 0 && (c.prestige ?? base) >= 85 ? 0.18 : 0.1);
+
+    // 6) The board: investors, new presidents, crises...
+    let event = null;
+    if (rng() < 0.05) {
+      const positive = rng() < 0.5;
+      const size = 4 + rng() * 4;
+      const list = positive ? POSITIVE_EVENTS : NEGATIVE_EVENTS;
+      event = { ...list[Math.floor(rng() * list.length)], positive };
+      delta += positive ? size : -size;
+    }
+
+    const next = Math.max(45, Math.min(97, Math.max(base - CLUB_DRIFT_LIMIT, Math.min(base + CLUB_DRIFT_LIMIT, current + delta))));
+    const exact = Math.round(next * 10) / 10;
+    if (exact !== base) rep[c.id] = exact;
+
+    const change = Math.round(exact) - Math.round(current);
+    if (event || Math.abs(change) >= 3) {
+      news.push({
+        clubId: c.id,
+        name: c.name,
+        icon: event ? event.icon : change > 0 ? '📈' : '📉',
+        text: event ? event.text(c.name) : `${c.name} ${change > 0 ? 'crece' : 'se achica'}${reasons.length ? ` (${reasons.join(', ')})` : ''}`,
+        from: Math.round(current),
+        to: Math.round(exact),
+        league: c.league,
+        prestige: c.prestige ?? base,
+      });
+    }
+  });
+
+  return { world: { ...(world || {}), rep }, news };
+}
+
+/** The news a player cares about: their club, their league and the big names. */
+export function relevantNews(news, { clubId = null, leagueId = null, limit = 6 } = {}) {
+  const score = (n) => (n.clubId === clubId ? 100 : 0) + (n.league === leagueId ? 50 : 0) + n.prestige / 10 + Math.abs(n.to - n.from);
+  return [...news].sort((a, b) => score(b) - score(a)).slice(0, limit);
+}
